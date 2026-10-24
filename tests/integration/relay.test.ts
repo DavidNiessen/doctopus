@@ -306,6 +306,7 @@ it('relays exact bytes and only explicit target credentials, with filtered respo
     bodyBase64: Buffer.from([0, 255, 128]).toString('base64'),
   });
   expect(requests).toBe(1);
+  expect(result.headers['x-doctopus-relay-id']).toBeTypeOf('string');
   const records = (await repository.audit(project.id)).filter(
     (record) =>
       (record.metadata as { requestId: string }).requestId ===

@@ -202,7 +202,7 @@ export async function registerRelay(
         if (controller.signal.aborted)
           fail(504, 'Relay cancelled or timed out');
         const base = { requestId, method: request.body.method };
-        reply.header('X-Api-Docs-Relay-Id', requestId);
+        reply.header('X-Doctopus-Relay-Id', requestId);
         const audit = (event: RelayAudit) => {
           const pending = abortable(
             Promise.resolve().then(() =>
