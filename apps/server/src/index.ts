@@ -665,7 +665,7 @@ export async function createServer(options: ServerOptions) {
       reply
         .type('text/html')
         .send(
-          '<!doctype html><html lang="en"><head><meta charset="utf-8"><title>doctopus administration</title></head><body><h1>doctopus administration</h1><p>Use the documented management API to configure projects and publications.</p><a href="/auth/login">Sign in with your identity provider</a></body></html>',
+          '<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Doctopus administration</title></head><body><h1>Doctopus administration</h1><p>Use the documented management API to configure projects and publications.</p><a href="/auth/login">Sign in with your identity provider</a></body></html>',
         ),
     );
   return app;
