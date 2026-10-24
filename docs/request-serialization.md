@@ -26,6 +26,29 @@ An absent flag preserves automatic inclusion of nonempty input. `true` includes 
 
 cURL snippets use `--header 'trace;'` for an empty custom header; `trace:` would remove that header in cURL. Generated clients in all five languages are executed against a loopback server with empty headers, alongside the existing body, multipart and error/redirect cases.
 
+## Editable parameter rows
+
+The playground groups query parameters and headers into compact Key / Value rows. Enter a custom name and value in the blank final row; another blank row appears automatically. **Add query parameter** and **Add header parameter** focus that insertion row. Uncheck a row to omit it while keeping its draft, or use its remove button to discard it.
+
+Optional documented query/header rows can be removed without changing the specification. **Restore documented parameters** brings them back with their previous values. Required documented fields stay visible and cannot be removed. Path fields and documented arrays, objects, styles and content-based values retain their existing validation and serialization.
+
+Custom query values are literal text. Repeated names preserve their order, and an enabled empty value sends `name=`. Custom header names are case-insensitive; duplicate active custom header rows produce an error. Browser-controlled headers retain the restrictions below. Authentication-owned fields must use the authentication controls, and a request body's Content-Type must use the body format control. A custom Accept header can override the default response format.
+
+Additional rows stay in memory for the open modal. Changing the API server or closing the modal clears them; they are not stored with reader preferences. Credential-like custom names, including Authorization, API keys and tokens, have masked value inputs and placeholders in displayed/copied URLs and generated snippets. Sending uses the entered values.
+
+SDK callers can supply the same literal rows to `prepareRequest`:
+
+```ts
+additionalParameters: [
+  { in: 'query', name: 'tag', value: 'blue' },
+  { in: 'query', name: 'tag', value: '' },
+  { in: 'header', name: 'trace', value: 'request-123' },
+  { in: 'query', name: 'draft', value: 'not sent', enabled: false },
+];
+```
+
+The optional `enabled` flag must be a boolean and defaults to true. Blank names are insertion drafts and are ignored. Hosts can use `redactAdditionalParameters` when building previews; retain the original rows only for the live request.
+
 ## Supported styles
 
 | Location | Styles                            | Structured values                                                                        |

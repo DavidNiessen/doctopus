@@ -2385,13 +2385,19 @@ h3 {
   background: var(--bg);
   border-radius: 7px;
 }
-.request-url-bar > .method-badge {
+.playground-heading .request-url-bar > .method-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
   flex-shrink: 0;
-  background: transparent;
-  border-right: 1px solid var(--ui-border, var(--border));
-  border-radius: 0;
-  padding: 5px 10px 5px 2px;
+  height: 28px;
+  min-width: 44px;
+  border: 0;
+  border-radius: 6px;
+  padding: 0 8px;
   font-size: var(--ui-text-sm);
+  line-height: 1;
 }
 .playground-heading .request-url-bar code {
   display: flex;
@@ -2493,9 +2499,6 @@ h3 {
   }
   .playground-heading .request-url-bar code {
     font-size: var(--ui-text-sm);
-  }
-  .request-url-bar > .method-badge {
-    padding-right: 6px;
   }
   .url-send {
     padding: 7px;
@@ -2787,4 +2790,135 @@ label:has(input[type='radio']) {
 .brand-mark.small > img {
   width: 20px;
   height: 20px;
+}
+
+/* Compact, native form rows retain OpenAPI validation and keyboard controls. */
+.request-parameter-section {
+  min-width: 0;
+  border: 1px solid var(--ui-border, var(--border));
+  border-radius: 10px;
+  overflow: clip;
+}
+.request-parameter-section > summary {
+  padding: 10px 12px;
+  background: var(--surface);
+  font-weight: 600;
+  font-size: var(--ui-text-md);
+  cursor: pointer;
+}
+.request-parameter-columns,
+.request-parameter-row {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) minmax(0, 1.4fr) 32px;
+  align-items: center;
+  min-width: 0;
+  border-top: 1px solid var(--ui-border, var(--border));
+}
+.request-parameter-columns {
+  color: var(--muted);
+  font-size: var(--ui-text-sm);
+}
+.request-parameter-columns > span {
+  padding: 6px;
+}
+.request-parameter-row > input,
+.request-parameter-row > label:not(.parameter-presence) {
+  min-width: 0;
+  width: 100%;
+  margin: 0;
+  padding: 9px 8px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  font-size: var(--ui-text-md);
+}
+.request-parameter-row > input {
+  border-left: 1px solid var(--ui-border, var(--border));
+  min-height: var(--ui-control-height);
+  font-family: var(--ui-mono);
+}
+.request-parameter-row > input:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: -2px;
+}
+.request-parameter-row > .parameter-presence {
+  display: grid;
+  place-items: center;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+  width: 32px;
+}
+.parameter-required {
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+}
+.request-parameter-row .parameter-name {
+  display: grid;
+  gap: 3px;
+  overflow-wrap: anywhere;
+}
+.request-parameter-row .parameter-name small {
+  color: var(--muted);
+  font-size: var(--ui-text-xs);
+}
+.request-parameter-row .parameter-remove {
+  display: grid;
+  place-items: center;
+  border: 0;
+  padding: 0;
+  width: 32px;
+  min-height: var(--ui-control-height);
+  color: var(--muted);
+  background: transparent;
+  border-radius: 6px;
+}
+.parameter-remove:hover:not(:disabled) {
+  color: var(--text);
+  background: var(--surface);
+}
+.request-parameter-row > .parameter-presence-hint {
+  grid-column: 2 / -1;
+  margin: 0;
+  padding: 0 8px 8px;
+  font-size: var(--ui-text-xs);
+  overflow-wrap: anywhere;
+}
+.parameter-row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 8px;
+  border-top: 1px solid var(--ui-border, var(--border));
+}
+.parameter-row-actions button {
+  color: var(--accent-text);
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-size: var(--ui-text-sm);
+}
+@media (pointer: coarse), (max-width: 760px) {
+  .request-parameter-columns,
+  .request-parameter-row {
+    grid-template-columns: 44px minmax(0, 1fr) minmax(0, 1.3fr) 44px;
+  }
+  .request-parameter-row > .parameter-presence,
+  .request-parameter-row .parameter-remove {
+    width: 44px;
+    min-height: 44px;
+  }
+  .request-parameter-row > input {
+    font-size: 1rem;
+    min-height: 44px;
+  }
+  .parameter-row-actions button {
+    min-height: 44px;
+  }
+}
+.request-parameter-section > summary:focus-visible,
+.request-parameter-row .parameter-remove:focus-visible {
+  outline-offset: -3px;
 }

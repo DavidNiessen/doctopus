@@ -21,6 +21,7 @@ import {
   toFetchRequest,
   isMultipartMediaType,
   canSerializeEmptyParameter,
+  redactAdditionalParameters,
 } from '@davidniessen/doctopus-explorer';
 import type {
   PreparedRequest,
@@ -35,6 +36,11 @@ import { CopyButton } from './CopyButton.js';
 import { PanelResizeHandle } from './PanelResizeHandle.js';
 import { RequestUrlBar } from './RequestUrlBar.js';
 import { ParameterInput } from './ParameterInput.js';
+import { ParameterRows } from './ParameterRows.js';
+import {
+  createParameterDrafts,
+  editParameterDraft,
+} from '../parameter-drafts.js';
 import { MockResponseControls } from './MockResponseControls.js';
 
 import { AuthField } from './AuthField.js';
@@ -128,6 +134,15 @@ export function Explorer({
   const [server, setServer] = useState(
     operation.servers[0] ?? 'https://api.example.com',
   );
+  const [parameterDrafts, setParameterDrafts] = useState(createParameterDrafts);
+  const additionalParameters = parameterDrafts.rows;
+  const previewAdditionalParameters = useMemo(
+    () => redactAdditionalParameters(additionalParameters),
+    [additionalParameters],
+  );
+  const [removedParameters, setRemovedParameters] = useState<
+    ReadonlySet<string>
+  >(() => new Set());
   const [parameters, setParameters] = useState<Record<string, string>>(() =>
     Object.fromEntries(
       operation.parameters
@@ -286,6 +301,7 @@ export function Explorer({
         openapiVersion: api.openapiVersion,
         parameters,
         parameterPresence,
+        additionalParameters: previewAdditionalParameters,
         body,
         bodyFormat,
         files,
@@ -329,6 +345,7 @@ export function Explorer({
     server,
     parameters,
     parameterPresence,
+    previewAdditionalParameters,
     body,
     contentType,
     accept,
@@ -348,6 +365,7 @@ export function Explorer({
         server,
         parameters,
         parameterPresence,
+        additionalParameters: previewAdditionalParameters,
         schemas: api.schemas,
         openapiVersion: api.openapiVersion,
         credentials: Object.fromEntries(
@@ -364,6 +382,7 @@ export function Explorer({
     server,
     parameters,
     parameterPresence,
+    previewAdditionalParameters,
     credentials,
     authNames.join(','),
   ]);
@@ -421,6 +440,7 @@ export function Explorer({
         openapiVersion: api.openapiVersion,
         parameters,
         parameterPresence,
+        additionalParameters,
         body,
         bodyFormat,
         files,
@@ -670,6 +690,7 @@ export function Explorer({
                 onChange={(event) => {
                   setServer(event.target.value);
                   auth.clearLocal();
+                  setParameterDrafts(createParameterDrafts());
                   controller.current?.abort();
                   controller.current = null;
                   setBusy(false);
@@ -687,30 +708,107 @@ export function Explorer({
             {!operation.servers.length && (
               <p className="subtle">{t('playground.noServer')}</p>
             )}
-            {operation.parameters.map((parameter) => {
-              const key = `${parameter.in}:${parameter.name}`;
-              return (
-                <ParameterInput
-                  key={key}
-                  parameter={parameter}
-                  value={parameters[key] ?? ''}
-                  presence={parameterPresence[key]}
-                  allowEmpty={emptyParameters.has(key)}
-                  qualified={qualifiedParameterNames.has(parameter.name)}
-                  onChange={(value) =>
-                    setParameters((previous) => ({ ...previous, [key]: value }))
-                  }
-                  onPresence={(value) =>
-                    setParameterPresence((previous) => {
-                      const next = { ...previous };
-                      if (value === undefined) delete next[key];
-                      else next[key] = value;
-                      return next;
-                    })
-                  }
-                />
-              );
-            })}
+            {operation.parameters
+              .filter(
+                (parameter) =>
+                  parameter.in !== 'query' && parameter.in !== 'header',
+              )
+              .map((parameter) => {
+                const key = `${parameter.in}:${parameter.name}`;
+                return (
+                  <ParameterInput
+                    key={key}
+                    parameter={parameter}
+                    value={parameters[key] ?? ''}
+                    presence={parameterPresence[key]}
+                    allowEmpty={emptyParameters.has(key)}
+                    qualified={qualifiedParameterNames.has(parameter.name)}
+                    onChange={(value) =>
+                      setParameters((previous) => ({
+                        ...previous,
+                        [key]: value,
+                      }))
+                    }
+                    onPresence={(value) =>
+                      setParameterPresence((previous) => {
+                        const next = { ...previous };
+                        if (value === undefined) delete next[key];
+                        else next[key] = value;
+                        return next;
+                      })
+                    }
+                  />
+                );
+              })}
+            {(['header', 'query'] as const).map((location) => (
+              <ParameterRows
+                key={location}
+                location={location}
+                declared={operation.parameters.filter(
+                  (parameter) =>
+                    parameter.in === location &&
+                    !(
+                      location === 'header' &&
+                      /^(accept|content-type|authorization)$/i.test(
+                        parameter.name,
+                      )
+                    ),
+                )}
+                removed={removedParameters}
+                values={parameters}
+                presence={parameterPresence}
+                empty={emptyParameters}
+                qualified={qualifiedParameterNames}
+                rows={additionalParameters.filter((row) => row.in === location)}
+                onValue={(key, value) =>
+                  setParameters((previous) => ({ ...previous, [key]: value }))
+                }
+                onPresence={(key, value) =>
+                  setParameterPresence((previous) => {
+                    const next = { ...previous };
+                    if (value === undefined) delete next[key];
+                    else next[key] = value;
+                    return next;
+                  })
+                }
+                onRemoveDeclared={(key) => {
+                  setRemovedParameters(
+                    (previous) => new Set([...previous, key]),
+                  );
+                  setParameterPresence((previous) => ({
+                    ...previous,
+                    [key]: false,
+                  }));
+                }}
+                onRestore={() => {
+                  setRemovedParameters(
+                    (previous) =>
+                      new Set(
+                        [...previous].filter(
+                          (key) => !key.startsWith(location + ':'),
+                        ),
+                      ),
+                  );
+                  setParameterPresence((previous) => {
+                    const next = { ...previous };
+                    for (const key of removedParameters)
+                      if (key.startsWith(location + ':')) delete next[key];
+                    return next;
+                  });
+                }}
+                onEdit={(id, patch) =>
+                  setParameterDrafts((previous) =>
+                    editParameterDraft(previous, id, patch),
+                  )
+                }
+                onRemove={(id) =>
+                  setParameterDrafts((previous) => ({
+                    ...previous,
+                    rows: previous.rows.filter((row) => row.id !== id),
+                  }))
+                }
+              />
+            ))}
             {!mockOnly && authNames.length > 0 && (
               <details className="auth-fields" open>
                 <summary>

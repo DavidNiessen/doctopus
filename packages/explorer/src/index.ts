@@ -21,11 +21,19 @@ import {
 import type { MultipartFiles, MultipartPart } from './multipart.js';
 import type { MultipartHeaders } from './multipart-headers.js';
 import { redactMultipartParts } from './redact-multipart.js';
+import { appendAdditionalParameters } from './additional-parameters.js';
+import type { AdditionalParameter } from './additional-parameters.js';
+export {
+  redactAdditionalParameters,
+  isSensitiveAdditionalParameter,
+} from './additional-parameters.js';
+export type { AdditionalParameter } from './additional-parameters.js';
 export interface RequestInput {
   server: string;
   parameters: Record<string, string>;
   /** Qualified in:name keys: true includes empty input, false omits an optional draft. */
   parameterPresence?: Readonly<Record<string, boolean>>;
+  additionalParameters?: readonly AdditionalParameter[];
   body?: string;
   bodyFormat?: 'serialized' | 'json';
   files?: MultipartFiles;
@@ -83,6 +91,29 @@ export function prepareRequest(
     throw new Error('Response format cannot contain newlines');
   const headers: Record<string, string> = { ...serialized.headers };
   setRequestHeader(headers, 'Accept', accept);
+  appendAdditionalParameters(
+    input.additionalParameters ?? [],
+    query,
+    headers,
+    input.body || isMultipartMediaType(input.contentType ?? '')
+      ? (input.contentType ?? 'application/json')
+      : undefined,
+    new Set(
+      operation.security
+        .flatMap((alternative) => Object.keys(alternative))
+        .flatMap((name) => {
+          const scheme = schemes[name];
+          if (scheme?.type === 'apiKey' && scheme.in === 'query')
+            return [`query:${scheme.name ?? name}`];
+          if (scheme?.type === 'apiKey' && scheme.in === 'header')
+            return [`header:${(scheme.name ?? name).toLowerCase()}`];
+          return scheme &&
+            ['http', 'oauth2', 'openIdConnect'].includes(scheme.type)
+            ? ['header:authorization']
+            : [];
+        }),
+    ),
+  );
   for (const [name, value] of Object.entries(serialized.paths))
     path = path.replaceAll(`{${name}}`, value);
   if (path.split('/').some((segment) => /^(?:\.|%2e){1,2}$/i.test(segment)))
