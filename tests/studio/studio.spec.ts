@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
-import { buildSite, stageArtifact } from '@davidniessen/cli';
+import { buildSite, stageArtifact } from '@davidniessen/doctopus-cli';
 import AxeBuilder from '@axe-core/playwright';
 const temporary: string[] = [];
 test.afterAll(async () => {
@@ -34,7 +34,7 @@ test('Studio login follows system appearance and supports doubled compact text',
     expect(target?.height).toBeGreaterThanOrEqual(44);
     expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
     await page.screenshot({
-      path: `.api-docs/studio-${appearance}-compact-large-text.png`,
+      path: `.doctopus/studio-${appearance}-compact-large-text.png`,
     });
   }
 });
@@ -59,12 +59,13 @@ test('an operator creates a private project, publishes, reads it and audits the 
   await expect(
     page.getByRole('status').filter({ hasText: 'Project created' }),
   ).toBeVisible();
-  const root = resolve('.api-docs/studio-test', slug);
+  const root = resolve('.doctopus/studio-test', slug);
   temporary.push(root);
   await mkdir(root, { recursive: true });
   await cp(resolve('examples/demo'), root, {
     recursive: true,
-    filter: (file) => !file.includes('.api-docs'),
+    filter: (file) =>
+      !file.includes('.doctopus') && !file.includes('.api-docs'),
   });
   const config = join(root, 'docs.config.yaml');
   await writeFile(
@@ -74,9 +75,9 @@ test('an operator creates a private project, publishes, reads it and audits the 
   const built = await buildSite(root);
   const artifact = await stageArtifact(
     built.directory,
-    resolve('.api-docs/studio-test/artifacts'),
+    resolve('.doctopus/studio-test/artifacts'),
   );
-  temporary.push(resolve('.api-docs/studio-test/artifacts', artifact));
+  temporary.push(resolve('.doctopus/studio-test/artifacts', artifact));
   let releaseHistory!: () => void;
   let historyRequested!: () => void;
   const history = new Promise<void>((resolve) => {

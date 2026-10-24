@@ -9,10 +9,10 @@ import {
   generateSnippet,
   encodeFormBody,
   createMultipartParts,
-} from '@davidniessen/explorer';
+} from '@davidniessen/doctopus-explorer';
 
 const exec = promisify(execFile);
-const directory = await mkdtemp(join(tmpdir(), 'api-docs-snippets-'));
+const directory = await mkdtemp(join(tmpdir(), 'doctopus-snippets-'));
 const languages = ['cURL', 'JavaScript', 'TypeScript', 'Python', 'Java'];
 const uploadBytes = Uint8Array.from([0, 255, 128, 13, 10, 34, 1, 254]);
 const multipartMedia = {
@@ -311,7 +311,7 @@ try {
       if (fixture.multipart) {
         assert.match(
           actual.headers['content-type'],
-          /^multipart\/form-data; boundary=api-docs-[a-f0-9]+$/,
+          /^multipart\/form-data; boundary=doctopus-[a-f0-9]+$/,
         );
         const form = await new Response(actual.bytes, {
           headers: { 'Content-Type': actual.headers['content-type'] },

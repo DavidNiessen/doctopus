@@ -1,5 +1,5 @@
 import { readFile } from 'node:fs/promises';
-import { definePlugin } from '@davidniessen/plugin-sdk';
+import { definePlugin } from '@davidniessen/doctopus-plugin-sdk';
 
 export default definePlugin({
   name: '@davidniessen/example-brand-theme',

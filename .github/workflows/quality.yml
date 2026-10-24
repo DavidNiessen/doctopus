@@ -116,11 +116,11 @@ jobs:
         with:
           name: source-validation-${{ github.sha }}
           path: |
-            .api-docs/npm-candidates/**/*.tgz
-            .api-docs/npm-candidates/**/manifest.json
-            .api-docs/npm-candidates/**/consumer-result.json
-            .api-docs/npm-candidates/**/consumer-package-lock.json
-            .api-docs/npm-candidates/**/consumer-sbom.cdx.json
+            .doctopus/npm-candidates/**/*.tgz
+            .doctopus/npm-candidates/**/manifest.json
+            .doctopus/npm-candidates/**/consumer-result.json
+            .doctopus/npm-candidates/**/consumer-package-lock.json
+            .doctopus/npm-candidates/**/consumer-sbom.cdx.json
             playwright-report/
             test-results/
           include-hidden-files: true
@@ -140,13 +140,13 @@ jobs:
         if: inputs.release-candidate
         uses: actions/attest-build-provenance@977bb373ede98d70efdf65b84cb5f73e068dcc2a # v3.0.0
         with:
-          subject-path: .api-docs/release-assets/npm/*
+          subject-path: .doctopus/release-assets/npm/*
       - name: Retain verified candidates for later review
         if: inputs.release-candidate
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: release-npm-${{ github.run_id }}-${{ github.run_attempt }}
-          path: .api-docs/release-assets/npm/
+          path: .doctopus/release-assets/npm/
           include-hidden-files: true
           if-no-files-found: error
           compression-level: 0
@@ -183,7 +183,7 @@ jobs:
         with:
           name: pages-demo-${{ github.sha }}
           overwrite: true
-          path: .api-docs/pages-demo/
+          path: .doctopus/pages-demo/
           include-hidden-files: true
           if-no-files-found: error
           retention-days: 7
@@ -194,7 +194,7 @@ jobs:
           name: pages-demo-browser-${{ github.sha }}
           path: |
             playwright-pages-report/
-            .api-docs/pages-screenshots/
+            .doctopus/pages-screenshots/
           include-hidden-files: true
           if-no-files-found: warn
           retention-days: 7
@@ -207,15 +207,15 @@ jobs:
       postgres:
         image: postgres:17-alpine@sha256:1bcc18d81671b02906296aad470ec9778a6b71016ce953092024b680bad007b0
         env:
-          POSTGRES_USER: apidocs
-          POSTGRES_DB: apidocs
+          POSTGRES_USER: doctopus
+          POSTGRES_DB: doctopus
           POSTGRES_PASSWORD: isolated-ci-fixture
         ports: ['5432:5432']
         options: >-
-          --health-cmd "pg_isready -U apidocs"
+          --health-cmd "pg_isready -U doctopus"
           --health-interval 5s --health-timeout 5s --health-retries 10
     env:
-      TEST_DATABASE_URL: postgresql://apidocs:isolated-ci-fixture@127.0.0.1:5432/apidocs
+      TEST_DATABASE_URL: postgresql://doctopus:isolated-ci-fixture@127.0.0.1:5432/doctopus
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
@@ -282,11 +282,11 @@ jobs:
         with:
           name: installed-java-${{ matrix.java }}-boot-${{ matrix.boot }}-${{ github.run_id }}
           path: |
-            .api-docs/java-candidates/**/report.json
-            .api-docs/java-candidates/**/*.cdx.json
-            .api-docs/java-candidates/**/*.jar
-            .api-docs/java-candidates/**/*.pom
-            .api-docs/java-candidates/**/*.log
+            .doctopus/java-candidates/**/report.json
+            .doctopus/java-candidates/**/*.cdx.json
+            .doctopus/java-candidates/**/*.jar
+            .doctopus/java-candidates/**/*.pom
+            .doctopus/java-candidates/**/*.log
           include-hidden-files: true
           if-no-files-found: error
           retention-days: 14
@@ -299,13 +299,13 @@ jobs:
         if: inputs.release-candidate && matrix.java == '21' && matrix.boot == '3.5.16'
         uses: actions/attest-build-provenance@977bb373ede98d70efdf65b84cb5f73e068dcc2a # v3.0.0
         with:
-          subject-path: .api-docs/release-assets/java/*
+          subject-path: .doctopus/release-assets/java/*
       - name: Retain verified candidates for later review
         if: inputs.release-candidate && matrix.java == '21' && matrix.boot == '3.5.16'
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: release-java-${{ github.run_id }}-${{ github.run_attempt }}
-          path: .api-docs/release-assets/java/
+          path: .doctopus/release-assets/java/
           include-hidden-files: true
           if-no-files-found: error
           compression-level: 0
@@ -331,15 +331,15 @@ jobs:
       postgres:
         image: postgres:17-alpine@sha256:1bcc18d81671b02906296aad470ec9778a6b71016ce953092024b680bad007b0
         env:
-          POSTGRES_USER: apidocs
-          POSTGRES_DB: apidocs
+          POSTGRES_USER: doctopus
+          POSTGRES_DB: doctopus
           POSTGRES_PASSWORD: isolated-ci-fixture
         ports: ['5432:5432']
         options: >-
-          --health-cmd "pg_isready -U apidocs"
+          --health-cmd "pg_isready -U doctopus"
           --health-interval 5s --health-timeout 5s --health-retries 10
     env:
-      TEST_DATABASE_URL: postgresql://apidocs:isolated-ci-fixture@127.0.0.1:5432/apidocs
+      TEST_DATABASE_URL: postgresql://doctopus:isolated-ci-fixture@127.0.0.1:5432/doctopus
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
@@ -355,22 +355,22 @@ jobs:
         run: node scripts/check-release-source.mjs
       - run: npm run build
       - name: Build approved worker from this checkout
-        run: docker build --target isolated-builder --iidfile /tmp/api-docs-builder.id .
+        run: docker build --target isolated-builder --iidfile /tmp/doctopus-builder.id .
       - name: Verify isolated builds and failure cleanup
         run: |
-          mkdir -p .api-docs
-          ISOLATED_BUILD_IMAGE="$(cat /tmp/api-docs-builder.id)" node scripts/test-isolated-builds.mjs > .api-docs/isolated-build-evidence.json
+          mkdir -p .doctopus
+          ISOLATED_BUILD_IMAGE="$(cat /tmp/doctopus-builder.id)" node scripts/test-isolated-builds.mjs > .doctopus/isolated-build-evidence.json
       - name: Verify API, PostgreSQL and worker Docker lifecycle
-        run: ISOLATED_BUILD_IMAGE="$(cat /tmp/api-docs-builder.id)" npm run test:build-worker --silent > .api-docs/build-worker-evidence.json
+        run: ISOLATED_BUILD_IMAGE="$(cat /tmp/doctopus-builder.id)" npm run test:build-worker --silent > .doctopus/build-worker-evidence.json
       - name: Build shipped server from this checkout
-        run: docker build --target server --iidfile /tmp/api-docs-server.id .
+        run: docker build --target server --iidfile /tmp/doctopus-server.id .
       - name: Build recorded schema-1 upgrade baseline
-        run: node scripts/build-upgrade-baseline.mjs > .api-docs/upgrade-baseline-evidence.json
+        run: node scripts/build-upgrade-baseline.mjs > .doctopus/upgrade-baseline-evidence.json
       - name: Verify fresh Compose installation, private content and outage recovery
         # Test-only reverse proxy; the fixture verifies this pinned image and its TLS authority.
         run: |
           docker pull caddy:2.11.7-alpine@sha256:eb4d35b7452d1ab6171fbdbe8d9275b2301dad6dad92115d91e19fb9b24d510f
-          SERVER_BASELINE_IMAGE="$(cat .api-docs/upgrade-baseline.id)" SERVER_TEST_IMAGE="$(cat /tmp/api-docs-server.id)" npm run test:server-container --silent > .api-docs/server-container-evidence.json
+          SERVER_BASELINE_IMAGE="$(cat .doctopus/upgrade-baseline.id)" SERVER_TEST_IMAGE="$(cat /tmp/doctopus-server.id)" npm run test:server-container --silent > .doctopus/server-container-evidence.json
       - name: Verify tested image inventory and vulnerabilities
         uses: ./.github/actions/image-security
       - name: Retain local control and artifact receipts
@@ -379,17 +379,17 @@ jobs:
         with:
           name: isolated-builds-${{ github.sha }}
           path: |
-            .api-docs/isolated-build-evidence.json
-            .api-docs/build-worker-evidence.json
-            .api-docs/server-container-evidence.json
-            .api-docs/upgrade-baseline-evidence.json
-            .api-docs/container-inventory-evidence.json
-            .api-docs/container-security-evidence.json
-            .api-docs/container-security-candidates/**/server.grype.json
-            .api-docs/container-security-candidates/**/report.json
-            .api-docs/container-security-candidates/**/.incomplete
-            .api-docs/container-candidates/**/server.cdx.json
-            .api-docs/container-candidates/**/report.json
+            .doctopus/isolated-build-evidence.json
+            .doctopus/build-worker-evidence.json
+            .doctopus/server-container-evidence.json
+            .doctopus/upgrade-baseline-evidence.json
+            .doctopus/container-inventory-evidence.json
+            .doctopus/container-security-evidence.json
+            .doctopus/container-security-candidates/**/server.grype.json
+            .doctopus/container-security-candidates/**/report.json
+            .doctopus/container-security-candidates/**/.incomplete
+            .doctopus/container-candidates/**/server.cdx.json
+            .doctopus/container-candidates/**/report.json
           include-hidden-files: true
           if-no-files-found: error
           retention-days: 14
@@ -402,13 +402,13 @@ jobs:
         if: inputs.release-candidate
         uses: actions/attest-build-provenance@977bb373ede98d70efdf65b84cb5f73e068dcc2a # v3.0.0
         with:
-          subject-path: .api-docs/release-assets/container/*
+          subject-path: .doctopus/release-assets/container/*
       - name: Retain verified candidates for later review
         if: inputs.release-candidate
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: release-container-${{ github.run_id }}-${{ github.run_attempt }}
-          path: .api-docs/release-assets/container/
+          path: .doctopus/release-assets/container/
           include-hidden-files: true
           if-no-files-found: error
           compression-level: 0

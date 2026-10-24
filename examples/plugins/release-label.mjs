@@ -1,4 +1,4 @@
-import { definePlugin } from '@davidniessen/plugin-sdk';
+import { definePlugin } from '@davidniessen/doctopus-plugin-sdk';
 import { releaseLabel } from './label.mjs';
 export default definePlugin({
   name: '@davidniessen/example-release-label',

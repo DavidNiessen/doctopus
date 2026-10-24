@@ -1,8 +1,8 @@
-package io.apidocs.consumer;
+package dev.niessen.doctopus.consumer;
 
 import static org.junit.jupiter.api.Assertions.*;
-import io.apidocs.core.Publication;
-import io.apidocs.spring.ApiDocsAutoConfiguration;
+import dev.niessen.doctopus.core.Publication;
+import dev.niessen.doctopus.spring.DoctopusAutoConfiguration;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.MessageDigest;
@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 class PackagedPublicationTest {
   @Test void publicClassesComeFromTheExactInstalledJarsAndVerifyTheRealPublication() throws Exception {
     verifyOrigin(Publication.class, "consumer.core.sha256");
-    verifyOrigin(ApiDocsAutoConfiguration.class, "consumer.starter.sha256");
+    verifyOrigin(DoctopusAutoConfiguration.class, "consumer.starter.sha256");
     var publication = new Publication(Path.of(System.getProperty("consumer.fixture")),
         System.getProperty("consumer.artifactDigest"));
     assertEquals("/gateway/docs", publication.basePath());

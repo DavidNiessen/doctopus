@@ -1,7 +1,7 @@
 .git
 **/node_modules
 **/.pnpm-store
-**/.api-docs
+**/.doctopus
 **/target
 **/*.tsbuildinfo
 **/dist
@@ -17,3 +17,6 @@ test-results
 **/.aws
 **/.codex
 **/.agents
+
+# Exclude artifacts produced before the Doctopus rename too.
+**/.api-docs

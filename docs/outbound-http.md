@@ -1,9 +1,9 @@
 # Bounded outbound HTTP transport
 
-`requestAllowedOrigin` from `@davidniessen/spec` is a Node-only transport shared by remote-spec imports and server integrations. It performs one HTTP exchange with explicit destination policy. It does not grant application permissions, expose a relay endpoint or accept browser sessions automatically; callers must authorize their own users, paths, methods and header policy before invoking it.
+`requestAllowedOrigin` from `@davidniessen/doctopus-spec` is a Node-only transport shared by remote-spec imports and server integrations. It performs one HTTP exchange with explicit destination policy. It does not grant application permissions, expose a relay endpoint or accept browser sessions automatically; callers must authorize their own users, paths, methods and header policy before invoking it.
 
 ```ts
-import { requestAllowedOrigin } from '@davidniessen/spec';
+import { requestAllowedOrigin } from '@davidniessen/doctopus-spec';
 
 const result = await requestAllowedOrigin('https://api.example.com/v1/items', {
   allowedOrigins: ['https://api.example.com'],

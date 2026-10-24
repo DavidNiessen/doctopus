@@ -4,8 +4,8 @@ import {
   formatExample,
   hasExternalExamples,
   isJsonMediaType,
-} from '@davidniessen/contracts';
-import type { Media, Schema } from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-contracts';
+import type { Media, Schema } from '@davidniessen/doctopus-contracts';
 import { CodeBlock } from './CodeBlock.js';
 import { useUi } from '../ui-translation.js';
 export function MediaExamples({

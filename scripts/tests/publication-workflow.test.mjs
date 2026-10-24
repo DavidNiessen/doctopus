@@ -98,7 +98,7 @@ test('a confirmed publication rescans accepted bytes and attests only reports cr
   );
   assert.equal(
     attest.with['subject-path'],
-    '.api-docs/publication-preflight/*',
+    '.doctopus/publication-preflight/*',
   );
   assert(!job.steps.some((step) => step.run?.includes('docker build')));
 });

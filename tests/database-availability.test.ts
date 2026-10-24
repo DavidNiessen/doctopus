@@ -8,8 +8,8 @@ import { join } from 'node:path';
 import {
   RepositoryUnavailableError,
   type Repository,
-} from '@davidniessen/domain';
-import { PostgresRepository } from '@davidniessen/storage';
+} from '@davidniessen/doctopus-domain';
+import { PostgresRepository } from '@davidniessen/doctopus-storage';
 import { databaseError } from '../packages/storage/src/database-error.js';
 import { createServer } from '../apps/server/src/index.js';
 
@@ -139,7 +139,7 @@ it.each([
 ])(
   'returns generic HTTP $status without exposing database details or retrying',
   async ({ error, status }) => {
-    const root = await mkdtemp(join(tmpdir(), 'api-docs-availability-'));
+    const root = await mkdtemp(join(tmpdir(), 'doctopus-availability-'));
     let calls = 0;
     const unavailable = async () => {
       calls++;

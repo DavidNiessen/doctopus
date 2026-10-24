@@ -30,8 +30,8 @@ import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
-import { downloadSpec, loadSpec } from '@davidniessen/spec';
-import { importRemoteSpec } from '@davidniessen/cli';
+import { downloadSpec, loadSpec } from '@davidniessen/doctopus-spec';
+import { importRemoteSpec } from '@davidniessen/doctopus-cli';
 import { isAllowedImportAddress } from '../packages/spec/src/remote-policy.js';
 
 vi.mock('node:dns/promises', async (original) => {
@@ -82,7 +82,7 @@ afterEach(async () => {
   setDefaultCACertificates(originalCAs);
 });
 async function directory() {
-  const root = await mkdtemp(join(tmpdir(), 'api-docs-import-'));
+  const root = await mkdtemp(join(tmpdir(), 'doctopus-import-'));
   directories.push(root);
   return root;
 }
@@ -477,12 +477,12 @@ describe('bounded remote snapshots and atomic installation', () => {
         '--output',
         'openapi.json',
         '--bearer-env',
-        'API_DOCS_IMPORT_TEST_TOKEN',
+        'DOCTOPUS_IMPORT_TEST_TOKEN',
       ],
       {
         env: {
           ...process.env,
-          API_DOCS_IMPORT_TEST_TOKEN: 'fixture-cli-secret',
+          DOCTOPUS_IMPORT_TEST_TOKEN: 'fixture-cli-secret',
         },
         timeout: 10_000,
       },

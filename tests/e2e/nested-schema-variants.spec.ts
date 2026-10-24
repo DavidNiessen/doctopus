@@ -8,7 +8,7 @@ async function open(page: Page) {
   const playground = page.getByLabel('API playground');
   await playground
     .getByRole('combobox', { name: 'Content type', exact: true })
-    .selectOption('application/vnd.api-docs.nested+json');
+    .selectOption('application/vnd.doctopus.nested+json');
   await playground.getByRole('button', { name: 'Fields', exact: true }).click();
   return playground;
 }
@@ -275,7 +275,7 @@ test('nested JSON and omission reset descendant choices while preserving the con
   await page.getByRole('button', { name: 'Try this endpoint' }).click();
   await playground
     .getByRole('combobox', { name: 'Content type', exact: true })
-    .selectOption('application/vnd.api-docs.nested+json');
+    .selectOption('application/vnd.doctopus.nested+json');
   await playground.getByRole('button', { name: 'Fields', exact: true }).click();
   await playground
     .getByRole('combobox', {
@@ -300,6 +300,6 @@ test('nested JSON and omission reset descendant choices while preserving the con
     ).violations,
   ).toEqual([]);
   await page.screenshot({
-    path: '.api-docs/nested-schema-variants-mobile-dark.png',
+    path: '.doctopus/nested-schema-variants-mobile-dark.png',
   });
 });

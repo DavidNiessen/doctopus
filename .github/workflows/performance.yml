@@ -55,6 +55,6 @@ jobs:
           retention-days: 28
           if-no-files-found: error
           path: |
-            .api-docs/benchmark-report.json
-            .api-docs/browser-benchmark/**/report.json
-            .api-docs/browser-benchmark/**/*-mobile.png
+            .doctopus/benchmark-report.json
+            .doctopus/browser-benchmark/**/report.json
+            .doctopus/browser-benchmark/**/*-mobile.png

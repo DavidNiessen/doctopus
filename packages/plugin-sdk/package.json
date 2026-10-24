@@ -1,5 +1,5 @@
 {
-  "name": "@davidniessen/plugin-sdk",
+  "name": "@davidniessen/doctopus-plugin-sdk",
   "version": "0.2.0-candidate.7",
   "type": "module",
   "license": "Apache-2.0",
@@ -17,7 +17,7 @@
     }
   },
   "dependencies": {
-    "@davidniessen/contracts": "0.2.0-candidate.7",
+    "@davidniessen/doctopus-contracts": "0.2.0-candidate.7",
     "zod": "4.6.6"
   },
   "publishConfig": {

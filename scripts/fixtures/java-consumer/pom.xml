@@ -1,12 +1,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>io.apidocs.consumer</groupId><artifactId>installed-consumer</artifactId><version>0.0.0</version>
+  <groupId>dev.niessen.doctopus.consumer</groupId><artifactId>installed-consumer</artifactId><version>0.0.0</version>
   <properties><maven.compiler.release>17</maven.compiler.release><project.build.sourceEncoding>UTF-8</project.build.sourceEncoding></properties>
   <dependencyManagement><dependencies>
     <dependency><groupId>org.springframework.boot</groupId><artifactId>spring-boot-dependencies</artifactId><version>__BOOT_VERSION__</version><type>pom</type><scope>import</scope></dependency>
   </dependencies></dependencyManagement>
   <dependencies>
-    <dependency><groupId>dev.niessen</groupId><artifactId>api-docs-spring-boot-starter</artifactId><version>__API_DOCS_VERSION__</version></dependency>
+    <dependency><groupId>dev.niessen</groupId><artifactId>doctopus-spring-boot-starter</artifactId><version>__DOCTOPUS_VERSION__</version></dependency>
     <dependency><groupId>org.springframework.boot</groupId><artifactId>__WEB_STARTER__</artifactId></dependency>
     <dependency><groupId>org.springframework.boot</groupId><artifactId>spring-boot-starter-security</artifactId></dependency>
     <dependency><groupId>org.springframework.boot</groupId><artifactId>spring-boot-starter-test</artifactId><scope>test</scope></dependency>

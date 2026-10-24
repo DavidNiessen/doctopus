@@ -81,7 +81,7 @@ for (const width of [360, 768, 1280, 1920]) {
       const text = playground.locator('.monaco-editor textarea');
       await expect(text.first()).toHaveAttribute('readonly');
       await page.screenshot({
-        path: `.api-docs/apple-workspace-${width}-${mode}.png`,
+        path: `.doctopus/apple-workspace-${width}-${mode}.png`,
       });
       await page.keyboard.press('Escape');
     }
@@ -130,7 +130,7 @@ test('compact reading and settings reflow with doubled text and visible keyboard
       );
     }),
   ).toBe(true);
-  await page.screenshot({ path: '.api-docs/apple-workspace-text-200.png' });
+  await page.screenshot({ path: '.doctopus/apple-workspace-text-200.png' });
 });
 
 test('increased contrast and reduced motion keep navigation and dialogs opaque and usable', async ({

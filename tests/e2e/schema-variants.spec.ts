@@ -118,7 +118,7 @@ test('oneOf controls require explicit selection and preserve values, privacy and
         .analyze()
     ).violations,
   ).toEqual([]);
-  await page.screenshot({ path: '.api-docs/schema-variants-light.png' });
+  await page.screenshot({ path: '.doctopus/schema-variants-light.png' });
   expect(errors).toEqual([]);
 });
 
@@ -129,7 +129,7 @@ test('anyOf array branches retain existing items, allow explicit additions and d
   const playground = page.getByLabel('API playground');
   await playground
     .getByRole('combobox', { name: 'Content type', exact: true })
-    .selectOption('application/vnd.api-docs.variants+json');
+    .selectOption('application/vnd.doctopus.variants+json');
   const branch = playground.getByRole('combobox', {
     name: 'Request body schema branch',
   });
@@ -184,7 +184,7 @@ test('anyOf array branches retain existing items, allow explicit additions and d
   await page.getByRole('button', { name: 'Try this endpoint' }).click();
   await playground
     .getByRole('combobox', { name: 'Content type', exact: true })
-    .selectOption('application/vnd.api-docs.variants+json');
+    .selectOption('application/vnd.doctopus.variants+json');
   await branch.selectOption('0');
   await playground.getByRole('button', { name: 'Fields', exact: true }).click();
   await page.setViewportSize({ width: 390, height: 844 });
@@ -207,7 +207,7 @@ test('anyOf array branches retain existing items, allow explicit additions and d
   await expect(
     playground.getByLabel('Request URL', { exact: true }),
   ).toBeFocused();
-  await page.screenshot({ path: '.api-docs/schema-variants-mobile-dark.png' });
+  await page.screenshot({ path: '.doctopus/schema-variants-mobile-dark.png' });
 });
 
 test('unsupported sibling constraints retain JSON and example/media resets clear prior editing selections', async ({
@@ -217,7 +217,7 @@ test('unsupported sibling constraints retain JSON and example/media resets clear
   const playground = page.getByLabel('API playground');
   await playground
     .getByRole('combobox', { name: 'Content type', exact: true })
-    .selectOption('application/vnd.api-docs.constrained+json');
+    .selectOption('application/vnd.doctopus.constrained+json');
   const raw = await playground
     .getByLabel('Request body', { exact: true })
     .inputValue();

@@ -18,10 +18,10 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { once } from 'node:events';
 import pg from 'pg';
-import { createServer } from '@davidniessen/server';
-import type { ServerOptions } from '@davidniessen/server';
-import { PostgresRepository } from '@davidniessen/storage';
-import type { Project } from '@davidniessen/domain';
+import { createServer } from '@davidniessen/doctopus-server';
+import type { ServerOptions } from '@davidniessen/doctopus-server';
+import { PostgresRepository } from '@davidniessen/doctopus-storage';
+import type { Project } from '@davidniessen/doctopus-domain';
 import type { RelayConfiguration } from '../../apps/server/src/relay-policy.js';
 
 if (!process.env.TEST_DATABASE_URL)
@@ -106,7 +106,7 @@ const call = (
   });
 beforeAll(async () => {
   await repository.initialize();
-  root = await mkdtemp(join(tmpdir(), 'api-docs-relay-integration-'));
+  root = await mkdtemp(join(tmpdir(), 'doctopus-relay-integration-'));
   project = await repository.createProject({
     slug: 'relay-' + randomUUID().slice(0, 8),
     name: 'Relay fixture',
@@ -306,10 +306,11 @@ it('relays exact bytes and only explicit target credentials, with filtered respo
     bodyBase64: Buffer.from([0, 255, 128]).toString('base64'),
   });
   expect(requests).toBe(1);
+  expect(result.headers['x-doctopus-relay-id']).toBeTypeOf('string');
   const records = (await repository.audit(project.id)).filter(
     (record) =>
       (record.metadata as { requestId: string }).requestId ===
-      result.headers['x-api-docs-relay-id'],
+      result.headers['x-doctopus-relay-id'],
   );
   expect(records.map((record) => record.action).sort()).toEqual([
     'relay.completed',
@@ -467,7 +468,7 @@ it('times out a slow target and frees the lease for a subsequent call', async ()
         (record) =>
           record.action === 'relay.failed' &&
           (record.metadata as { requestId: string }).requestId ===
-            timedOut.headers['x-api-docs-relay-id'],
+            timedOut.headers['x-doctopus-relay-id'],
       ),
     ).toBe(true);
   });
@@ -588,7 +589,7 @@ it('reports a failed completion audit without repeating an upstream mutation', a
   const records = (await repository.audit(project.id)).filter(
     (record) =>
       (record.metadata as { requestId: string }).requestId ===
-      result.headers['x-api-docs-relay-id'],
+      result.headers['x-doctopus-relay-id'],
   );
   expect(records.map((record) => record.action).sort()).toEqual([
     'relay.failed',
@@ -730,7 +731,7 @@ it('aborts active exchanges during shutdown', async () => {
   const records = (await repository.audit(project.id)).filter(
     (record) =>
       (record.metadata as { requestId: string }).requestId ===
-      result.headers['x-api-docs-relay-id'],
+      result.headers['x-doctopus-relay-id'],
   );
   expect(records.map((record) => record.action).sort()).toEqual([
     'relay.failed',

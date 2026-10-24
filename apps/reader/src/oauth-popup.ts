@@ -1,12 +1,12 @@
 import {
   createPkceTransaction,
   exchangePkceCode,
-} from '@davidniessen/explorer';
+} from '@davidniessen/doctopus-explorer';
 import type {
   OAuthClient,
   OAuthAccessToken,
   PkceTransaction,
-} from '@davidniessen/explorer';
+} from '@davidniessen/doctopus-explorer';
 const popupMessages = {
   cancelled: 'Authorization cancelled.',
   closed: 'Authorization window closed.',
@@ -50,7 +50,7 @@ function receiveCallback(
         return;
       const data = event.data as Record<string, unknown>;
       if (
-        data.type !== 'api-docs:oauth-callback' ||
+        data.type !== 'doctopus:oauth-callback' ||
         typeof data.query !== 'string' ||
         data.query.length > 16_384
       )

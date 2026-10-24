@@ -18,7 +18,7 @@ import { fileURLToPath } from 'node:url';
 const cli = fileURLToPath(new URL('../recovery.mjs', import.meta.url));
 const environment = {
   ...process.env,
-  COMPOSE_PROJECT_NAME: 'api-docs-override-test',
+  COMPOSE_PROJECT_NAME: 'doctopus-override-test',
 };
 const run = (target, args, env = environment, script = cli) =>
   spawnSync(
@@ -28,7 +28,7 @@ const run = (target, args, env = environment, script = cli) =>
   );
 
 test('recovery rejects malformed override arguments before creating a backup', async () => {
-  const root = await mkdtemp(join(tmpdir(), 'api-docs-recovery-options-'));
+  const root = await mkdtemp(join(tmpdir(), 'doctopus-recovery-options-'));
   const target = join(root, 'backup');
   try {
     for (const args of [
@@ -47,7 +47,7 @@ test('recovery rejects malformed override arguments before creating a backup', a
 });
 
 test('recovery refuses linked, directory and oversized override files without backup or Docker side effects', async () => {
-  const root = await mkdtemp(join(tmpdir(), 'api-docs-recovery-files-'));
+  const root = await mkdtemp(join(tmpdir(), 'doctopus-recovery-files-'));
   const target = join(root, 'backup');
   try {
     await writeFile(join(root, 'valid.json'), '{}');
@@ -66,7 +66,7 @@ test('recovery refuses linked, directory and oversized override files without ba
 });
 
 test('copied offline operators run without npm dependencies and forward their Compose override before retaining a failed backup', async () => {
-  const root = await mkdtemp(join(tmpdir(), 'api-docs-recovery-forward-'));
+  const root = await mkdtemp(join(tmpdir(), 'doctopus-recovery-forward-'));
   try {
     await mkdir(join(root, 'scripts'));
     await mkdir(join(root, 'deploy'));

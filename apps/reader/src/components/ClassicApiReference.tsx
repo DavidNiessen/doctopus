@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
-import type { ApiDocument, Operation } from '@davidniessen/contracts';
-import { safeNavigationHref } from '@davidniessen/contracts';
+import type { ApiDocument, Operation } from '@davidniessen/doctopus-contracts';
+import { safeNavigationHref } from '@davidniessen/doctopus-contracts';
 import {
   readExpandedOperation,
   readOperationCatalog,

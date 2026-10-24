@@ -81,7 +81,7 @@ const mutations = [
       'pnpm-lock.yaml',
       (data) => {
         data.importers['apps/reader'].dependencies[
-          '@davidniessen/contracts'
+          '@davidniessen/doctopus-contracts'
         ].specifier = OTHER_VERSION;
       },
       /pnpm dependency specifier/,
@@ -91,7 +91,7 @@ const mutations = [
       'pnpm-lock.yaml',
       (data) => {
         data.importers['apps/reader'].dependencies[
-          '@davidniessen/contracts'
+          '@davidniessen/doctopus-contracts'
         ].version = 'link:../../packages/spec';
       },
       /pnpm workspace link/,
@@ -170,8 +170,9 @@ const mutations = [
     'workspace link',
     (root) =>
       editJson(root, 'package-lock.json', (data) => {
-        data.packages['node_modules/@davidniessen/contracts'].resolved =
-          'different';
+        data.packages[
+          'node_modules/@davidniessen/doctopus-contracts'
+        ].resolved = 'different';
       }),
     /Workspace link/,
   ],
@@ -180,7 +181,7 @@ const mutations = [
     (root) =>
       editJson(root, 'package-lock.json', (data) => {
         delete data.packages['packages/cli'].dependencies[
-          '@davidniessen/contracts'
+          '@davidniessen/doctopus-contracts'
         ];
       }),
     /Internal lockfile dependency/,
@@ -189,11 +190,13 @@ const mutations = [
     'internal caret range',
     async (root) => {
       await editJson(root, 'packages/cli/package.json', (data) => {
-        data.dependencies['@davidniessen/contracts'] = '^' + BASE_VERSION;
+        data.dependencies['@davidniessen/doctopus-contracts'] =
+          '^' + BASE_VERSION;
       });
       await editJson(root, 'package-lock.json', (data) => {
-        data.packages['packages/cli'].dependencies['@davidniessen/contracts'] =
-          '^' + BASE_VERSION;
+        data.packages['packages/cli'].dependencies[
+          '@davidniessen/doctopus-contracts'
+        ] = '^' + BASE_VERSION;
       });
     },
     /exact unified version/,
@@ -239,11 +242,12 @@ const mutations = [
     'private runtime dependency',
     async (root) => {
       await editJson(root, 'packages/cli/package.json', (data) => {
-        data.dependencies['@davidniessen/server'] = BASE_VERSION;
+        data.dependencies['@davidniessen/doctopus-server'] = BASE_VERSION;
       });
       await editJson(root, 'package-lock.json', (data) => {
-        data.packages['packages/cli'].dependencies['@davidniessen/server'] =
-          BASE_VERSION;
+        data.packages['packages/cli'].dependencies[
+          '@davidniessen/doctopus-server'
+        ] = BASE_VERSION;
       });
     },
     /private workspace/,
@@ -252,7 +256,7 @@ const mutations = [
     'duplicate package',
     (root) =>
       editJson(root, 'packages/contracts/package.json', (data) => {
-        data.name = 'api-docs';
+        data.name = 'doctopus';
       }),
     /Duplicate workspace/,
   ],
@@ -281,7 +285,7 @@ for (const version of ['v0.1.0', '01.0.0', '0.1.0+build', '0.1'])
   });
 test('refuses metadata symlinks outside the checkout', async (t) => {
   const root = await fixture(t),
-    outside = await mkdtemp(join(tmpdir(), 'api-docs-outside-version-'));
+    outside = await mkdtemp(join(tmpdir(), 'doctopus-outside-version-'));
   t.after(() => rm(outside, { recursive: true, force: true }));
   await writeFile(
     join(outside, 'outside.json'),

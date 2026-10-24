@@ -18,7 +18,7 @@ Verify a reviewed release plan against its clean source checkout.
 Default: stage and audit proposed metadata without changing repository files.
 --apply updates npm/lock/runtime/Java versions and CHANGELOG.md for Git review.
 No commands install packages, commit, tag, push or publish.
-Keep the plan outside the checkout, or in its ignored .api-docs directory.`);
+Keep the plan outside the checkout, or in its ignored .doctopus directory.`);
   else {
     const message = 'Supply a release --plan JSON file of at most 16 MiB.';
     if (!values.plan) throw new Error(message);

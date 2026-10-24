@@ -2,12 +2,12 @@ import { describe, expect, it } from 'vitest';
 import { createServer } from 'node:http';
 import { once } from 'node:events';
 import type { AddressInfo } from 'node:net';
-import type { Media, Operation } from '@davidniessen/contracts';
+import type { Media, Operation } from '@davidniessen/doctopus-contracts';
 import {
   encodeFormBody,
   isFormMediaType,
   prepareRequest,
-} from '@davidniessen/explorer';
+} from '@davidniessen/doctopus-explorer';
 
 const media: Media = {
   schema: {

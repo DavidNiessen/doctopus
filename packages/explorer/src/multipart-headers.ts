@@ -1,5 +1,9 @@
-import { resolveHeaderObject } from '@davidniessen/contracts';
-import type { Media, Parameter, Schema } from '@davidniessen/contracts';
+import { resolveHeaderObject } from '@davidniessen/doctopus-contracts';
+import type {
+  Media,
+  Parameter,
+  Schema,
+} from '@davidniessen/doctopus-contracts';
 import { serializeHeaderValue } from './parameters.js';
 
 export type MultipartHeaders = Record<string, Record<string, string>>;

@@ -4,7 +4,7 @@ import { readFile, mkdir, writeFile } from 'node:fs/promises';
 import { join, resolve, delimiter } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
-import { parseSource } from '@davidniessen/spec';
+import { parseSource } from '@davidniessen/doctopus-spec';
 import { clearJavaResults, readJavaResults } from './lib/java-results.mjs';
 
 const exec = promisify(execFile);
@@ -52,7 +52,7 @@ const commit = (
 ).stdout.trim();
 const output = join(
   repository,
-  '.api-docs/java-matrix',
+  '.doctopus/java-matrix',
   `${commit.slice(0, 12)}-${Date.now()}`,
 );
 await mkdir(output, { recursive: true });
@@ -63,7 +63,7 @@ await exec(
 );
 const manifest = JSON.parse(
   await readFile(
-    join(repository, '.api-docs/java-fixture/.api-docs/site/manifest.json'),
+    join(repository, '.doctopus/java-fixture/.doctopus/site/manifest.json'),
     'utf8',
   ),
 );

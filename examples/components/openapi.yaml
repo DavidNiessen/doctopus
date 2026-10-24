@@ -236,7 +236,7 @@ paths:
               password: fixture-body-password
               responseOnly: retained-read-only-value
               fixed: fixed
-          application/vnd.api-docs.list+json:
+          application/vnd.doctopus.list+json:
             schema:
               type: array
               items: { $ref: '#/components/schemas/NestedProfile' }
@@ -282,7 +282,7 @@ paths:
               name: Ada
               token: fixture-variant-secret
               responseOnly: retained
-          application/vnd.api-docs.variants+json:
+          application/vnd.doctopus.variants+json:
             schema:
               anyOf:
                 - title: Organizations
@@ -297,7 +297,7 @@ paths:
                   company: Ada Lab,
                   token: fixture-variant-secret,
                 }
-          application/vnd.api-docs.nested+json:
+          application/vnd.doctopus.nested+json:
             schema:
               type: object
               properties:
@@ -339,7 +339,7 @@ paths:
                 }
               optionalPayload: { child: { kind: person, name: Optional } }
               lists: [Ada]
-          application/vnd.api-docs.constrained+json:
+          application/vnd.doctopus.constrained+json:
             schema:
               type: object
               additionalProperties: false

@@ -144,7 +144,7 @@ export async function inspectPublicationProtections(root, repository, api) {
     128 * 1024,
   );
   const snapshotSha256 = createHash('sha256').update(bytes).digest('hex');
-  const directory = join(root, '.api-docs/publication');
+  const directory = join(root, '.doctopus/publication');
   await mkdir(directory, { recursive: true });
   // Retain actual API observations even if a later validation rejects them.
   await writeFile(

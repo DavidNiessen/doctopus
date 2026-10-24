@@ -108,13 +108,13 @@ export async function auditReleaseVersions(root, { release = false } = {}) {
     const pom = await readRepositoryFile(root, path);
     const parents = [
       ...pom.matchAll(
-        /<artifactId>api-docs-parent<\/artifactId>\s*<version>([^<]+)<\/version>/g,
+        /<artifactId>doctopus-parent<\/artifactId>\s*<version>([^<]+)<\/version>/g,
       ),
     ];
     assert(parents.length === 1, `Expected one Java parent version: ${path}`);
     javaVersions.push(parents[0][1]);
     for (const match of pom.matchAll(
-      /<artifactId>api-docs-core<\/artifactId>\s*<version>([^<]+)<\/version>/g,
+      /<artifactId>doctopus-core<\/artifactId>\s*<version>([^<]+)<\/version>/g,
     ))
       assert(
         match[1] === '${project.version}',

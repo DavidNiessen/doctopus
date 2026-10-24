@@ -29,9 +29,9 @@ const report = {
   passed: results.every((result) => result.assessment.passed),
   results,
 };
-await mkdir('.api-docs', { recursive: true });
+await mkdir('.doctopus', { recursive: true });
 await writeFile(
-  '.api-docs/code-scanning-evidence.json',
+  '.doctopus/code-scanning-evidence.json',
   JSON.stringify(report, null, 2) + '\n',
 );
 console.log(JSON.stringify(report, null, 2));

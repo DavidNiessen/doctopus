@@ -26,7 +26,7 @@ export default defineConfig({
       PUBLIC_URL: 'http://127.0.0.1:8082',
       INSECURE_DEVELOPMENT: 'true',
       PORT: '8082',
-      ARTIFACT_ROOT: '.api-docs/studio-test/artifacts',
+      ARTIFACT_ROOT: '.doctopus/studio-test/artifacts',
     },
     reuseExistingServer: false,
   },

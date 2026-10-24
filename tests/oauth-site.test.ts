@@ -2,9 +2,9 @@ import { describe, expect, it } from 'vitest';
 import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { parseConfig } from '@davidniessen/spec';
-import { buildSite } from '@davidniessen/cli';
-import { verifyArtifact } from '@davidniessen/compiler';
+import { parseConfig } from '@davidniessen/doctopus-spec';
+import { buildSite } from '@davidniessen/doctopus-cli';
+import { verifyArtifact } from '@davidniessen/doctopus-compiler';
 
 const base = {
   name: 'OAuth docs',
@@ -55,7 +55,7 @@ describe('static OAuth publication', () => {
     },
   );
   it('exports the callback as static files and preserves a publication when a redirect collides', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'api-docs-oauth-site-'));
+    const root = await mkdtemp(join(tmpdir(), 'doctopus-oauth-site-'));
     try {
       await writeFile(
         join(root, 'docs.config.yaml'),

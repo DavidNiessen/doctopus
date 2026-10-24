@@ -1,7 +1,7 @@
 import { hydrateRoot } from 'react-dom/client';
 import { App } from './components/App.js';
-import { normalizePagePath } from '@davidniessen/contracts';
-import type { SiteData } from '@davidniessen/contracts';
+import { normalizePagePath } from '@davidniessen/doctopus-contracts';
+import type { SiteData } from '@davidniessen/doctopus-contracts';
 import '../../shared/design-tokens.css';
 import './styles.css';
 import './island-layout.css';

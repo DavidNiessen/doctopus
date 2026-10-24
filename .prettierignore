@@ -7,7 +7,9 @@ playwright-report/
 test-results/
 **/dist/
 **/target/
-.api-docs/
+.doctopus/
 
 playwright-pages-report/
 playwright-studio-report/
+
+.api-docs/

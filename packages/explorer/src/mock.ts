@@ -2,8 +2,8 @@ import {
   exampleChoices,
   formatExample,
   isJsonMediaType,
-} from '@davidniessen/contracts';
-import type { Operation, Schema } from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-contracts';
+import type { Operation, Schema } from '@davidniessen/doctopus-contracts';
 import { mockSchemaValue } from './mock-schema.js';
 
 export interface MockResponse {

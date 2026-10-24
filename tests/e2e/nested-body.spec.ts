@@ -138,7 +138,7 @@ test('allOf object controls retain precise and unknown values, mask secrets and 
       .locator('.playground-inputs')
       .evaluate((element) => element.scrollWidth <= element.clientWidth),
   ).toBe(true);
-  await page.screenshot({ path: '.api-docs/nested-body-mobile-dark.png' });
+  await page.screenshot({ path: '.doctopus/nested-body-mobile-dark.png' });
   expect(errors).toEqual([]);
 });
 

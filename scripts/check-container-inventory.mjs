@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { readFile, realpath } from 'node:fs/promises';
 import { isAbsolute, join, relative, resolve, sep } from 'node:path';
-import { toolVersion } from '@davidniessen/contracts';
+import { toolVersion } from '@davidniessen/doctopus-contracts';
 import {
   inventoryContext,
   requireCompleteInventory,
@@ -15,7 +15,7 @@ const image = process.argv[2];
 assert(process.argv.length === 3, 'Select the exact tested server image ID');
 assert.match(image, /^sha256:[a-f0-9]{64}$/);
 const report = JSON.parse(
-  await readFile('.api-docs/container-inventory-evidence.json', 'utf8'),
+  await readFile('.doctopus/container-inventory-evidence.json', 'utf8'),
 );
 assert.equal(report.schemaVersion, 1);
 assert.equal(report.resolvedImage, image);
@@ -32,7 +32,7 @@ assert.equal(
 );
 assert.equal(report.signed, false);
 assert.equal(report.publicationApproved, false);
-const root = await realpath('.api-docs/container-candidates');
+const root = await realpath('.doctopus/container-candidates');
 const directory = await realpath(resolve(report.directory));
 const local = relative(root, directory);
 assert(

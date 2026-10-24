@@ -1,4 +1,4 @@
-import type { Diagnostic, SiteData } from '@davidniessen/contracts';
+import type { Diagnostic, SiteData } from '@davidniessen/doctopus-contracts';
 import type { BuildPlugin, BuildPluginContext } from './index.js';
 import { validatePluginSite, validateCodeSamples } from './validation.js';
 

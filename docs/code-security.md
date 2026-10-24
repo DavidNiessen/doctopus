@@ -12,7 +12,7 @@ To assess current CodeQL output locally, use the pinned Node version:
 node scripts/check-code-scanning.mjs path/to/javascript.sarif path/to/java.sarif
 ```
 
-The command reads regular SARIF files of at most 64 MiB each, verifies their structure, records SHA-256 hashes and writes `.api-docs/code-scanning-evidence.json`. It returns a failing exit status for blocking findings or invalid input. It does not run the analyzer or establish the authenticity of arbitrary supplied reports. CI requires the preceding pinned analyzer step as well as this assessment.
+The command reads regular SARIF files of at most 64 MiB each, verifies their structure, records SHA-256 hashes and writes `.doctopus/code-scanning-evidence.json`. It returns a failing exit status for blocking findings or invalid input. It does not run the analyzer or establish the authenticity of arbitrary supplied reports. CI requires the preceding pinned analyzer step as well as this assessment.
 
 The prepared rehearsal analyzes the checked-out source commit; its metadata preparation changes distribution versions but does not replace source security analysis. Before public launch, owners must verify the required aggregate checks in repository protection. CodeQL support and repository settings also need verification for private deployments/forks under their applicable GitHub licensing.
 

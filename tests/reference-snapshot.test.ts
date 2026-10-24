@@ -3,7 +3,7 @@ import { createServer } from 'node:http';
 import type { Server } from 'node:http';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
-import { compileProject } from '@davidniessen/compiler';
+import { compileProject } from '@davidniessen/doctopus-compiler';
 import { createHash } from 'node:crypto';
 import {
   mkdtemp,
@@ -23,12 +23,12 @@ import {
   parseReferencePolicy,
   parseReferenceManifest,
   parseSource,
-} from '@davidniessen/spec';
+} from '@davidniessen/doctopus-spec';
 import type {
   ReferencePolicy,
   ReferenceSnapshotOptions,
-} from '@davidniessen/spec';
-import { vendorRemoteSpec, buildSite } from '@davidniessen/cli';
+} from '@davidniessen/doctopus-spec';
+import { vendorRemoteSpec, buildSite } from '@davidniessen/doctopus-cli';
 let server: Server,
   origin = '',
   root = '',
@@ -57,7 +57,7 @@ const options = (): ReferenceSnapshotOptions => ({
   allowPrivateNetwork: true,
 });
 beforeAll(async () => {
-  root = await mkdtemp(join(tmpdir(), 'api-docs-pinned-spec-'));
+  root = await mkdtemp(join(tmpdir(), 'doctopus-pinned-spec-'));
   vi.stubEnv(
     'NO_PROXY',
     [process.env.NO_PROXY ?? '', '127.0.0.1'].filter(Boolean).join(','),
@@ -290,7 +290,7 @@ it('rejects unsafe output and cache symlinks without overwriting local files', a
     await expect(
       vendorRemoteSpec(root, policy(), { ...options(), output }),
     ).rejects.toThrow();
-  const outside = await mkdtemp(join(tmpdir(), 'api-docs-vendor-outside-'));
+  const outside = await mkdtemp(join(tmpdir(), 'doctopus-vendor-outside-'));
   try {
     await symlink(outside, join(root, 'unsafe'));
     await expect(

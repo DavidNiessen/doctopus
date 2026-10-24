@@ -82,7 +82,7 @@ export function generateMultipartSnippet(
       "trap 'exit 1' 1 2 3 15",
       `nonce=$(od -An -N24 -tx1 /dev/urandom | tr -d ' \\n')`,
       '[ "${#nonce}" -eq 48 ] || exit 1',
-      'boundary="api-docs-$nonce"',
+      'boundary="doctopus-$nonce"',
       '{',
       ...writes,
       `  printf '%s\\r\\n' "--$boundary--"`,
@@ -110,7 +110,7 @@ export function generateMultipartSnippet(
       `  ${part.file ? `await openAsBlob(${literal(part.path)})` : literal(part.value)},`,
       "  '\\r\\n',",
     ]);
-    return `${imports}const boundary = 'api-docs-' + crypto.randomUUID().replaceAll('-', '');
+    return `${imports}const boundary = 'doctopus-' + crypto.randomUUID().replaceAll('-', '');
 const body = new Blob([
 ${chunks.join('\n')}
   '--' + boundary + '--\\r\\n'
@@ -142,7 +142,7 @@ class NoRedirect(urllib.request.HTTPRedirectHandler):
     def redirect_request(self, req, fp, code, msg, headers, newurl):
         return None
 
-boundary = 'api-docs-' + uuid.uuid4().hex
+boundary = 'doctopus-' + uuid.uuid4().hex
 body = b''.join([
 ${chunks.join('\n')}
     ('--' + boundary + '--\\r\\n').encode('utf-8')
@@ -171,7 +171,7 @@ import java.util.UUID;
 
 class Example {
   public static void main(String[] args) throws Exception {
-    var boundary = "api-docs-" + UUID.randomUUID().toString().replace("-", "");
+    var boundary = "doctopus-" + UUID.randomUUID().toString().replace("-", "");
     var body = HttpRequest.BodyPublishers.concat(
 ${publishers.join('\n')}
         HttpRequest.BodyPublishers.ofString("--" + boundary + "--\\r\\n")

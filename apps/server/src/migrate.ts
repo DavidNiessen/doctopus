@@ -1,6 +1,6 @@
 import { databaseOptions } from './database-options.js';
 import { readFile } from 'node:fs/promises';
-import { PostgresRepository } from '@davidniessen/storage';
+import { PostgresRepository } from '@davidniessen/doctopus-storage';
 async function migrate() {
   const connection =
     process.env.DATABASE_URL ??

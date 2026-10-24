@@ -2,7 +2,7 @@
 
 Use the [lifecycle inventory](lifecycle.md) to report deprecations, resolve migration targets and enforce explicit deadline policies in CI.
 
-Build the repository with `npm ci && npm run build`. Commands below use `node packages/cli/dist/main.js`; the packaged executable is named `api-docs`.
+Build the repository with `npm ci && npm run build`. Commands below use `node packages/cli/dist/main.js`; the packaged executable is named `doctopus`.
 
 | Command                          | Purpose                                                   |
 | -------------------------------- | --------------------------------------------------------- |
@@ -19,7 +19,7 @@ Build the repository with `npm ci && npm run build`. Commands below use `node pa
 | `doctor [project]`               | Offline examples, links, fragments and coverage policy    |
 | `diff <before> <after>`          | Classify breaking and uncertain API contract changes      |
 
-`build` and `dev` accept `--config`, `--output`, and `--trust-plugins`. Output must stay inside the project's `.api-docs` directory to protect source files. `serve` and `dev` accept `--port` and `--host`; the default interface is loopback.
+`build` and `dev` accept `--config`, `--output`, and `--trust-plugins`. Output must stay inside the project's `.doctopus` directory to protect source files. `serve` and `dev` accept `--port` and `--host`; the default interface is loopback.
 
 `serve` verifies the publication manifest and all listed checksums before startup, then serves only listed files and directory aliases backed by a listed index page. Extra files and the manifest itself are not automatically public. A supplied programmatic mount must match the compiled `basePath`. Keep served artifacts immutable; startup verification does not rehash each response.
 
@@ -73,7 +73,7 @@ Authenticate management API requests with an operator or project-scoped bearer t
 
 Publish again with the same key and artifact to safely retry. A stale expected publication returns HTTP 409. Roll back by activating a previously registered artifact with a new key and the current expected publication id. History remains immutable.
 
-Use `api-docs stage <directory> --store <artifact-root>` to verify and atomically stage a build; retries are idempotent. Then set `DOCS_PUBLISH_TOKEN` securely and use `api-docs publish <artifact-id> --server <https-origin> --project <slug-or-id>`. For loopback testing only, add `--insecure-development`. An optional `DOCS_IDEMPOTENCY_KEY` makes CI retries reuse the same publication request.
+Use `doctopus stage <directory> --store <artifact-root>` to verify and atomically stage a build; retries are idempotent. Then set `DOCS_PUBLISH_TOKEN` securely and use `doctopus publish <artifact-id> --server <https-origin> --project <slug-or-id>`. For loopback testing only, add `--insecure-development`. An optional `DOCS_IDEMPOTENCY_KEY` makes CI retries reuse the same publication request.
 
 The protocol stages through operator-controlled storage rather than accepting arbitrary archives from the browser. Isolated upload/build workers are further roadmap work.
 

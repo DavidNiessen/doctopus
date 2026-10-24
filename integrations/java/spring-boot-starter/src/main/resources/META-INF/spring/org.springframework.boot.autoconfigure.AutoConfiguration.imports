@@ -1,1 +1,1 @@
-io.apidocs.spring.ApiDocsAutoConfiguration
+dev.niessen.doctopus.spring.DoctopusAutoConfiguration

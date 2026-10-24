@@ -20,7 +20,7 @@ import { buildIsolatedSite } from '../packages/cli/src/isolation.js';
 
 const directories: string[] = [];
 async function temporary() {
-  const directory = await mkdtemp(join(tmpdir(), 'api-docs-isolation-'));
+  const directory = await mkdtemp(join(tmpdir(), 'doctopus-isolation-'));
   directories.push(directory);
   return directory;
 }

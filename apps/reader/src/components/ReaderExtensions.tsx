@@ -2,12 +2,12 @@ import { useEffect, useRef } from 'react';
 import {
   createReaderExtensionSession,
   defineReaderExtension,
-} from '@davidniessen/plugin-sdk/browser';
+} from '@davidniessen/doctopus-plugin-sdk/browser';
 import type {
   ReaderExtension,
   ReaderPage,
-} from '@davidniessen/plugin-sdk/browser';
-import type { ReaderExtensionAsset } from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-plugin-sdk/browser';
+import type { ReaderExtensionAsset } from '@davidniessen/doctopus-contracts';
 type Session = ReturnType<typeof createReaderExtensionSession>;
 function assetUrl(asset: ReaderExtensionAsset, basePath: string) {
   if (

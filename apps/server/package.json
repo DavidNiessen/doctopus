@@ -1,5 +1,5 @@
 {
-  "name": "@davidniessen/server",
+  "name": "@davidniessen/doctopus-server",
   "version": "0.2.0-candidate.7",
   "type": "module",
   "license": "Apache-2.0",
@@ -14,12 +14,12 @@
     }
   },
   "dependencies": {
-    "@davidniessen/cli": "0.2.0-candidate.7",
-    "@davidniessen/compiler": "0.2.0-candidate.7",
-    "@davidniessen/contracts": "0.2.0-candidate.7",
-    "@davidniessen/domain": "0.2.0-candidate.7",
-    "@davidniessen/spec": "0.2.0-candidate.7",
-    "@davidniessen/storage": "0.2.0-candidate.7",
+    "@davidniessen/doctopus-cli": "0.2.0-candidate.7",
+    "@davidniessen/doctopus-compiler": "0.2.0-candidate.7",
+    "@davidniessen/doctopus-contracts": "0.2.0-candidate.7",
+    "@davidniessen/doctopus-domain": "0.2.0-candidate.7",
+    "@davidniessen/doctopus-spec": "0.2.0-candidate.7",
+    "@davidniessen/doctopus-storage": "0.2.0-candidate.7",
     "@fastify/cookie": "11.1.3",
     "@fastify/rate-limit": "10.3.0",
     "@fastify/static": "10.1.7",

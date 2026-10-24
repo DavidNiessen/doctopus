@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import type { APIRequestContext, Page } from '@playwright/test';
 import { randomUUID } from 'node:crypto';
-import type { Project, Role } from '@davidniessen/domain';
+import type { Project, Role } from '@davidniessen/doctopus-domain';
 
 const headers = () => ({
   authorization: 'Bearer ' + process.env.TEST_ROOT_TOKEN!,

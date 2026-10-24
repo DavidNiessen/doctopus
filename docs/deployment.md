@@ -11,19 +11,19 @@ Requirements: Docker Engine with Compose v2, Node.js 24 for the operator scripts
 ```sh
 node scripts/init-deployment.mjs
 export PUBLIC_URL=https://docs.example.com
-export COMPOSE_PROJECT_NAME=api-docs
+export COMPOSE_PROJECT_NAME=doctopus
 # Builds from the committed lockfile; the base images are pinned by digest.
 docker compose -f deploy/compose.yaml build
 docker compose -f deploy/compose.yaml up -d --wait
 ```
 
-`DOCS_IMAGE` selects the server and migration image; its default is the local `api-docs:local` build. For a reviewed prebuilt distribution, set it to your full repository reference with `@sha256:...` and pull the selected image before using `up --no-build`. Recovery helpers honor the same selection. No public release image is implied by this setting.
+`DOCS_IMAGE` selects the server and migration image; its default is the local `doctopus:local` build. For a reviewed prebuilt distribution, set it to your full repository reference with `@sha256:...` and pull the selected image before using `up --no-build`. Recovery helpers honor the same selection. No public release image is implied by this setting.
 
 You can also pin an image built locally without changing shared tags:
 
 ```sh
-docker build --target server --iidfile /tmp/api-docs-server.id .
-export DOCS_IMAGE="$(cat /tmp/api-docs-server.id)"
+docker build --target server --iidfile /tmp/doctopus-server.id .
+export DOCS_IMAGE="$(cat /tmp/doctopus-server.id)"
 docker compose -f deploy/compose.yaml up -d --no-build --pull never --wait
 ```
 
@@ -39,7 +39,7 @@ The current image uses the pinned Node 24.22.1 Alpine runtime and contains no np
 
 The current runtime requires schema version 2. Its migration upgrades version 1 atomically, retaining existing metadata and adding the [build queue tables](build-jobs.md). Run the matching migration job during an upgrade and retain a pre-upgrade recovery set with its compatible image. A version 1 runtime cannot start against a version 2 database; reverting the application image alone is not a schema rollback. The server provides authenticated source/job HTTP routes. Configure the [separate build worker](build-worker.md) for execution and use [Studio build controls](studio-builds.md) to manage approved sources and queued work.
 
-The reader runs as UID 1000, drops capabilities, uses a read-only root filesystem, and mounts artifacts read-only. Only a separate trusted publisher should mount the artifact volume writable. Build a project with `basePath: /docs/<project-slug>`, stage its verified output into that volume using the CLI image, then activate it through Studio or `api-docs publish`. See [CLI publishing](cli.md). A publication stores a digest and changes a database pointer atomically; changing an artifact in place is unsupported.
+The reader runs as UID 1000, drops capabilities, uses a read-only root filesystem, and mounts artifacts read-only. Only a separate trusted publisher should mount the artifact volume writable. Build a project with `basePath: /docs/<project-slug>`, stage its verified output into that volume using the CLI image, then activate it through Studio or `doctopus publish`. See [CLI publishing](cli.md). A publication stores a digest and changes a database pointer atomically; changing an artifact in place is unsupported.
 
 `deploy/Caddyfile` is a reverse-proxy configuration template. Set its `DOCS_HOST` and put Caddy on the application's frontend network (or change the upstream to the host's loopback port). Retain `/auth/callback`, `/admin/`, `/api/` and `/docs/` paths. Configure edge request limits; the application does not trust arbitrary forwarded client addresses. Anonymous static readers do not consume the management authentication rate-limit quota.
 
@@ -61,8 +61,8 @@ Pause publication and artifact staging writers for the operation. Readers can re
 
 ```sh
 # Keep PUBLIC_URL and the source deployment's secret configuration set.
-export COMPOSE_PROJECT_NAME=api-docs
-node scripts/recovery.mjs backup /secure-backups/api-docs-2026-10-22 --writers-paused
+export COMPOSE_PROJECT_NAME=doctopus
+node scripts/recovery.mjs backup /secure-backups/doctopus-2026-10-22 --writers-paused
 ```
 
 The destination must not exist. A successful set contains `database.dump`, `artifacts.tar` and `recovery.json` with SHA-256 checksums. An `.incomplete` marker means the backup failed. Move completed sets to encrypted off-host storage, retain the matching application image and deployment configuration, and test recovery regularly. Checksums detect corruption; they do not authenticate a backup from an untrusted source. Treat recovery sets as privileged deployable content.
@@ -75,12 +75,12 @@ Restore into a **new Compose project with fresh volumes**, never over the live d
 
 ```sh
 node scripts/init-deployment.mjs deploy/.secrets/recovery
-export COMPOSE_PROJECT_NAME=api-docs-recovery
+export COMPOSE_PROJECT_NAME=doctopus-recovery
 export DOCS_SECRETS_DIR=.secrets/recovery
 export PUBLIC_URL=http://127.0.0.1:8087
 export DOCS_PORT=8087
 export INSECURE_DEVELOPMENT=true
-node scripts/recovery.mjs restore /secure-backups/api-docs-2026-10-22 --writers-paused
+node scripts/recovery.mjs restore /secure-backups/doctopus-2026-10-22 --writers-paused
 docker compose -f deploy/compose.yaml up -d --no-build --wait
 ```
 
@@ -92,7 +92,7 @@ A schema rollback restores the backup's point in time. Writes after that recover
 
 ## Kubernetes template
 
-`deploy/kubernetes.yaml` is a starting template, not a turnkey managed cluster installer. Supply a `ConfigMap` named `api-docs` with `public-url`, a `Secret` named `api-docs` with `database-url` (runtime role) and `root-token`, and a PVC named `api-docs-artifacts`. Provision PostgreSQL and run the migration job separately with the owner connection and `DB_RUNTIME_ROLE`. Replace `api-docs:local` with your reviewed registry image digest. Configure a TLS Ingress, encrypted storage, backup jobs and network policies according to the cluster's provider. The current template uses one replica and a Recreate rollout; shared multi-replica storage and cluster recovery remain unvalidated release gates.
+`deploy/kubernetes.yaml` is a starting template, not a turnkey managed cluster installer. Supply a `ConfigMap` named `doctopus` with `public-url`, a `Secret` named `doctopus` with `database-url` (runtime role) and `root-token`, and a PVC named `doctopus-artifacts`. Provision PostgreSQL and run the migration job separately with the owner connection and `DB_RUNTIME_ROLE`. Replace `doctopus:local` with your reviewed registry image digest. Configure a TLS Ingress, encrypted storage, backup jobs and network policies according to the cluster's provider. The current template uses one replica and a Recreate rollout; shared multi-replica storage and cluster recovery remain unvalidated release gates.
 
 ## Publication verification boundaries
 
@@ -107,11 +107,11 @@ Artifacts must remain immutable after staging. These checks establish content in
 Build the default server target and test its immutable image with a local Linux Docker daemon and cgroup v2. Cache the exact PostgreSQL digest from `deploy/compose.yaml` first. A full Git checkout is required to build the recorded historical upgrade baseline. Run from the repository root after `npm ci --ignore-scripts && npm run build`:
 
 ```sh
-docker build --target server --iidfile /tmp/api-docs-server.id .
-mkdir -p .api-docs
-node scripts/build-upgrade-baseline.mjs > .api-docs/upgrade-baseline-evidence.json
+docker build --target server --iidfile /tmp/doctopus-server.id .
+mkdir -p .doctopus
+node scripts/build-upgrade-baseline.mjs > .doctopus/upgrade-baseline-evidence.json
 docker pull caddy:2.11.7-alpine@sha256:eb4d35b7452d1ab6171fbdbe8d9275b2301dad6dad92115d91e19fb9b24d510f
-SERVER_BASELINE_IMAGE="$(cat .api-docs/upgrade-baseline.id)" SERVER_TEST_IMAGE="$(cat /tmp/api-docs-server.id)" npm run test:server-container --silent
+SERVER_BASELINE_IMAGE="$(cat .doctopus/upgrade-baseline.id)" SERVER_TEST_IMAGE="$(cat /tmp/doctopus-server.id)" npm run test:server-container --silent
 ```
 
 The harness uses the shipped Compose file with a unique project, fresh credentials, an unpublished loopback port and owned volumes/networks. It refuses external resource reuse and does not select an existing deployment. A fixture is compiled offline inside that exact server image, then published only to the disposable installation. Acceptance verifies schema/runtime role grants, UID 1000, a read-only root, no capabilities, seccomp, no new privileges and explicit test limits (512 MiB, two CPUs, 128 PIDs). These limits are test overrides; choose production capacity for your workload.
@@ -136,7 +136,7 @@ Before restoration, incomplete/corrupt sets must fail without creating target co
 
 Both source and target cleanup are checked before the JSON receipt reports success. The prepared release gate requires at least nine recovery checks, the selected server image, matching artifact identity and verified target cleanup. No existing deployment, external volume or production credential is selected. This exercises a small single-host fixture with cached images; site-specific recovery time/point objectives, major PostgreSQL upgrades, encrypted off-host storage and full air-gapped installation remain operator acceptance work.
 
-Hosted [Quality 40002181064](https://github.com/DavidNiessen/api-docs/actions/runs/40002181064) and [release rehearsal 40003175317](https://github.com/DavidNiessen/api-docs/actions/runs/40003175317) passed every required job at `3f6cb48`. The prepared `0.2.0` image `sha256:18902b0cbff8e2ab23803ed3c28009bc00bade4e276764130731f12e2428514e` passed the same source/target image and artifact checks, nine recovery checks and both cleanup checks. The restored fixture artifact was `6e8eee1229e2e7424d8e85e5446c8eb4b2c433a407ad97a07aa5d7e4c709b607`. This is recorded single-host rehearsal evidence, not a signed or approved release.
+Hosted [Quality 40002181064](https://github.com/DavidNiessen/doctopus/actions/runs/40002181064) and [release rehearsal 40003175317](https://github.com/DavidNiessen/doctopus/actions/runs/40003175317) passed every required job at `3f6cb48`. The prepared `0.2.0` image `sha256:18902b0cbff8e2ab23803ed3c28009bc00bade4e276764130731f12e2428514e` passed the same source/target image and artifact checks, nine recovery checks and both cleanup checks. The restored fixture artifact was `6e8eee1229e2e7424d8e85e5446c8eb4b2c433a407ad97a07aa5d7e4c709b607`. This is recorded single-host rehearsal evidence, not a signed or approved release.
 
 ### Automated schema upgrade and rollback rehearsal
 

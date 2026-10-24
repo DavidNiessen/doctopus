@@ -20,13 +20,13 @@ const source = await releaseSource(root, process.env, {
   workflow: 'release-publish.yml',
 });
 const plan = JSON.parse(
-  await readRegularFile(join(root, '.api-docs/publication/plan.json')),
+  await readRegularFile(join(root, '.doctopus/publication/plan.json')),
 );
 const context = { ...source, runId: plan.runId, runAttempt: plan.runAttempt };
 const candidate = await loadContainerPublication(root, context, plan);
 const receipt = JSON.parse(
   await readRegularFile(
-    join(root, '.api-docs/publication/container-result.json'),
+    join(root, '.doctopus/publication/container-result.json'),
   ),
 );
 for (const [key, value] of Object.entries(context))
@@ -41,7 +41,7 @@ const remote = await verifyPublicGhcrImage(candidate, receipt.digest);
 assert(remote.exists, 'The published image must be publicly accessible.');
 assert.equal(remote.image, candidate.image);
 const config = await mkdtemp(join(tmpdir(), 'ad-public-oci-'));
-const output = join(root, '.api-docs/published-consumers/container');
+const output = join(root, '.doctopus/published-consumers/container');
 await mkdir(output, { recursive: true });
 try {
   const reference = `${candidate.repository}@${receipt.digest}`;

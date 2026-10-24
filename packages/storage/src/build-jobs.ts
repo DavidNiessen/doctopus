@@ -4,7 +4,7 @@ import {
   readSourceSnapshotInfo,
   isImmutableBuilderImage,
   toolVersion,
-} from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-contracts';
 import type {
   BuildJob,
   BuildJobRepository,
@@ -14,14 +14,14 @@ import type {
   BuildSource,
   BuildPage,
   BuildSourceListOptions,
-} from '@davidniessen/domain';
+} from '@davidniessen/doctopus-domain';
 import {
   BuildCapacityError,
   BuildInputError,
   BuildLeaseLostError,
   BuildNotFoundError,
   ConflictError,
-} from '@davidniessen/domain';
+} from '@davidniessen/doctopus-domain';
 import type { SqlClient, SqlDatabase } from './sql.js';
 
 const defaults: BuildQueueLimits = {

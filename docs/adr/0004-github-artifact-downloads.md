@@ -8,7 +8,7 @@ Date: 2026-10-24.
 
 The first protected GitHub publication uploaded the initial npm archive and Maven parent POM, then failed closed while reading them back. GitHub serves these artifact bytes through signed redirects. The original transport rejected every redirect, so mocks of direct registry responses did not establish native download compatibility.
 
-[Read-only observation 40111682551](https://github.com/DavidNiessen/api-docs/actions/runs/40111682551) captured HTTP 302 responses from both authenticated endpoints without following them or printing signed URLs. The npm endpoint selected `https://pkg-npm.githubusercontent.com`; Maven selected `https://github-registry-files.githubusercontent.com`. Metadata remained at the configured registry.
+[Read-only observation 40111682551](https://github.com/DavidNiessen/doctopus/actions/runs/40111682551) captured HTTP 302 responses from both authenticated endpoints without following them or printing signed URLs. The npm endpoint selected `https://pkg-npm.githubusercontent.com`; Maven selected `https://github-registry-files.githubusercontent.com`. Metadata remained at the configured registry.
 
 ## Decision
 
@@ -23,6 +23,6 @@ Keep a read-only manual diagnostic workflow using the normal repository token wi
 ## Validation and consequences
 
 - Regression tests verify that CDN requests drop all original headers and credential/referrer options, reject unapproved origins, writes and further hops, retain response bounds, and redact signed locations from fetch/stream errors.
-- [Native corrected-download run 40112262485](https://github.com/DavidNiessen/api-docs/actions/runs/40112262485) at `3d9d53a` fetched the existing 75,704-byte npm archive and 5,130-byte Maven POM with the new transport. Their SHA-256 hashes match the original producer-verified candidate `.6`; npm integrity also matches. This is native partial-artifact download evidence, not acceptance of a complete distribution release.
+- [Native corrected-download run 40112262485](https://github.com/DavidNiessen/doctopus/actions/runs/40112262485) at `3d9d53a` fetched the existing 75,704-byte npm archive and 5,130-byte Maven POM with the new transport. Their SHA-256 hashes match the original producer-verified candidate `.6`; npm integrity also matches. This is native partial-artifact download evidence, not acceptance of a complete distribution release.
 - The `.6` publication is partial and cannot authorize an announcement. Existing versions and tags remain immutable. A replacement version must carry this transport change through full candidate checks and all required registry consumers.
 - A future GitHub CDN change requires a reviewed exact-origin update and new acceptance evidence. Arbitrary redirects or credential forwarding are not fallback behavior.

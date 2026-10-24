@@ -32,14 +32,14 @@ const source = await releaseSource(root, process.env, {
 let context, candidate;
 if (candidateMode) {
   context = source;
-  const directory = join(root, '.api-docs/release-assets/container');
+  const directory = join(root, '.doctopus/release-assets/container');
   const manifest = await verifyReleaseAssets(directory, source, 'container');
   const archive = manifest.files.find((file) => file.name === 'server.tar.gz');
   assert(archive);
   candidate = { directory, image: manifest.image, archive };
 } else {
   const plan = JSON.parse(
-    await readRegularFile(join(root, '.api-docs/publication/plan.json')),
+    await readRegularFile(join(root, '.doctopus/publication/plan.json')),
   );
   assert.equal(plan.publicationRunId, source.runId);
   assert.equal(plan.publicationRunAttempt, source.runAttempt);
@@ -53,7 +53,7 @@ const run = (args) =>
     timeout: 900_000,
     maxBuffer: 4 * 1024 * 1024,
   });
-const output = join(root, '.api-docs/publication-preflight');
+const output = join(root, '.doctopus/publication-preflight');
 await mkdir(output);
 try {
   await releaseCommand('npm', ['audit', '--audit-level=moderate'], {
@@ -87,7 +87,7 @@ try {
     candidate.image,
   ]);
   await writeFile(
-    '.api-docs/container-inventory-evidence.json',
+    '.doctopus/container-inventory-evidence.json',
     inventory.stdout,
     { flag: 'wx' },
   );
@@ -98,7 +98,7 @@ try {
     candidate.image,
   ]);
   await writeFile(
-    '.api-docs/container-security-evidence.json',
+    '.doctopus/container-security-evidence.json',
     security.stdout,
     { flag: 'wx' },
   );
@@ -126,12 +126,12 @@ try {
   }
   const inventoryBytes = await raw(
     inventoryReceipt,
-    '.api-docs/container-candidates',
+    '.doctopus/container-candidates',
     'server.cdx.json',
   );
   const findingsBytes = await raw(
     securityReceipt,
-    '.api-docs/container-security-candidates',
+    '.doctopus/container-security-candidates',
     'server.grype.json',
   );
   assert.equal(bytesSha256(inventoryBytes), inventoryReceipt.inventory.sha256);

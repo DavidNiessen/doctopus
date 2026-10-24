@@ -21,12 +21,12 @@ export function mavenPublicationFiles(context, group) {
   assert.match(context.version, /^\d+\.\d+\.\d+(?:-[a-zA-Z0-9.-]+)?$/);
   const files = [];
   for (const artifact of [
-    'api-docs-parent',
-    'api-docs-core',
-    'api-docs-spring-boot-starter',
+    'doctopus-parent',
+    'doctopus-core',
+    'doctopus-spring-boot-starter',
   ]) {
     const stem = `${artifact}-${context.version}`;
-    for (const suffix of artifact === 'api-docs-parent'
+    for (const suffix of artifact === 'doctopus-parent'
       ? ['.pom']
       : ['.pom', '.jar', '-sources.jar', '-javadoc.jar']) {
       const name = stem + suffix;
@@ -66,7 +66,7 @@ export async function loadMavenPublication(
       plan.maven.registry,
       githubPackageRegistries(context.repository).maven,
     );
-  const directory = join(root, '.api-docs/release-assets/java');
+  const directory = join(root, '.doctopus/release-assets/java');
   const manifest = await verifyReleaseAssets(directory, context, 'java');
   const files = mavenPublicationFiles(context, plan.maven.groupId).map(
     (file) => {
@@ -366,7 +366,7 @@ export async function publishCentralBundle(
       'central-bundle.zip',
     );
     const upload = await request(
-      `${central}/upload?publishingType=USER_MANAGED&name=${encodeURIComponent('api-docs-' + version)}`,
+      `${central}/upload?publishingType=USER_MANAGED&name=${encodeURIComponent('doctopus-' + version)}`,
       { method: 'POST', headers, body: form },
     );
     assert.equal(

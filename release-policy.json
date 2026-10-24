@@ -10,10 +10,10 @@
   "maven": {
     "groupId": "dev.niessen",
     "ownershipVerified": true,
-    "registry": "https://maven.pkg.github.com/davidniessen/api-docs"
+    "registry": "https://maven.pkg.github.com/davidniessen/doctopus"
   },
   "container": {
-    "repository": "ghcr.io/davidniessen/api-docs",
+    "repository": "ghcr.io/davidniessen/doctopus",
     "ownershipVerified": true
   },
   "reviews": {

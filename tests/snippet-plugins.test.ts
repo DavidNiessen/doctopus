@@ -5,13 +5,13 @@ import { join, resolve } from 'node:path';
 import {
   compileProject,
   checkProjectPluginConformance,
-} from '@davidniessen/compiler';
+} from '@davidniessen/doctopus-compiler';
 import {
   applyPlugins,
   runPluginFiles,
   definePlugin,
-} from '@davidniessen/plugin-sdk';
-import type { SiteData } from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-plugin-sdk';
+import type { SiteData } from '@davidniessen/doctopus-contracts';
 let site: SiteData;
 beforeAll(async () => {
   site = await compileProject(resolve('examples/demo'));
@@ -23,7 +23,7 @@ const sample = {
   code: 'await client.get();',
 };
 async function fixture(code: string, run: (root: string) => Promise<void>) {
-  const root = await mkdtemp(join(tmpdir(), 'api-docs-snippet-plugin-'));
+  const root = await mkdtemp(join(tmpdir(), 'doctopus-snippet-plugin-'));
   try {
     await writeFile(join(root, 'plugin.mjs'), code);
     await run(root);

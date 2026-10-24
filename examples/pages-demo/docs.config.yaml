@@ -1,7 +1,7 @@
 schemaVersion: 1
-name: Orbit
-description: Explore a self-hosted documentation experience with local mock data.
-basePath: /api-docs
+name: Doctopus
+description: Give your API a helping hand. Explore Doctopus with local mock data.
+basePath: /doctopus
 specs:
   - id: orbit
     path: openapi.yaml
@@ -9,8 +9,8 @@ specs:
 explorer:
   mode: mock
 theme:
-  preset: mint
+  preset: violet
   radius: 14
 links:
   - label: Source on GitHub
-    href: https://github.com/DavidNiessen/api-docs
+    href: https://github.com/DavidNiessen/doctopus

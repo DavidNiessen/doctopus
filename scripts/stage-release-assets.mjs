@@ -21,12 +21,12 @@ assert(
 );
 const root = process.cwd();
 const context = await releaseSource(root);
-const parent = join(root, '.api-docs/release-assets');
+const parent = join(root, '.doctopus/release-assets');
 const destination = join(parent, kind);
 await mkdir(parent, { recursive: true });
 if (kind !== 'container') {
   const source = await singleCandidate(
-    join(root, `.api-docs/${kind}-candidates`),
+    join(root, `.doctopus/${kind}-candidates`),
   );
   const packages = (await readWorkspacePackages(root))
     .filter((pkg) => pkg.path && pkg.metadata.private !== true)
@@ -38,13 +38,13 @@ if (kind !== 'container') {
     exec(file, args, { env, timeout: 300_000, maxBuffer: 4 * 1024 * 1024 });
   const read = async (path) =>
     JSON.parse(await readRegularFile(path, 16 * 1024 * 1024));
-  const deployment = await read('.api-docs/server-container-evidence.json');
+  const deployment = await read('.doctopus/server-container-evidence.json');
   const image = deployment.resolvedImage;
   assert.match(image, /^sha256:[a-f0-9]{64}$/);
   // Reassess the exact raw inventory/finding bytes and freshness before export.
   await run(process.execPath, ['scripts/check-container-security.mjs', image]);
-  const inventory = await read('.api-docs/container-inventory-evidence.json');
-  const security = await read('.api-docs/container-security-evidence.json');
+  const inventory = await read('.doctopus/container-inventory-evidence.json');
+  const security = await read('.doctopus/container-security-evidence.json');
   for (const report of [inventory, security]) {
     assert.equal(report.sourceCommit, context.commit);
     assert.equal(report.sourceWorkingTreeDirty, false);
@@ -88,7 +88,7 @@ if (kind !== 'container') {
     'build-worker-evidence.json',
     'isolated-build-evidence.json',
   ])
-    await add(join('.api-docs', name), name);
+    await add(join('.doctopus', name), name);
   const environment = { ...process.env };
   for (const name of [
     'DOCKER_HOST',

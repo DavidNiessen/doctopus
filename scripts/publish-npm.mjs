@@ -18,7 +18,7 @@ const source = await releaseSource(root, process.env, {
   workflow: 'release-publish.yml',
 });
 const plan = JSON.parse(
-  await readRegularFile(join(root, '.api-docs/publication/plan.json')),
+  await readRegularFile(join(root, '.doctopus/publication/plan.json')),
 );
 assert.equal(plan.publicationRunId, source.runId);
 assert.equal(plan.publicationRunAttempt, source.runAttempt);

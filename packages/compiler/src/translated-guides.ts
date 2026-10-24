@@ -1,8 +1,8 @@
-import { confinedPath } from '@davidniessen/spec';
-import { loadGuides } from '@davidniessen/content';
-import type { GuideReadBudget } from '@davidniessen/content';
-import { validateGuideTranslations } from '@davidniessen/contracts';
-import type { SiteData } from '@davidniessen/contracts';
+import { confinedPath } from '@davidniessen/doctopus-spec';
+import { loadGuides } from '@davidniessen/doctopus-content';
+import type { GuideReadBudget } from '@davidniessen/doctopus-content';
+import { validateGuideTranslations } from '@davidniessen/doctopus-contracts';
+import type { SiteData } from '@davidniessen/doctopus-contracts';
 export async function loadTranslatedGuides(
   root: string,
   site: SiteData,

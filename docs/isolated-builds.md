@@ -1,6 +1,6 @@
 # Isolated documentation builds
 
-`api-docs isolated-build` is an operator-only, offline build runner for Linux Docker Engine. It stages data on the operator host, executes the compiler and explicitly trusted plugins/MDX in a separate restricted container, verifies the exported publication and activates it under the normal publication lock. The application server does not accept source uploads or invoke this runner. Keep Docker access off the application server.
+`doctopus isolated-build` is an operator-only, offline build runner for Linux Docker Engine. It stages data on the operator host, executes the compiler and explicitly trusted plugins/MDX in a separate restricted container, verifies the exported publication and activates it under the normal publication lock. The application server does not accept source uploads or invoke this runner. Keep Docker access off the application server.
 
 ## Prepare an approved worker
 
@@ -9,9 +9,9 @@ Build the worker from the reviewed checkout and locked dependencies. The default
 ```sh
 npm ci --ignore-scripts
 npm run build
-docker build --target isolated-builder --iidfile /tmp/api-docs-builder.id .
+docker build --target isolated-builder --iidfile /tmp/doctopus-builder.id .
 node packages/cli/dist/main.js isolated-build /srv/docs-source \
-  --image "$(cat /tmp/api-docs-builder.id)" --json
+  --image "$(cat /tmp/doctopus-builder.id)" --json
 ```
 
 Networked image builds must use your configured registry credentials, proxy and verified CA trust. The Dockerfile accepts an optional `proxy_ca` build secret for npm. The documentation job itself is offline. Images must already exist locally; mutable tags and automatic pulls are rejected. Repository digests and full `sha256:` image IDs are accepted. An image digest records identity, not publisher trust: the operator must approve the image and its dependencies first.
@@ -21,10 +21,10 @@ The local Docker daemon must support cgroup v2, the default seccomp filter, priv
 ## Inspect and approve source
 
 ```sh
-api-docs source-info /srv/docs-source --json
+doctopus source-info /srv/docs-source --json
 # Set DOCS_APPROVED_SOURCE_DIGEST from the reviewed source inspection,
 # and DOCS_APPROVED_WORKER_IMAGE to the approved immutable worker image.
-api-docs isolated-build /srv/docs-source --image "$DOCS_APPROVED_WORKER_IMAGE" \
+doctopus isolated-build /srv/docs-source --image "$DOCS_APPROVED_WORKER_IMAGE" \
   --source-digest "$DOCS_APPROVED_SOURCE_DIGEST" --json
 ```
 
@@ -34,11 +34,11 @@ The approval binds visible file paths and bytes plus directory layout, including
 
 `--source-digest` / `expectedSourceDigest` accepts a lowercase 64-character SHA-256 value. After staging the actual build snapshot, the host compares its digest **before any Docker command or source execution**. A mismatch retains the prior publication and cleans the private stage/lock. A matching pin continues the existing immutable-image, isolation and publication checks. The executed read-only snapshot is the one that was compared, so later changes to the original source affect a later job. Bind approved image, config path, trust flags and resource policy separately when scheduling a build; a source digest alone does not approve those choices.
 
-The public `@davidniessen/cli` API exports `inspectIsolatedSource`, `IsolatedSourceOptions` and `IsolatedSourceInfo` alongside `buildIsolatedSite`, `IsolatedBuildOptions` and `IsolatedBuildReceipt`. Both inspection and building accept an `AbortSignal`. A build receipt's source metadata uses the same digest version and counts as inspection of the identical source. Inspection is data-only; validate the project separately with `validate` or `doctor` before approving it.
+The public `@davidniessen/doctopus-cli` API exports `inspectIsolatedSource`, `IsolatedSourceOptions` and `IsolatedSourceInfo` alongside `buildIsolatedSite`, `IsolatedBuildOptions` and `IsolatedBuildReceipt`. Both inspection and building accept an `AbortSignal`. A build receipt's source metadata uses the same digest version and counts as inspection of the identical source. Inspection is data-only; validate the project separately with `validate` or `doctor` before approving it.
 
 ## Source and dependency boundary
 
-Supply a dedicated, secret-free documentation source directory. All hidden entries and `node_modules` are excluded, including `.env`, `.git`, `.npmrc`, deployment secrets and previous `.api-docs` output. This is an exclusion rule, not secret detection: **visible files supplied in the source remain readable by build code**. Do not point this at a credentials directory or a general application checkout containing private data.
+Supply a dedicated, secret-free documentation source directory. All hidden entries and `node_modules` are excluded, including `.env`, `.git`, `.npmrc`, deployment secrets and previous `.doctopus` output. This is an exclusion rule, not secret detection: **visible files supplied in the source remain readable by build code**. Do not point this at a credentials directory or a general application checkout containing private data.
 
 The snapshot accepts single-link regular files and directories; symlinks, hardlinks and special files fail. It caps traversal at 30,000 entries and individual files at 64 MiB. It copies source data without executing package scripts. Config paths must be visible, relative and confined to this snapshot. Source changes after staging affect a later job.
 
@@ -59,15 +59,15 @@ Containers run as UID/GID 1000 with no network, dropped capabilities, no new pri
 
 After compilation, Docker freezes every container process, including detached descendants. The host streams the output archive into its own private staging directory. It creates only bounded regular files/directories, rejecting traversal, duplicate paths, links, special files, compression, truncated archives and byte/count overruns. Files are limited to 64 MiB each and 50,000 entries. Archive modes and ownership are ignored. Publication hashes, compiler version, inventory, site data and configuration are checked before activation. This establishes structural integrity, not the trustworthiness of the documentation's author.
 
-The runner removes the container and its output volume before activation. Failures, deadlines and cancellation preserve the prior publication. `--output` uses the normal project `.api-docs` confinement and `.build.lock`. The JSON receipt records the immutable image, source digest/count/bytes, artifact identity, duration, limits and observed controls; it excludes source paths, credentials and source logs. Receipts are local evidence, not signed provenance.
+The runner removes the container and its output volume before activation. Failures, deadlines and cancellation preserve the prior publication. `--output` uses the normal project `.doctopus` confinement and `.build.lock`. The JSON receipt records the immutable image, source digest/count/bytes, artifact identity, duration, limits and observed controls; it excludes source paths, credentials and source logs. Receipts are local evidence, not signed provenance.
 
 ## Cancellation and recovery
 
-SIGINT/SIGTERM and the JavaScript API's `AbortSignal` cancel the job. An independent host watchdog removes its immutable container ID and owned output volume after parent death or the deadline. Cleanup retries bounded daemon failures. A permanently unavailable daemon still requires operator recovery; inspect only the affected job's `io.api-docs.isolated-job` label and its `api-docs-build-<uuid>` volume when service returns. Do not prune unrelated containers or volumes.
+SIGINT/SIGTERM and the JavaScript API's `AbortSignal` cancel the job. An independent host watchdog removes its immutable container ID and owned output volume after parent death or the deadline. Cleanup retries bounded daemon failures. A permanently unavailable daemon still requires operator recovery; inspect only the affected job's `io.doctopus.isolated-job` label and its `doctopus-build-<uuid>` volume when service returns. Do not prune unrelated containers or volumes.
 
-A killed operator process can leave its private `.api-docs/isolated-<uuid>` staging directory and `.build.lock`. Confirm the corresponding container/volume are gone and no other build is active before removing those specific leftovers. Never delete a surviving `previous-<uuid>` backup until the publication has been recovered and verified. The runner does not silently break publication locks.
+A killed operator process can leave its private `.doctopus/isolated-<uuid>` staging directory and `.build.lock`. Confirm the corresponding container/volume are gone and no other build is active before removing those specific leftovers. Never delete a surviving `previous-<uuid>` backup until the publication has been recovered and verified. The runner does not silently break publication locks.
 
-Temporary snapshots, export staging and previous-output directories live beside the selected output under `.api-docs`. Nested worker outputs therefore keep their temporary files inside the owning attempt directory. The [separate worker](build-worker.md#failure-shutdown-and-recovery) can reclaim proven-expired attempts after process death.
+Temporary snapshots, export staging and previous-output directories live beside the selected output under `.doctopus`. Nested worker outputs therefore keep their temporary files inside the owning attempt directory. The [separate worker](build-worker.md#failure-shutdown-and-recovery) can reclaim proven-expired attempts after process death.
 
 Interruption during allocation, before the watchdog is armed, can also leave an owned volume or stopped container. The workload starts only after the watchdog handshake. Inspect the affected labels and remove those specific resources during recovery.
 
@@ -76,7 +76,7 @@ Docker access is privileged administrative access to the host. Use a dedicated p
 ## Validation
 
 ```sh
-ISOLATED_BUILD_IMAGE="$(cat /tmp/api-docs-builder.id)" npm run test:isolated-builds
+ISOLATED_BUILD_IMAGE="$(cat /tmp/doctopus-builder.id)" npm run test:isolated-builds
 ```
 
 The serial harness checks pinned-source/native/isolated artifact parity, receipt identity, mismatched-source rejection, SDK plugin resolution, absent host markers, read-only mounts, offline interfaces, detached descendants, trust refusal, deadline/cancellation, parent-death cleanup and preservation of the prior publication. Archive/snapshot adversarial cases also run in the normal unit suite. CI builds its own worker and makes this harness part of the aggregate quality gate.

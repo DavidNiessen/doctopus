@@ -54,17 +54,17 @@ jobs:
         uses: github/codeql-action/analyze@9b3254085494b55a0f7c4c2b3d2d52cc712ce370 # v4
         with:
           category: /language:${{ matrix.language }}
-          output: .api-docs/code-scanning
+          output: .doctopus/code-scanning
       - name: Block high and critical source findings
-        run: node scripts/check-code-scanning.mjs .api-docs/code-scanning/*.sarif
+        run: node scripts/check-code-scanning.mjs .doctopus/code-scanning/*.sarif
       - name: Retain current findings and assessment on failure
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: code-security-${{ matrix.language }}-${{ github.sha }}
           path: |
-            .api-docs/code-scanning/*.sarif
-            .api-docs/code-scanning-evidence.json
+            .doctopus/code-scanning/*.sarif
+            .doctopus/code-scanning-evidence.json
           include-hidden-files: true
           if-no-files-found: warn
           retention-days: 14

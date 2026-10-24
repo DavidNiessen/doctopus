@@ -66,7 +66,7 @@ jobs:
         run: |
           node --input-type=module <<'NODE'
           import { readFile, appendFile } from 'node:fs/promises';
-          import { parseSource } from '@davidniessen/spec';
+          import { parseSource } from '@davidniessen/doctopus-spec';
           const workflow = parseSource(await readFile('.github/workflows/quality.yml', 'utf8'), 'quality.yml');
           const matrix = workflow.jobs.java.strategy.matrix;
           await appendFile(process.env.GITHUB_OUTPUT, `value=${JSON.stringify(matrix)}\n`);
@@ -114,12 +114,12 @@ jobs:
         with:
           name: unpublished-rehearsal-${{ github.run_id }}
           path: |
-            .api-docs/release/
-            .api-docs/npm-candidates/**/*.tgz
-            .api-docs/npm-candidates/**/manifest.json
-            .api-docs/npm-candidates/**/consumer-result.json
-            .api-docs/npm-candidates/**/consumer-package-lock.json
-            .api-docs/npm-candidates/**/consumer-sbom.cdx.json
+            .doctopus/release/
+            .doctopus/npm-candidates/**/*.tgz
+            .doctopus/npm-candidates/**/manifest.json
+            .doctopus/npm-candidates/**/consumer-result.json
+            .doctopus/npm-candidates/**/consumer-package-lock.json
+            .doctopus/npm-candidates/**/consumer-sbom.cdx.json
           include-hidden-files: true
           if-no-files-found: error
           retention-days: 14
@@ -133,15 +133,15 @@ jobs:
       postgres:
         image: postgres:17-alpine@sha256:1bcc18d81671b02906296aad470ec9778a6b71016ce953092024b680bad007b0
         env:
-          POSTGRES_USER: apidocs
-          POSTGRES_DB: apidocs
+          POSTGRES_USER: doctopus
+          POSTGRES_DB: doctopus
           POSTGRES_PASSWORD: isolated-ci-fixture
         ports: ['5432:5432']
         options: >-
-          --health-cmd "pg_isready -U apidocs"
+          --health-cmd "pg_isready -U doctopus"
           --health-interval 5s --health-timeout 5s --health-retries 10
     env:
-      TEST_DATABASE_URL: postgresql://apidocs:isolated-ci-fixture@127.0.0.1:5432/apidocs
+      TEST_DATABASE_URL: postgresql://doctopus:isolated-ci-fixture@127.0.0.1:5432/doctopus
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
@@ -229,11 +229,11 @@ jobs:
         with:
           name: installed-java-${{ matrix.java }}-boot-${{ matrix.boot }}-${{ github.run_id }}
           path: |
-            .api-docs/java-candidates/**/report.json
-            .api-docs/java-candidates/**/*.cdx.json
-            .api-docs/java-candidates/**/*.jar
-            .api-docs/java-candidates/**/*.pom
-            .api-docs/java-candidates/**/*.log
+            .doctopus/java-candidates/**/report.json
+            .doctopus/java-candidates/**/*.cdx.json
+            .doctopus/java-candidates/**/*.jar
+            .doctopus/java-candidates/**/*.pom
+            .doctopus/java-candidates/**/*.log
           include-hidden-files: true
           if-no-files-found: error
           retention-days: 14
@@ -247,15 +247,15 @@ jobs:
       postgres:
         image: postgres:17-alpine@sha256:1bcc18d81671b02906296aad470ec9778a6b71016ce953092024b680bad007b0
         env:
-          POSTGRES_USER: apidocs
-          POSTGRES_DB: apidocs
+          POSTGRES_USER: doctopus
+          POSTGRES_DB: doctopus
           POSTGRES_PASSWORD: isolated-ci-fixture
         ports: ['5432:5432']
         options: >-
-          --health-cmd "pg_isready -U apidocs"
+          --health-cmd "pg_isready -U doctopus"
           --health-interval 5s --health-timeout 5s --health-retries 10
     env:
-      TEST_DATABASE_URL: postgresql://apidocs:isolated-ci-fixture@127.0.0.1:5432/apidocs
+      TEST_DATABASE_URL: postgresql://doctopus:isolated-ci-fixture@127.0.0.1:5432/doctopus
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
@@ -274,21 +274,21 @@ jobs:
           baseline: ${{ inputs.baseline }}
       - run: npm run build
       - name: Build approved worker from this checkout
-        run: docker build --target isolated-builder --iidfile /tmp/api-docs-builder.id .
+        run: docker build --target isolated-builder --iidfile /tmp/doctopus-builder.id .
       - name: Verify isolated builds and failure cleanup
         run: |
-          mkdir -p .api-docs
-          ISOLATED_BUILD_IMAGE="$(cat /tmp/api-docs-builder.id)" node scripts/test-isolated-builds.mjs > .api-docs/isolated-build-evidence.json
+          mkdir -p .doctopus
+          ISOLATED_BUILD_IMAGE="$(cat /tmp/doctopus-builder.id)" node scripts/test-isolated-builds.mjs > .doctopus/isolated-build-evidence.json
       - name: Verify API, PostgreSQL and worker Docker lifecycle
-        run: ISOLATED_BUILD_IMAGE="$(cat /tmp/api-docs-builder.id)" npm run test:build-worker --silent > .api-docs/build-worker-evidence.json
+        run: ISOLATED_BUILD_IMAGE="$(cat /tmp/doctopus-builder.id)" npm run test:build-worker --silent > .doctopus/build-worker-evidence.json
       - name: Build shipped server from this checkout
-        run: docker build --target server --iidfile /tmp/api-docs-server.id .
+        run: docker build --target server --iidfile /tmp/doctopus-server.id .
       - name: Build recorded schema-1 upgrade baseline
-        run: node scripts/build-upgrade-baseline.mjs > .api-docs/upgrade-baseline-evidence.json
+        run: node scripts/build-upgrade-baseline.mjs > .doctopus/upgrade-baseline-evidence.json
       - name: Verify fresh Compose installation, private content and outage recovery
         run: |
           docker pull caddy:2.11.7-alpine@sha256:eb4d35b7452d1ab6171fbdbe8d9275b2301dad6dad92115d91e19fb9b24d510f
-          SERVER_BASELINE_IMAGE="$(cat .api-docs/upgrade-baseline.id)" SERVER_TEST_IMAGE="$(cat /tmp/api-docs-server.id)" npm run test:server-container --silent > .api-docs/server-container-evidence.json
+          SERVER_BASELINE_IMAGE="$(cat .doctopus/upgrade-baseline.id)" SERVER_TEST_IMAGE="$(cat /tmp/doctopus-server.id)" npm run test:server-container --silent > .doctopus/server-container-evidence.json
       - name: Verify tested image inventory and vulnerabilities
         uses: ./.github/actions/image-security
       - name: Require receipts from the prepared tool and image
@@ -296,11 +296,11 @@ jobs:
           node --input-type=module <<'NODE'
           import assert from 'node:assert/strict';
           import { readFile } from 'node:fs/promises';
-          import { toolVersion } from '@davidniessen/contracts';
+          import { toolVersion } from '@davidniessen/doctopus-contracts';
           import { createHash } from 'node:crypto';
-          const image = (await readFile('/tmp/api-docs-builder.id', 'utf8')).trim();
-          const isolated = JSON.parse(await readFile('.api-docs/isolated-build-evidence.json', 'utf8'));
-          const worker = JSON.parse(await readFile('.api-docs/build-worker-evidence.json', 'utf8'));
+          const image = (await readFile('/tmp/doctopus-builder.id', 'utf8')).trim();
+          const isolated = JSON.parse(await readFile('.doctopus/isolated-build-evidence.json', 'utf8'));
+          const worker = JSON.parse(await readFile('.doctopus/build-worker-evidence.json', 'utf8'));
           assert(isolated.checks >= 6 && isolated.receipts.length >= 2);
           assert(worker.checks.length >= 7 && worker.results.length >= 2);
           for (const receipt of isolated.receipts) {
@@ -313,8 +313,8 @@ jobs:
             assert.equal(result.resolvedImage, image);
           }
           assert.equal(worker.automaticPublication, false);
-          const serverImage = (await readFile('/tmp/api-docs-server.id', 'utf8')).trim();
-          const server = JSON.parse(await readFile('.api-docs/server-container-evidence.json', 'utf8'));
+          const serverImage = (await readFile('/tmp/doctopus-server.id', 'utf8')).trim();
+          const server = JSON.parse(await readFile('.doctopus/server-container-evidence.json', 'utf8'));
           assert.equal(server.toolVersion, toolVersion);
           assert.equal(server.runtime.toolVersion, toolVersion);
           assert.equal(server.runtime.packageManagersAbsent, true);
@@ -352,7 +352,7 @@ jobs:
           assert.match(server.offline.archiveSha256, /^[a-f0-9]{64}$/);
           assert.match(server.offline.databaseImage, /^sha256:[a-f0-9]{64}$/);
           assert.match(server.offline.databaseReference, /^postgres:17-alpine@sha256:[a-f0-9]{64}$/);
-          const baseline = JSON.parse(await readFile('.api-docs/upgrade-baseline-evidence.json', 'utf8'));
+          const baseline = JSON.parse(await readFile('.doctopus/upgrade-baseline-evidence.json', 'utf8'));
           const { upgradeBaselineCommit } = await import('./scripts/lib/server-upgrade-fixture.mjs');
           assert.equal(baseline.baselineCommit, upgradeBaselineCommit);
           assert.equal(server.upgrade.baselineCommit, upgradeBaselineCommit);
@@ -365,12 +365,12 @@ jobs:
           assert.equal(server.upgrade.cleanupVerified, true);
           assert(server.upgrade.checks.length >= 10 && server.upgrade.privateFiles >= 8);
           assert.match(server.upgrade.metadataSha256, /^[a-f0-9]{64}$/);
-          const inventory = JSON.parse(await readFile('.api-docs/container-inventory-evidence.json', 'utf8'));
+          const inventory = JSON.parse(await readFile('.doctopus/container-inventory-evidence.json', 'utf8'));
           assert.equal(inventory.toolVersion, toolVersion);
           assert.equal(inventory.resolvedImage, serverImage);
           assert.equal(inventory.signed, false);
           assert.equal(inventory.publicationApproved, false);
-          const security = JSON.parse(await readFile('.api-docs/container-security-evidence.json', 'utf8'));
+          const security = JSON.parse(await readFile('.doctopus/container-security-evidence.json', 'utf8'));
           assert.equal(security.toolVersion, toolVersion);
           assert.equal(security.resolvedImage, serverImage);
           assert.equal(security.inventorySha256, inventory.inventory.sha256);
@@ -384,17 +384,17 @@ jobs:
         with:
           name: prepared-isolated-builds-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
-            .api-docs/isolated-build-evidence.json
-            .api-docs/build-worker-evidence.json
-            .api-docs/server-container-evidence.json
-            .api-docs/upgrade-baseline-evidence.json
-            .api-docs/container-inventory-evidence.json
-            .api-docs/container-security-evidence.json
-            .api-docs/container-security-candidates/**/server.grype.json
-            .api-docs/container-security-candidates/**/report.json
-            .api-docs/container-security-candidates/**/.incomplete
-            .api-docs/container-candidates/**/server.cdx.json
-            .api-docs/container-candidates/**/report.json
+            .doctopus/isolated-build-evidence.json
+            .doctopus/build-worker-evidence.json
+            .doctopus/server-container-evidence.json
+            .doctopus/upgrade-baseline-evidence.json
+            .doctopus/container-inventory-evidence.json
+            .doctopus/container-security-evidence.json
+            .doctopus/container-security-candidates/**/server.grype.json
+            .doctopus/container-security-candidates/**/report.json
+            .doctopus/container-security-candidates/**/.incomplete
+            .doctopus/container-candidates/**/server.cdx.json
+            .doctopus/container-candidates/**/report.json
           include-hidden-files: true
           if-no-files-found: error
           retention-days: 14
@@ -449,9 +449,9 @@ jobs:
           retention-days: 28
           if-no-files-found: error
           path: |
-            .api-docs/benchmark-report.json
-            .api-docs/browser-benchmark/**/report.json
-            .api-docs/browser-benchmark/**/*-mobile.png
+            .doctopus/benchmark-report.json
+            .doctopus/browser-benchmark/**/report.json
+            .doctopus/browser-benchmark/**/*-mobile.png
 
   result:
     name: Rehearsal result

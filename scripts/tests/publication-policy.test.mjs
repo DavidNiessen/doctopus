@@ -30,7 +30,7 @@ const policy = {
   reviewDeferral: null,
 };
 const context = {
-  repository: 'DavidNiessen/api-docs',
+  repository: 'DavidNiessen/doctopus',
   commit: 'a'.repeat(40),
   version: '0.2.0',
   ref: 'refs/tags/v0.2.0',
@@ -38,7 +38,7 @@ const context = {
   runAttempt: '1',
 };
 const source = {
-  packages: ['@davidniessen/contracts', '@davidniessen/cli'],
+  packages: ['@davidniessen/doctopus-contracts', '@davidniessen/doctopus-cli'],
   mavenGroup: 'dev.niessen',
 };
 
@@ -251,7 +251,7 @@ test('read-only inspection verifies environment protections and retains actual o
   );
   const observed = JSON.parse(
     await readFile(
-      join(root, '.api-docs/publication/protection-observation.json'),
+      join(root, '.doctopus/publication/protection-observation.json'),
     ),
   );
   assert.equal(observed.branch.updated_at, liveBranch.updated_at);
@@ -361,12 +361,12 @@ test('the GitHub policy lists pending launch decisions without approving publica
   assert.equal(plan.npm.registry, 'https://npm.pkg.github.com');
   assert.equal(
     plan.maven.registry,
-    'https://maven.pkg.github.com/davidniessen/api-docs',
+    'https://maven.pkg.github.com/davidniessen/doctopus',
   );
   assert.equal(plan.npm.tag, 'latest');
   assert.deepEqual(plan.npm.packages, [
-    '@davidniessen/cli',
-    '@davidniessen/contracts',
+    '@davidniessen/doctopus-cli',
+    '@davidniessen/doctopus-contracts',
   ]);
   assert.equal(
     publicationPlan(

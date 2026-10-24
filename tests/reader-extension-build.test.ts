@@ -10,14 +10,14 @@ import {
 import { join, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
 import { parse, stringify } from 'yaml';
-import { buildSite, createStaticServer } from '@davidniessen/cli';
+import { buildSite, createStaticServer } from '@davidniessen/doctopus-cli';
 import {
   compileProject,
   loadReaderExtensions,
   verifyArtifact,
-} from '@davidniessen/compiler';
-import { parseConfig } from '@davidniessen/spec';
-import { createPageData } from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-compiler';
+import { parseConfig } from '@davidniessen/doctopus-spec';
+import { createPageData } from '@davidniessen/doctopus-contracts';
 let root = '';
 async function config() {
   return parseConfig(
@@ -25,10 +25,11 @@ async function config() {
   );
 }
 beforeAll(async () => {
-  root = await mkdtemp(join(tmpdir(), 'api-docs-reader-extension-'));
+  root = await mkdtemp(join(tmpdir(), 'doctopus-reader-extension-'));
   await cp(resolve('examples/reader-extensions'), root, {
     recursive: true,
-    filter: (path) => !path.includes('.api-docs'),
+    filter: (path) =>
+      !path.includes('.doctopus') && !path.includes('.api-docs'),
   });
 });
 afterAll(async () => {
@@ -151,7 +152,7 @@ it('rejects source escapes and invalid UTF-8 before publishing', async () => {
     ),
   ).rejects.toThrow();
   await rm(file);
-  const outside = await mkdtemp(join(tmpdir(), 'api-docs-extension-outside-'));
+  const outside = await mkdtemp(join(tmpdir(), 'doctopus-extension-outside-'));
   try {
     await writeFile(join(outside, 'entry.mjs'), 'export default {};');
     await symlink(join(outside, 'entry.mjs'), file);

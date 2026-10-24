@@ -3,13 +3,13 @@ import { resolve } from 'node:path';
 import { performance } from 'node:perf_hooks';
 import { execFileSync } from 'node:child_process';
 import assert from 'node:assert/strict';
-import { toolVersion } from '@davidniessen/contracts';
-import { createDevelopmentBuilder } from '@davidniessen/cli';
-import { createSearchIndex, search } from '@davidniessen/search';
+import { toolVersion } from '@davidniessen/doctopus-contracts';
+import { createDevelopmentBuilder } from '@davidniessen/doctopus-cli';
+import { createSearchIndex, search } from '@davidniessen/doctopus-search';
 const count = Number(process.argv[2] ?? 10000);
 if (!Number.isInteger(count) || count < 100 || count > 10000)
   throw new Error('Choose 100–10000 operations');
-const root = resolve('.api-docs/benchmark', String(Date.now()));
+const root = resolve('.doctopus/benchmark', String(Date.now()));
 await mkdir(root, { recursive: true });
 const paths = {};
 const schemas = {};
@@ -116,7 +116,7 @@ const report = {
   vcpusAvailable: (await import('node:os')).availableParallelism(),
 };
 await writeFile(
-  resolve('.api-docs/benchmark-report.json'),
+  resolve('.doctopus/benchmark-report.json'),
   JSON.stringify(report, null, 2),
 );
 console.log(JSON.stringify(report, null, 2));

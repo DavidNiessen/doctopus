@@ -1,13 +1,13 @@
 # Development candidates and release gates
 
-The project has a [published and registry-accepted prerelease, 0.2.0-candidate.7](release-acceptance.md), and no approved stable release. The local candidate commands below do not publish packages. Distributions use [GitHub Packages and GHCR](github-packages.md), npm scope `@davidniessen` and Maven group `dev.niessen`; no npm or Maven Central account is required. The `api-docs` artifact names remain provisional pending the product rename. Independent launch reviews remain deferred for prereleases. Never install or execute artifacts from an untrusted pull request.
+The project has a [published and registry-accepted prerelease, 0.2.0-candidate.7](release-acceptance.md), and no approved stable release. The local candidate commands below do not publish packages. Distributions use [GitHub Packages and GHCR](github-packages.md), npm scope `@davidniessen` and Maven group `dev.niessen`; no npm or Maven Central account is required. Doctopus is the selected product name. The accepted release predates the rename; renamed distributions await a new release and fresh registry acceptance. See the [migration guide](migration-doctopus.md). Independent launch reviews remain deferred for prereleases. Never install or execute artifacts from an untrusted pull request.
 
 ## Review a release plan
 
 Use a full clone with fetched release tags. The planner checks distribution metadata before reading local Git history. It never edits versions, writes a changelog, creates tags, fetches, pushes or publishes. With no merged release tags, select the initial release explicitly:
 
 ```sh
-npm run --silent release:plan -- --initial --date 2026-10-22 > /tmp/api-docs-release-plan.json
+npm run --silent release:plan -- --initial --date 2026-10-22 > /tmp/doctopus-release-plan.json
 npm run --silent release:plan -- --initial --date 2026-10-22 --notes
 ```
 
@@ -21,11 +21,11 @@ Shallow repositories, invalid/unrelated baselines, invalid dates, conflicting ta
 
 ## Prepare the reviewed metadata
 
-Generate the plan from a clean full checkout, keep it outside tracked source (for example `/tmp/api-docs-release-plan.json`), and inspect its version, notes, baseline, dirty flag and unclassified commits. The preparer regenerates the proposal from the current source and rejects changed JSON or stale source. Edit source/migration documentation before planning; do not hand-edit the JSON to bypass that comparison.
+Generate the plan from a clean full checkout, keep it outside tracked source (for example `/tmp/doctopus-release-plan.json`), and inspect its version, notes, baseline, dirty flag and unclassified commits. The preparer regenerates the proposal from the current source and rejects changed JSON or stale source. Edit source/migration documentation before planning; do not hand-edit the JSON to bypass that comparison.
 
 ```sh
-npm run --silent release:prepare -- --plan /tmp/api-docs-release-plan.json
-npm run --silent release:prepare -- --plan /tmp/api-docs-release-plan.json --apply
+npm run --silent release:prepare -- --plan /tmp/doctopus-release-plan.json
+npm run --silent release:prepare -- --plan /tmp/doctopus-release-plan.json --apply
 npm run check:versions -- --release
 ```
 
@@ -49,9 +49,9 @@ The **Release rehearsal** workflow can be dispatched from `master` with a target
 
 The workflow uses SHA-pinned actions, read-only repository permissions, full Git history, and quoted environment inputs. Its shared preparation action validates boolean/baseline choices and retains the JSON plan, preview and applied receipt. Source artifacts and current Java results are retained for review. The prepared working tree is deliberately dirty and labeled as an unpublished rehearsal: no tags, commits, registry packages, release entries or deployments are created. A rehearsal does not replace checks against a final reviewed clean commit or signed release artifacts.
 
-Hosted [rehearsal 39984331124](https://github.com/DavidNiessen/api-docs/actions/runs/39984331124) passed at clean source `6f1e5ce`, preparing an unpublished `0.2.0` candidate with the selected `dev.niessen` group. Source/tooling/browser/snippet/package checks, server/Studio acceptance and all six Java/Spring combinations passed. That run predates the added prepared-version Docker job. Expanded [rehearsal 39987857551](https://github.com/DavidNiessen/api-docs/actions/runs/39987857551) passed every job at source `05a0fa9`, including the prepared Docker compiler/worker harnesses and receipt gate. The actual container runtime reported tool version `0.2.0`, UID 1000, no network, a read-only root, enforced memory/CPU/PID limits, no new privileges, seccomp and no capabilities; no publication was activated. The prepared working tree and candidate flags are intentional rehearsal evidence; signed publication, registry installation and approval of final artifact digests remain separate gates.
+Hosted [rehearsal 39984331124](https://github.com/DavidNiessen/doctopus/actions/runs/39984331124) passed at clean source `6f1e5ce`, preparing an unpublished `0.2.0` candidate with the selected `dev.niessen` group. Source/tooling/browser/snippet/package checks, server/Studio acceptance and all six Java/Spring combinations passed. That run predates the added prepared-version Docker job. Expanded [rehearsal 39987857551](https://github.com/DavidNiessen/doctopus/actions/runs/39987857551) passed every job at source `05a0fa9`, including the prepared Docker compiler/worker harnesses and receipt gate. The actual container runtime reported tool version `0.2.0`, UID 1000, no network, a read-only root, enforced memory/CPU/PID limits, no new privileges, seccomp and no capabilities; no publication was activated. The prepared working tree and candidate flags are intentional rehearsal evidence; signed publication, registry installation and approval of final artifact digests remain separate gates.
 
-Latest expanded [rehearsal 39995916569](https://github.com/DavidNiessen/api-docs/actions/runs/39995916569) passed every required job at `36ee79b`. Both performance jobs measured the prepared `0.2.0` tool and publication, passed the full-size evidence gates and retained raw results. The fresh server image `sha256:a0bd1e8e7cba136b98b3d639d73f1f535a4747b3f47d366facd3321d8f877c32` passed installation, role/kernel/resource checks, private-content denial, revocation, restart/idempotence, database outage/recovery and verified cleanup. Normal Quality also passed after a targeted rerun of a Maven Central HTTP 429 failure. The [performance record](performance.md#prepared-candidate-hosted-results) distinguishes these unpublished prepared results from an approved release.
+Latest expanded [rehearsal 39995916569](https://github.com/DavidNiessen/doctopus/actions/runs/39995916569) passed every required job at `36ee79b`. Both performance jobs measured the prepared `0.2.0` tool and publication, passed the full-size evidence gates and retained raw results. The fresh server image `sha256:a0bd1e8e7cba136b98b3d639d73f1f535a4747b3f47d366facd3321d8f877c32` passed installation, role/kernel/resource checks, private-content denial, revocation, restart/idempotence, database outage/recovery and verified cleanup. Normal Quality also passed after a targeted rerun of a Maven Central HTTP 429 failure. The [performance record](performance.md#prepared-candidate-hosted-results) distinguishes these unpublished prepared results from an approved release.
 
 ## Local prepared-version rehearsal
 
@@ -77,7 +77,7 @@ npm run test:packages
 
 The consumer check installs the archives into a temporary project outside the workspace, audits its dependency tree at the moderate threshold, reinstalls from its lockfile using the local npm cache with network access disabled for npm, and runs the installed code. Internal package directories must be physical installs rather than workspace symlinks. The smoke covers strict public TypeScript declarations, CLI initialization, trusted MDX and plugin workers, plugin conformance, strict doctor validation, artifact checks, static serving, and authenticated Express/Fastify mounts under a subpath. Its Node TypeScript fixture selects `types: ["node"]` and keeps `skipLibCheck: false`; this avoids auto-loading unrelated ambient MDX JSX types. Projects that consume MDX types directly must configure the JSX runtime they use.
 
-Results remain in `.api-docs/npm-candidates/<commit>-<run>/`: archives, `manifest.json`, `consumer-result.json`, the installed consumer lockfile and a CycloneDX SBOM. The lockfile/SBOM describe this tested consumer, including its integration hosts, rather than every Docker/Java distribution. The source workflow retains candidates and browser reports for 14 days. Hosted Actions is enabled; source and aggregate Quality results are tracked in the [implementation progress](planning/04-progress.md). Local candidate results remain separate evidence.
+Results remain in `.doctopus/npm-candidates/<commit>-<run>/`: archives, `manifest.json`, `consumer-result.json`, the installed consumer lockfile and a CycloneDX SBOM. The lockfile/SBOM describe this tested consumer, including its integration hosts, rather than every Docker/Java distribution. The source workflow retains candidates and browser reports for 14 days. Hosted Actions is enabled; source and aggregate Quality results are tracked in the [implementation progress](planning/04-progress.md). Local candidate results remain separate evidence.
 
 Browser builds collect license texts for packages identified in bundle source maps plus Vite's generated preload helper. Reader exports and Studio distributions include `assets/THIRD_PARTY_NOTICES.txt`; static exports retain that file. This is attribution collection, not completion of the release-wide dependency/license review.
 
@@ -95,19 +95,19 @@ After building packages and the server target, run from the repository root:
 
 ```sh
 node scripts/install-inventory-tool.mjs
-node scripts/container-inventory.mjs "$(cat /tmp/api-docs-server.id)" > .api-docs/container-inventory-evidence.json
-node scripts/check-container-inventory.mjs "$(cat /tmp/api-docs-server.id)"
+node scripts/container-inventory.mjs "$(cat /tmp/doctopus-server.id)" > .doctopus/container-inventory-evidence.json
+node scripts/check-container-inventory.mjs "$(cat /tmp/doctopus-server.id)"
 ```
 
 The inventory command accepts an immutable server image ID or repository digest, resolves it against the local Docker daemon and rejects the worker target. It preserves Docker registry/proxy configuration while explicitly selecting the local socket. Scanner update checks and Java network lookups are disabled. Its inputs are the actual image filesystem and package databases, including Debian packages and the Node runtime. A source lockfile inventory cannot substitute for that result.
 
-Each unique `.api-docs/container-candidates/` directory contains `server.cdx.json` (CycloneDX 1.7) and `report.json`, with the image ID, tool/source versions, scanner checksums, inventory checksum and component counts. `.incomplete` marks an unfinished result and causes the receipt checker to refuse it. The receipt checker confines the inventory path to the candidate directory, validates its bytes and subject, requires the pinned scanner and checks every workspace package against the current tool version. It also requires OS packages, the supported Node runtime and server/database dependencies. Both workflows retain the inventory and receipt; prepared acceptance requires the same version and image as the running server.
+Each unique `.doctopus/container-candidates/` directory contains `server.cdx.json` (CycloneDX 1.7) and `report.json`, with the image ID, tool/source versions, scanner checksums, inventory checksum and component counts. `.incomplete` marks an unfinished result and causes the receipt checker to refuse it. The receipt checker confines the inventory path to the candidate directory, validates its bytes and subject, requires the pinned scanner and checks every workspace package against the current tool version. It also requires OS packages, the supported Node runtime and server/database dependencies. Both workflows retain the inventory and receipt; prepared acceptance requires the same version and image as the running server.
 
 A local scan of the development server image found 506 npm packages, 88 Debian packages, the Node runtime and file records. This is inventory evidence, not a vulnerability verdict, license approval or signed release. Bundled browser attribution remains documented separately. The image ID recorded here is Docker's immutable configuration ID; registry manifest digests and signed publication provenance remain separate promotion evidence. Source fields identify the checkout running the inventory; they do not prove how the image was built. Candidate reports explicitly remain unsigned and unapproved for publication.
 
 Current inventories also support Alpine package identities after the runtime refresh. [Container vulnerability acceptance](container-security.md) is now a separate required gate: the pinned scanner assesses the exact inventory bytes with a valid database no older than 48 hours. High, critical, unknown-severity and suppressed findings block acceptance; unavailable fixes are included. Receipts retain raw finding checksums and database identities and must match the prepared tool version, tested image and inventory. Daily advisory checks run separately from deployment acceptance. Automated scans do not replace independent review, final dependency/license approval or authenticated release provenance.
 
-Prepared [rehearsal 40000268183](https://github.com/DavidNiessen/api-docs/actions/runs/40000268183) passed every required job at `28b43aa`, including the new image inventory and incomplete-result guard. The actual prepared `0.2.0` server image is `sha256:6ba4a47df57b9fa186a5511b906887e68a6da408890a3f3e116228cd0a9626f5`; its CycloneDX checksum is `91595452e487e03d95c8141b4d08300d8174b72337568f71eccaac88889ca363`. Retained bytes were rehashed after download and validated against every prepared workspace version, scanner/subject identity and OS/runtime requirements. Normal Quality also passed every job. These receipts remain unpublished, unsigned rehearsal evidence.
+Prepared [rehearsal 40000268183](https://github.com/DavidNiessen/doctopus/actions/runs/40000268183) passed every required job at `28b43aa`, including the new image inventory and incomplete-result guard. The actual prepared `0.2.0` server image is `sha256:6ba4a47df57b9fa186a5511b906887e68a6da408890a3f3e116228cd0a9626f5`; its CycloneDX checksum is `91595452e487e03d95c8141b4d08300d8174b72337568f71eccaac88889ca363`. Retained bytes were rehashed after download and validated against every prepared workspace version, scanner/subject identity and OS/runtime requirements. Normal Quality also passed every job. These receipts remain unpublished, unsigned rehearsal evidence.
 
 ## Clean-tag candidate provenance
 

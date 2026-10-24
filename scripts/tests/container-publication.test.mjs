@@ -13,7 +13,7 @@ import {
 } from '../lib/container-publication.mjs';
 
 const image = 'sha256:' + 'a'.repeat(64);
-const repository = 'ghcr.io/davidniessen/api-docs';
+const repository = 'ghcr.io/davidniessen/doctopus';
 const raw = Buffer.from(
   JSON.stringify({
     schemaVersion: 2,
@@ -39,7 +39,7 @@ const candidate = {
   image,
   archive: { name: 'server.tar.gz', sha256: 'c'.repeat(64) },
   context: {
-    repository: 'DavidNiessen/api-docs',
+    repository: 'DavidNiessen/doctopus',
     commit: 'd'.repeat(40),
     ref: 'refs/tags/v0.2.0',
     version: '0.2.0',
@@ -53,7 +53,7 @@ test('GHCR anonymous checks request only public pull scope and never inherit pub
     request: async (url, options) => {
       assert.equal(
         new URL(url).searchParams.get('scope'),
-        'repository:davidniessen/api-docs:pull',
+        'repository:davidniessen/doctopus:pull',
       );
       assert.deepEqual(options.headers, {});
       return auth;
@@ -183,7 +183,7 @@ test('container publication loads the exact archive, pushes the tested config an
     calls.map((args) => (args[0] === 'login' ? 'login' : args[1])),
     ['login', 'load', 'inspect', 'inspect', 'tag', 'push'],
   );
-  assert.equal(result.predicate.repository, 'DavidNiessen/api-docs');
+  assert.equal(result.predicate.repository, 'DavidNiessen/doctopus');
   assert.equal(result.predicate.containerRepository, repository);
   assert.equal(result.predicate.archiveSha256, candidate.archive.sha256);
   await assert.rejects(access(config));
@@ -275,7 +275,7 @@ test('a failed or successful public runtime probe always removes only its alloca
           calls.push(args);
           if (args[1] === 'create') {
             name = args[args.indexOf('--name') + 1];
-            assert.match(name, /^api-docs-public-probe-[a-f0-9-]+$/);
+            assert.match(name, /^doctopus-public-probe-[a-f0-9-]+$/);
             assert(args.includes('--read-only'));
           }
           if (args[1] === 'start' && fails) throw new Error('fixture timeout');

@@ -1,6 +1,6 @@
 # Pinned external-reference snapshots
 
-`api-docs vendor-spec` explicitly imports an OpenAPI 3.0/3.1 YAML or JSON root and its reviewed external reference documents. Every source has an exact URL and mandatory SHA-256 pin. The command validates the complete cached graph before recording a ready snapshot. Builds, doctor and preview use only local, hash-verified files; compilation never refreshes upstream sources.
+`doctopus vendor-spec` explicitly imports an OpenAPI 3.0/3.1 YAML or JSON root and its reviewed external reference documents. Every source has an exact URL and mandatory SHA-256 pin. The command validates the complete cached graph before recording a ready snapshot. Builds, doctor and preview use only local, hash-verified files; compilation never refreshes upstream sources.
 
 For a self-contained document, the simpler [remote importer](remote-import.md) remains available. Local project references keep their existing behavior without this feature.
 
@@ -21,7 +21,7 @@ sources:
 The root must be listed. Include every transitive reference document; the command fetches all listed documents, including unused ones, and refuses unlisted references. Relative references resolve against each document's original URL. Origins and credentials are operator inputs outside the policy:
 
 ```sh
-api-docs vendor-spec reference-policy.yaml . \
+doctopus vendor-spec reference-policy.yaml . \
   --allow-origin https://api.example.com \
   --allow-origin https://schemas.example.com
 ```
@@ -44,7 +44,7 @@ Keep the policy and complete snapshot in source control or another reviewed buil
 Set a selected environment variable through your secret manager, then bind it to one exact canonical source URL:
 
 ```sh
-api-docs vendor-spec reference-policy.yaml . \
+doctopus vendor-spec reference-policy.yaml . \
   --allow-origin https://api.example.com \
   --allow-origin https://schemas.example.com \
   --bearer-env 'https://api.example.com/openapi.yaml=SPEC_DOWNLOAD_TOKEN'
@@ -68,4 +68,4 @@ To refresh, review new source hashes, import again and update both configuration
 
 Files are created with mode `0600` and never overwritten. A ready snapshot has an exact file inventory; extra files, symlinks, conflicting bytes or tampering cause failure and preserve local files. `snapshot.json` is linked last as the readiness marker. An interrupted import may leave matching partial source files; rerunning the same approved import can finish that cache. Inspect and resolve a stale per-digest lock manually after a process crash. Do not edit a completed snapshot or place notes inside it. Existing publications remain available when a later build fails.
 
-`@davidniessen/spec` exports `parseReferencePolicy`, `downloadReferenceSnapshot`, `loadReferenceSnapshot`, `parseReferenceManifest` and the associated types. The downloader accepts required `allowedOrigins`, optional explicit `allowHttp`/`allowPrivateNetwork`, exact-URL `credentials`, cancellation and lower `maxBytes`/`timeoutMs` limits. It returns the manifest and raw source buffers without writing files. `@davidniessen/cli` exports `vendorRemoteSpec(project, policy, options)` for the immutable cache workflow. `loadSpec(project, { id, path, references })` performs offline loading. Isolate untrusted builds even when their references are frozen.
+`@davidniessen/doctopus-spec` exports `parseReferencePolicy`, `downloadReferenceSnapshot`, `loadReferenceSnapshot`, `parseReferenceManifest` and the associated types. The downloader accepts required `allowedOrigins`, optional explicit `allowHttp`/`allowPrivateNetwork`, exact-URL `credentials`, cancellation and lower `maxBytes`/`timeoutMs` limits. It returns the manifest and raw source buffers without writing files. `@davidniessen/doctopus-cli` exports `vendorRemoteSpec(project, policy, options)` for the immutable cache workflow. `loadSpec(project, { id, path, references })` performs offline loading. Isolate untrusted builds even when their references are frozen.

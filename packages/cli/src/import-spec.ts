@@ -13,9 +13,9 @@ import {
   confinedPath,
   downloadSpec,
   readBoundedFile,
-} from '@davidniessen/spec';
-import type { RemoteSpecOptions } from '@davidniessen/spec';
-import { digest } from '@davidniessen/compiler';
+} from '@davidniessen/doctopus-spec';
+import type { RemoteSpecOptions } from '@davidniessen/doctopus-spec';
+import { digest } from '@davidniessen/doctopus-compiler';
 
 export interface ImportSpecOptions extends RemoteSpecOptions {
   output?: string;
@@ -76,7 +76,7 @@ export async function importRemoteSpec(
       );
     }
   }
-  const temporary = join(parent, '.api-docs-import-' + randomUUID());
+  const temporary = join(parent, '.doctopus-import-' + randomUUID());
   try {
     const file = await open(temporary, 'wx', mode);
     try {

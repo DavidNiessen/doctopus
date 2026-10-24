@@ -3,8 +3,8 @@ import {
   resolveSchema,
   serializeJsonValue,
   objectFieldSchema,
-} from '@davidniessen/contracts';
-import type { Media, Schema } from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-contracts';
+import type { Media, Schema } from '@davidniessen/doctopus-contracts';
 
 const object = (value: unknown): Schema =>
   value !== null && typeof value === 'object' && !Array.isArray(value)
@@ -35,7 +35,7 @@ export function multipartEditorModel(
     );
   }
   if (
-    root['x-api-docs-boolean-schema'] === false ||
+    root['x-doctopus-boolean-schema'] === false ||
     ['allOf', 'oneOf', 'anyOf', 'if', 'then', 'else'].some((key) =>
       Object.hasOwn(root, key),
     ) ||

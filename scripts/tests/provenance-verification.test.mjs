@@ -10,7 +10,7 @@ import {
 import { verifyProducerProvenance } from '../lib/provenance-verification.mjs';
 
 const context = {
-  repository: 'DavidNiessen/api-docs',
+  repository: 'DavidNiessen/doctopus',
   commit: 'a'.repeat(40),
   version: '0.2.0',
   ref: 'refs/tags/v0.2.0',
@@ -19,11 +19,11 @@ const context = {
 };
 async function fixture(t) {
   const root = await mkdtemp(
-    join(tmpdir(), 'api-docs-provenance-verification-'),
+    join(tmpdir(), 'doctopus-provenance-verification-'),
   );
   t.after(() => rm(root, { recursive: true, force: true }));
   for (const kind of ['npm', 'java', 'container']) {
-    const dir = join(root, '.api-docs/release-assets', kind);
+    const dir = join(root, '.doctopus/release-assets', kind);
     await mkdir(dir, { recursive: true });
     const path = join(dir, 'archive.bin');
     await writeFile(path, 'exact bytes');
@@ -65,14 +65,14 @@ test('the verifier invokes all producer/source constraints for every subject and
   assert.equal(calls.length, 6);
   assert.equal(proof.subjects.length, 6);
   assert.equal(
-    (await readdir(join(root, '.api-docs/release-verification'))).length,
+    (await readdir(join(root, '.doctopus/release-verification'))).length,
     6,
   );
 });
 
 test('changed artifacts fail before invoking a verifier and verifier errors or empty results never count as success', async (t) => {
   const root = await fixture(t);
-  const archive = join(root, '.api-docs/release-assets/npm/archive.bin');
+  const archive = join(root, '.doctopus/release-assets/npm/archive.bin');
   await writeFile(archive, 'tampered');
   let called = false;
   await assert.rejects(

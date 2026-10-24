@@ -19,7 +19,7 @@ import type {
   MouseEvent,
   KeyboardEvent as ReactKeyboardEvent,
 } from 'react';
-import { createSearchIndex, search } from '@davidniessen/search';
+import { createSearchIndex, search } from '@davidniessen/doctopus-search';
 import {
   guideHref,
   operationHref,
@@ -33,13 +33,13 @@ import {
   localeRoute,
   localizePath,
   localeName,
-} from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-contracts';
 import type {
   ApiDocument,
   Operation,
   SiteData,
   SearchResult,
-} from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-contracts';
 import { PanelResizeHandle } from './PanelResizeHandle.js';
 import { LocaleMenu } from './LocaleMenu.js';
 import { UiContext, useUi } from '../ui-translation.js';
@@ -170,7 +170,7 @@ export function App({
   const dialog = useRef<HTMLDialogElement>(null);
   const playground = useRef<PlaygroundHandle>(null);
   useEffect(() => {
-    performance.mark('api-docs:hydrated');
+    performance.mark('doctopus:hydrated');
   }, []);
   const config = {
     ...site.config,
@@ -533,7 +533,13 @@ export function App({
               </>
             ) : (
               <span className="brand-mark">
-                <Icon name="spark" size={21} />
+                <img
+                  src={href('/assets/doctopus-mascot.webp')}
+                  alt=""
+                  width={36}
+                  height={36}
+                  decoding="async"
+                />
               </span>
             )}
             <span>{config.name}</span>
@@ -610,7 +616,7 @@ export function App({
                 setTheme(next);
                 setPreferences((previous) => ({ ...previous, mode: next }));
                 try {
-                  localStorage.setItem('api-docs-theme', next);
+                  localStorage.setItem('doctopus-theme', next);
                 } catch {
                   /* Optional preference. */
                 }
@@ -852,10 +858,15 @@ export function App({
           )}
           <div className="sidebar-bottom">
             <span className="brand-mark small">
-              <Icon name="spark" size={14} />
+              <img
+                src={href('/assets/doctopus-icon.svg')}
+                width={20}
+                height={20}
+                alt=""
+              />
             </span>
             <span>
-              Powered by <strong>api-docs</strong>
+              Powered by <strong>Doctopus</strong>
             </span>
             <span className="open-source-label">Open source</span>
           </div>

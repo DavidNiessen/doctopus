@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import { parseSource } from '@davidniessen/spec';
+import { parseSource } from '@davidniessen/doctopus-spec';
 import {
   buildJavaCandidate,
   javaEnvironment,

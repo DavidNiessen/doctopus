@@ -26,12 +26,12 @@ const source = await releaseSource(root, process.env, {
   workflow: 'release-publish.yml',
 });
 const plan = JSON.parse(
-  await readRegularFile(join(root, '.api-docs/publication/plan.json')),
+  await readRegularFile(join(root, '.doctopus/publication/plan.json')),
 );
 const context = { ...source, runId: plan.runId, runAttempt: plan.runAttempt };
 const accepted = await loadGitHubMavenPublication(root, context, plan);
 const repositoryVisibility = await githubPackageRepository(context.repository);
-const output = join(root, '.api-docs/published-consumers/maven');
+const output = join(root, '.doctopus/published-consumers/maven');
 await mkdir(output, { recursive: true });
 const state = await inspectGitHubMaven(accepted, {
   acceptFile: async (file, bytes) => {

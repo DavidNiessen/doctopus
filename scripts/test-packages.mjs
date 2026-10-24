@@ -8,7 +8,7 @@ import { packNpmCandidates, repository } from './pack-npm.mjs';
 
 const exec = promisify(execFile);
 const candidate = await packNpmCandidates();
-const consumer = await mkdtemp(join(tmpdir(), 'api-docs-installed-consumer-'));
+const consumer = await mkdtemp(join(tmpdir(), 'doctopus-installed-consumer-'));
 const root = JSON.parse(
   await readFile(join(repository, 'package.json'), 'utf8'),
 );
@@ -23,7 +23,7 @@ try {
     join(consumer, 'package.json'),
     JSON.stringify(
       {
-        name: 'api-docs-installed-consumer',
+        name: 'doctopus-installed-consumer',
         version: '0.0.0',
         private: true,
         type: 'module',

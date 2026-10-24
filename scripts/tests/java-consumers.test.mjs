@@ -53,12 +53,15 @@ test('consumer logs omit credentials and Java option dumps while retaining publi
 });
 
 test('installed consumers require both fresh nonzero JUnit suites without failures or skips', async () => {
-  const directory = await mkdtemp(join(tmpdir(), 'api-docs-junit-consumer-'));
+  const directory = await mkdtemp(join(tmpdir(), 'doctopus-junit-consumer-'));
   const publication = join(
     directory,
-    'TEST-io.apidocs.consumer.PackagedPublicationTest.xml',
+    'TEST-dev.niessen.doctopus.consumer.PackagedPublicationTest.xml',
   );
-  const host = join(directory, 'TEST-io.apidocs.consumer.MvcConsumerTest.xml');
+  const host = join(
+    directory,
+    'TEST-dev.niessen.doctopus.consumer.MvcConsumerTest.xml',
+  );
   const publicationCases = [
     'publicClassesComeFromTheExactInstalledJarsAndVerifyTheRealPublication',
   ];

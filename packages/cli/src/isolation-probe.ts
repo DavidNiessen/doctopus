@@ -1,6 +1,6 @@
 import { readFile, statfs } from 'node:fs/promises';
 import { networkInterfaces } from 'node:os';
-import { toolVersion } from '@davidniessen/contracts';
+import { toolVersion } from '@davidniessen/doctopus-contracts';
 
 const [memory, cpu, pids, output] = process.argv.slice(2).map(Number);
 const status = await readFile('/proc/self/status', 'utf8');
@@ -8,10 +8,10 @@ const mounts = await readFile('/proc/mounts', 'utf8');
 const mounted = mounts.split('\n').map((line) => line.split(' '));
 const sourceMount = mounted.find((fields) => fields[1] === '/work/project');
 const outputMount = mounted.find(
-  (fields) => fields[1] === '/work/project/.api-docs',
+  (fields) => fields[1] === '/work/project/.doctopus',
 );
 const temporaryMount = mounted.find((fields) => fields[1] === '/tmp');
-const outputSpace = await statfs('/work/project/.api-docs');
+const outputSpace = await statfs('/work/project/.doctopus');
 if (
   !sourceMount?.[3]?.split(',').includes('ro') ||
   ![outputMount, temporaryMount].every(

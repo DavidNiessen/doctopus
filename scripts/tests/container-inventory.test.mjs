@@ -133,7 +133,7 @@ test('does not accept a named component without its package identity', () => {
   assert.throws(() => validateContainerInventory(report, context));
 });
 test('rejects a modified executable and executable symlinks before execution', async (t) => {
-  const root = await mkdtemp(join(tmpdir(), 'api-docs-scanner-integrity-'));
+  const root = await mkdtemp(join(tmpdir(), 'doctopus-scanner-integrity-'));
   t.after(() => rm(root, { recursive: true, force: true }));
   const path = join(root, 'scanner');
   await writeFile(path, 'unverified scanner');
@@ -143,7 +143,7 @@ test('rejects a modified executable and executable symlinks before execution', a
   await assert.rejects(verifyScanner(link), /regular file/);
 });
 test('refuses a partially completed inventory even when its other files are present', async (t) => {
-  const root = await mkdtemp(join(tmpdir(), 'api-docs-incomplete-inventory-'));
+  const root = await mkdtemp(join(tmpdir(), 'doctopus-incomplete-inventory-'));
   t.after(() => rm(root, { recursive: true, force: true }));
   await assert.rejects(requireCompleteInventory(join(root, 'missing')));
   await writeFile(join(root, 'report.json'), '{}');

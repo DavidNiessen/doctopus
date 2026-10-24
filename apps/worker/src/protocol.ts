@@ -1,8 +1,8 @@
-import type { BuildLease, BuildResult } from '@davidniessen/domain';
+import type { BuildLease, BuildResult } from '@davidniessen/doctopus-domain';
 import {
   readBuildPolicy,
   readSourceSnapshotInfo,
-} from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-contracts';
 import { identifier, record, readWorkerOrigin } from './config.js';
 export interface WorkerControlPlane {
   claim(

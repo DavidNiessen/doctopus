@@ -7,7 +7,12 @@ import {
 
 function metadata() {
   return {
-    groups: [{ name: 'api-docs', type: 'io.apidocs.spring.ApiDocsProperties' }],
+    groups: [
+      {
+        name: 'doctopus',
+        type: 'dev.niessen.doctopus.spring.DoctopusProperties',
+      },
+    ],
     properties: [
       'artifact-digest',
       'directory',
@@ -15,9 +20,9 @@ function metadata() {
       'path',
       'public-base-path',
     ].map((name) => ({
-      name: 'api-docs.' + name,
+      name: 'doctopus.' + name,
       type: name === 'enabled' ? 'java.lang.Boolean' : 'java.lang.String',
-      sourceType: 'io.apidocs.spring.ApiDocsProperties',
+      sourceType: 'dev.niessen.doctopus.spring.DoctopusProperties',
       description: 'A useful description of ' + name,
       ...(name === 'enabled'
         ? { defaultValue: true }
@@ -42,9 +47,9 @@ function component(group, name, version) {
   };
 }
 function fixture() {
-  const root = component(group, 'api-docs-parent', version),
-    core = component(group, 'api-docs-core', version),
-    starter = component(group, 'api-docs-spring-boot-starter', version),
+  const root = component(group, 'doctopus-parent', version),
+    core = component(group, 'doctopus-core', version),
+    starter = component(group, 'doctopus-spring-boot-starter', version),
     gson = component('com.google.code.gson', 'gson', '2.13.2');
   gson.hashes = [{ alg: 'SHA-256', content: 'd'.repeat(64) }];
   const ref = (entry) => entry['bom-ref'];
@@ -66,8 +71,8 @@ const options = {
   version,
   parentPom: { sha256: 'c'.repeat(64) },
   artifacts: [
-    { artifact: 'api-docs-core', sha256: 'a'.repeat(64) },
-    { artifact: 'api-docs-spring-boot-starter', sha256: 'b'.repeat(64) },
+    { artifact: 'doctopus-core', sha256: 'a'.repeat(64) },
+    { artifact: 'doctopus-spring-boot-starter', sha256: 'b'.repeat(64) },
   ],
 };
 
@@ -75,11 +80,11 @@ test('Spring metadata includes every documented property and real defaults', () 
   const result = validateSpringMetadata(metadata());
   assert.equal(result.length, 5);
   assert.equal(
-    result.find((entry) => entry.name === 'api-docs.enabled').defaultValue,
+    result.find((entry) => entry.name === 'doctopus.enabled').defaultValue,
     true,
   );
   assert.equal(
-    result.find((entry) => entry.name === 'api-docs.path').defaultValue,
+    result.find((entry) => entry.name === 'doctopus.path').defaultValue,
     '/docs',
   );
 });

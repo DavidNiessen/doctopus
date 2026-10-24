@@ -1,4 +1,4 @@
-import type { JsonValueNode, Schema } from '@davidniessen/contracts';
+import type { JsonValueNode, Schema } from '@davidniessen/doctopus-contracts';
 import { queryParts } from './parameters.js';
 
 export const hasBodyStyle = (encoding: Schema): boolean =>

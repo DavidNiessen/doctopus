@@ -16,7 +16,7 @@ paths:
       summary: Export widgets with a planned retirement
       description: Future lifecycle dates can be announced before the deprecated flag is set.
       tags: [Widgets]
-      x-api-docs-lifecycle:
+      x-doctopus-lifecycle:
         deprecatedOn: '2028-01-01'
         sunsetOn: '2028-06-01'
         migrationUrl: /guides/migration/#heading-update-your-client

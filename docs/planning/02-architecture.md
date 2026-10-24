@@ -146,7 +146,7 @@ A registry/catalog is optional discovery metadata, not a required runtime servic
 
 Publish a runtime-independent static asset distribution and a Spring Boot starter. Build assets in the documentation project's CI; bundle a verified distribution with the Java artifact or point the starter at a local publication directory. No Node process is required in the Java application at runtime.
 
-The starter offers validated properties for route prefix, title/theme, spec source, exposed versions, allowed hosts, and Spring Security integration. Reuse an existing `/v3/api-docs` source when springdoc is installed; do not claim the starter discovers arbitrary Java APIs without an OpenAPI generator.
+The starter offers validated properties for route prefix, title/theme, spec source, exposed versions, allowed hosts, and Spring Security integration. Reuse an existing `/v3/doctopus` source when springdoc is installed; do not claim the starter discovers arbitrary Java APIs without an OpenAPI generator.
 
 Support two explicit modes:
 

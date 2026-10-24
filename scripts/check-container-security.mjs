@@ -3,7 +3,7 @@ import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { lstat, readFile, realpath } from 'node:fs/promises';
 import { isAbsolute, join, relative, resolve, sep } from 'node:path';
-import { toolVersion } from '@davidniessen/contracts';
+import { toolVersion } from '@davidniessen/doctopus-contracts';
 import { readRegularFile } from './lib/read-regular-file.mjs';
 import {
   validateContainerSecurity,
@@ -19,10 +19,10 @@ execFileSync(
   { timeout: 30000, maxBuffer: 1024 * 1024 },
 );
 const receipt = JSON.parse(
-  await readFile('.api-docs/container-security-evidence.json', 'utf8'),
+  await readFile('.doctopus/container-security-evidence.json', 'utf8'),
 );
 const inventory = JSON.parse(
-  await readFile('.api-docs/container-inventory-evidence.json', 'utf8'),
+  await readFile('.doctopus/container-inventory-evidence.json', 'utf8'),
 );
 assert.equal(receipt.schemaVersion, 1);
 assert.equal(receipt.resolvedImage, image);
@@ -41,7 +41,7 @@ assert.equal(
 assert.deepEqual(receipt.scanner, vulnerabilityScanner);
 assert.equal(receipt.signed, false);
 assert.equal(receipt.publicationApproved, false);
-const root = await realpath('.api-docs/container-security-candidates');
+const root = await realpath('.doctopus/container-security-candidates');
 const directory = await realpath(resolve(receipt.directory));
 const local = relative(root, directory);
 assert(

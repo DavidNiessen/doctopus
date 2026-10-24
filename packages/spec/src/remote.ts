@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 import { Worker } from 'node:worker_threads';
-import { toolVersion } from '@davidniessen/contracts';
+import { toolVersion } from '@davidniessen/doctopus-contracts';
 import { importDestination } from './remote-policy.js';
 import {
   requestAllowedOrigin,
@@ -123,7 +123,7 @@ export async function downloadSpec(
     signal,
     headers: {
       accept: 'application/json, application/yaml, text/yaml, text/plain',
-      'user-agent': 'api-docs/' + toolVersion,
+      'user-agent': 'doctopus/' + toolVersion,
       ...(options.bearerToken
         ? { authorization: 'Bearer ' + options.bearerToken }
         : {}),

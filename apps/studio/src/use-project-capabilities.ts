@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import type { ProjectCapabilities } from '@davidniessen/domain';
+import type { ProjectCapabilities } from '@davidniessen/doctopus-domain';
 import { StudioApiError } from './api.js';
 import type { StudioApi } from './api.js';
 import { readProjectCapabilities } from './project-capabilities.js';

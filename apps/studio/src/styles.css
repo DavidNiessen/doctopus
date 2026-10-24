@@ -6,9 +6,9 @@
   --text: light-dark(#343438, #dedee4);
   --muted: light-dark(#61616b, #aaaab4);
   --heading: light-dark(#1d1d20, #f5f5f7);
-  --accent-text: light-dark(#13765d, #89dfbf);
-  --action-bg: #13765d;
-  --accent-surface: light-dark(#edf6f2, #1e332b);
+  --accent-text: light-dark(#6d28d9, #c4b5fd);
+  --action-bg: #6d28d9;
+  --accent-surface: light-dark(#f3edff, #302044);
   --success-surface: light-dark(#eaf7ef, #1e332b);
   --success-text: light-dark(#12654c, #95e1bc);
   --error-surface: light-dark(#fff0ee, #3b2429);
@@ -149,18 +149,19 @@ header {
   letter-spacing: -0.6px;
 }
 .studio-brand > span {
-  width: 29px;
-  height: 29px;
-  background: var(--action-bg);
+  width: 40px;
+  height: 40px;
+  background: transparent;
   color: white;
   display: grid;
   place-items: center;
   border-radius: var(--ui-control-radius);
   font-size: 1.5rem;
 }
-.studio-brand > span svg {
-  width: 18px;
-  height: 18px;
+.studio-brand > span img {
+  display: block;
+  width: 40px;
+  height: 40px;
 }
 .studio-brand > span {
   flex-shrink: 0;
@@ -672,4 +673,15 @@ a.secondary:hover {
     transition: none !important;
     scroll-behavior: auto !important;
   }
+}
+
+.login-mark {
+  background: transparent;
+  width: 76px;
+  height: 76px;
+}
+.login-mark img {
+  width: 76px;
+  height: 76px;
+  object-fit: contain;
 }

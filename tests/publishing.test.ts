@@ -9,13 +9,13 @@ import {
 } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
-import { renderMarkdown } from '@davidniessen/content';
+import { renderMarkdown } from '@davidniessen/doctopus-content';
 import {
   verifyArtifact,
   writeManifest,
   safeOutput,
-} from '@davidniessen/compiler';
-import { buildSite, createStaticServer } from '@davidniessen/cli';
+} from '@davidniessen/doctopus-compiler';
+import { buildSite, createStaticServer } from '@davidniessen/doctopus-cli';
 describe('static publishing', () => {
   it('sanitizes active content and creates stable heading links', async () => {
     const output = await renderMarkdown(
@@ -26,10 +26,11 @@ describe('static publishing', () => {
     expect(output.headings[0]?.id).toBe('heading-safe-heading');
   });
   it('builds deterministic verified output and serves real routes', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'api-docs-build-'));
+    const root = await mkdtemp(join(tmpdir(), 'doctopus-build-'));
     await cp(resolve('examples/demo'), root, {
       recursive: true,
-      filter: (path) => !path.includes('.api-docs'),
+      filter: (path) =>
+        !path.includes('.doctopus') && !path.includes('.api-docs'),
     });
     const first = await buildSite(root);
     const manifest1 = await verifyArtifact(first.directory);
@@ -72,10 +73,10 @@ describe('static publishing', () => {
     ).rejects.toThrow(/output/);
   });
   it('rejects output symlinks before creating directories outside the project', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'api-docs-symlink-'));
-    const outside = await mkdtemp(join(tmpdir(), 'api-docs-outside-'));
-    await symlink(outside, join(root, '.api-docs'));
-    await expect(safeOutput(root, '.api-docs/site')).rejects.toThrow(
+    const root = await mkdtemp(join(tmpdir(), 'doctopus-symlink-'));
+    const outside = await mkdtemp(join(tmpdir(), 'doctopus-outside-'));
+    await symlink(outside, join(root, '.doctopus'));
+    await expect(safeOutput(root, '.doctopus/site')).rejects.toThrow(
       /symlinks/,
     );
     await expect(access(join(outside, 'site'))).rejects.toMatchObject({

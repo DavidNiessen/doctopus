@@ -75,14 +75,14 @@ export async function inspectGitHubMaven(
   const headers = githubPackageHeaders('maven', env);
   const artifacts = [];
   for (const artifact of [
-    'api-docs-parent',
-    'api-docs-core',
-    'api-docs-spring-boot-starter',
+    'doctopus-parent',
+    'doctopus-core',
+    'doctopus-spring-boot-starter',
   ]) {
     const files = candidate.files.filter(
       (file) => file.path.split('/').at(-3) === artifact,
     );
-    assert.equal(files.length, artifact === 'api-docs-parent' ? 1 : 4);
+    assert.equal(files.length, artifact === 'doctopus-parent' ? 1 : 4);
     let existing = 0;
     for (const file of files) {
       const result = await request(`${candidate.registry}/${file.path}`, {

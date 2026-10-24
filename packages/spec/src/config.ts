@@ -1,5 +1,8 @@
 import { z } from 'zod';
-import type { UiMessageKey, ProjectConfig } from '@davidniessen/contracts';
+import type {
+  UiMessageKey,
+  ProjectConfig,
+} from '@davidniessen/doctopus-contracts';
 import {
   contrastRatio,
   resolvePalette,
@@ -8,7 +11,7 @@ import {
   isRelayEndpoint,
   defaultUiMessages,
   validUiMessage,
-} from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-contracts';
 
 const safePath = z
   .string()
@@ -103,7 +106,9 @@ export const configSchema = z
     guides: safePath.default('guides'),
     theme: z
       .object({
-        preset: z.enum(['mint', 'ocean', 'violet', 'neutral']).default('mint'),
+        preset: z
+          .enum(['mint', 'ocean', 'violet', 'neutral'])
+          .default('violet'),
         accent: color.optional(),
         colors: z
           .object({ light: palette.optional(), dark: palette.optional() })

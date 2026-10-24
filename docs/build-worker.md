@@ -10,7 +10,7 @@ The first supported worker topology uses operator-prepared local sources and fil
 
 ## Approve and prepare input
 
-1. Put reviewed, secret-free documentation input in a dedicated local directory. Keep visible input immutable for the approval's lifetime; `.api-docs` must remain writable for worker output. Hidden entries and `node_modules` are excluded from execution snapshots. Visible files are readable by approved build code.
+1. Put reviewed, secret-free documentation input in a dedicated local directory. Keep visible input immutable for the approval's lifetime; `.doctopus` must remain writable for worker output. Hidden entries and `node_modules` are excluded from execution snapshots. Visible files are readable by approved build code.
 2. Inspect with `node packages/cli/dist/main.js source-info /srv/docs-source --json`. Copy its `source` metadata into the source approval. Configuration parsing, plugins and MDX are not executed by inspection.
 3. Approve the exact project, snapshot and full executable policy through `POST /api/projects/:project/build-sources`. Review the image digest, visible config path, trust flags and resource limits. The project must build with the literal `basePath: /docs/<project-slug>` required by the management server.
 4. Put the returned source UUID, project UUID, canonical local directory, snapshot and identical normalized policy in the worker's independent registry. Changing a database approval cannot choose a host path or enable new trust/resource settings.
@@ -26,7 +26,7 @@ The worker reads strict data-only JSON, bounded to 4 MiB. This example illustrat
   "schemaVersion": 1,
   "serverUrl": "https://docs.example.com",
   "workerId": "build-host-1",
-  "artifactRoot": "/srv/api-docs/artifacts",
+  "artifactRoot": "/srv/doctopus/artifacts",
   "maxConcurrency": 1,
   "maxMemoryMiB": 2048,
   "maxCpus": 2,
@@ -67,8 +67,8 @@ Build the checkout, provision the JSON and a protected credential file, then run
 
 ```sh
 npm run build
-BUILD_WORKER_CONFIG_FILE=/etc/api-docs/worker.json \
-ROOT_TOKEN_FILE=/etc/api-docs/operator-token \
+BUILD_WORKER_CONFIG_FILE=/etc/doctopus/worker.json \
+ROOT_TOKEN_FILE=/etc/doctopus/operator-token \
 npm run worker
 ```
 
@@ -113,4 +113,4 @@ npm run test:build-worker
 
 Use a disposable schema-owner database, matching compiled packages and an actual Linux Docker daemon. The harness uses real HTTP source approvals/enqueues, worker claims/renewals, Docker builds and artifact completion. It checks native output parity, unchanged publication state, changed-source rejection, real cancellation, workspace cleanup, killing the actual worker executable, independent watchdog cleanup, expired workspace/lock reclamation and second-attempt recovery. Recovery waits the real 135-second hard deadline for the fixture policy; it does not change PostgreSQL clocks or shorten ownership budgets. The required CI isolation job builds its own worker image and runs both isolated-runner and worker/API acceptance, retaining receipts.
 
-The PostgreSQL/HTTP suite also checks revoked ownership, independently changed local approval, lost completion acknowledgements and executable file-credential startup/shutdown. Registry/protocol/unit cases cover strict data and URL boundaries, resource admission, bounded idle backoff, controlled failure handling and independent rate-limit budgets. Workspace cases cover active/reused process IDs, boot/namespace boundaries, malformed/oversized ownership, link refusal, nested-link target preservation, bounded sweep progress and shutdown. The fresh-image isolation/worker job passed in [hosted quality run 39983896039](https://github.com/DavidNiessen/api-docs/actions/runs/39983896039) at `6f1e5ce`. Expanded [release rehearsal 39987857551](https://github.com/DavidNiessen/api-docs/actions/runs/39987857551) additionally passed these harnesses with prepared tool version `0.2.0` at source `05a0fa9`, validating nonempty receipts against the prepared version and exact built image. Signed worker distribution, dedicated-host hardening and independent isolation review remain release gates.
+The PostgreSQL/HTTP suite also checks revoked ownership, independently changed local approval, lost completion acknowledgements and executable file-credential startup/shutdown. Registry/protocol/unit cases cover strict data and URL boundaries, resource admission, bounded idle backoff, controlled failure handling and independent rate-limit budgets. Workspace cases cover active/reused process IDs, boot/namespace boundaries, malformed/oversized ownership, link refusal, nested-link target preservation, bounded sweep progress and shutdown. The fresh-image isolation/worker job passed in [hosted quality run 39983896039](https://github.com/DavidNiessen/doctopus/actions/runs/39983896039) at `6f1e5ce`. Expanded [release rehearsal 39987857551](https://github.com/DavidNiessen/doctopus/actions/runs/39987857551) additionally passed these harnesses with prepared tool version `0.2.0` at source `05a0fa9`, validating nonempty receipts against the prepared version and exact built image. Signed worker distribution, dedicated-host hardening and independent isolation review remain release gates.

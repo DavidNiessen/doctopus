@@ -16,7 +16,7 @@ export async function installScanner(tool) {
   assert.match(tool.version, /^\d+\.\d+\.\d+$/);
   for (const digest of [tool.archiveSha256, tool.executableSha256])
     assert.match(digest, /^[a-f0-9]{64}$/);
-  const parent = resolve('.api-docs/tools', `${tool.name}-${tool.version}`);
+  const parent = resolve('.doctopus/tools', `${tool.name}-${tool.version}`);
   const executable = join(parent, tool.name);
   await mkdir(parent, { recursive: true });
   try {

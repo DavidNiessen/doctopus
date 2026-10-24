@@ -21,7 +21,7 @@ const now = Date.parse('2026-10-24T00:00:00Z');
 const image = 'sha256:' + 'a'.repeat(64);
 function fixture() {
   const context = {
-    repository: 'DavidNiessen/api-docs',
+    repository: 'DavidNiessen/doctopus',
     commit: 'b'.repeat(40),
     version: '0.2.0',
     ref: 'refs/tags/v0.2.0',
@@ -31,7 +31,7 @@ function fixture() {
   const inventoryContext = {
     image,
     toolVersion: context.version,
-    packages: ['@davidniessen/server'],
+    packages: ['@davidniessen/doctopus-server'],
     nodeRange: '>=24.22.1 <25',
   };
   const bom = {
@@ -43,9 +43,9 @@ function fixture() {
     },
     components: [
       {
-        name: '@davidniessen/server',
+        name: '@davidniessen/doctopus-server',
         version: '0.2.0',
-        purl: 'pkg:npm/%40api-docs%2Fserver@0.2.0',
+        purl: 'pkg:npm/%40doctopus%2Fserver@0.2.0',
       },
       { name: 'fastify', version: '5.12.7', purl: 'pkg:npm/fastify@5.12.7' },
       { name: 'pg', version: '8.23.1', purl: 'pkg:npm/pg@8.23.1' },
@@ -221,7 +221,7 @@ test('fresh security reports require authentic hosted producer constraints and n
     assert.equal(file, 'gh');
     assert.equal(
       args[args.indexOf('--signer-workflow') + 1],
-      'DavidNiessen/api-docs/.github/workflows/release-publish.yml',
+      'DavidNiessen/doctopus/.github/workflows/release-publish.yml',
     );
     assert.equal(
       args[args.indexOf('--source-digest') + 1],

@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef, useState } from 'react';
-import type { Project } from '@davidniessen/domain';
+import type { Project } from '@davidniessen/doctopus-domain';
 import { StudioApiError } from './api.js';
 import type { StudioApi } from './api.js';
 import { BuildSourceForm } from './BuildSourceForm.js';

@@ -23,7 +23,7 @@ for (const [index, file] of files.entries()) {
       '--config',
       'playwright.studio.config.ts',
       '--output',
-      join('.api-docs/studio-test/results', group),
+      join('.doctopus/studio-test/results', group),
       file,
     ],
     {
@@ -31,7 +31,7 @@ for (const [index, file] of files.entries()) {
       env: {
         ...process.env,
         PLAYWRIGHT_HTML_OUTPUT_DIR: join(
-          '.api-docs/studio-test/reports',
+          '.doctopus/studio-test/reports',
           group,
         ),
       },

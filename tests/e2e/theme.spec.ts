@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-import { themePresets } from '@davidniessen/contracts';
+import { themePresets } from '@davidniessen/doctopus-contracts';
 test('appearance settings offer prepared presets and the former custom-editor URL cannot expose editing controls', async ({
   page,
 }) => {
@@ -46,14 +46,14 @@ test('appearance settings offer prepared presets and the former custom-editor UR
     .selectOption('dark');
   await page.setViewportSize({ width: 390, height: 844 });
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
-  await page.screenshot({ path: '.api-docs/prepared-themes-mobile-dark.png' });
+  await page.screenshot({ path: '.doctopus/prepared-themes-mobile-dark.png' });
 });
 test('legacy custom appearance is removed while mode, layout and recognized presets migrate', async ({
   page,
 }) => {
   await page.addInitScript(() =>
     localStorage.setItem(
-      'api-docs:reader-settings:v1:/gallery',
+      'doctopus:reader-settings:v1:/gallery',
       JSON.stringify({
         version: 1,
         mode: 'dark',
@@ -83,12 +83,12 @@ test('legacy custom appearance is removed while mode, layout and recognized pres
   await expect
     .poll(() =>
       page.evaluate(() =>
-        localStorage.getItem('api-docs:reader-settings:v1:/gallery'),
+        localStorage.getItem('doctopus:reader-settings:v1:/gallery'),
       ),
     )
     .toBeNull();
   const saved = await page.evaluate(() =>
-    JSON.parse(localStorage.getItem('api-docs:reader-settings:v2:/gallery')!),
+    JSON.parse(localStorage.getItem('doctopus:reader-settings:v2:/gallery')!),
   );
   expect(saved).toEqual({
     version: 2,

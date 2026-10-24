@@ -2,7 +2,7 @@ import { afterEach, expect, it } from 'vitest';
 import { mkdir, mkdtemp, rm, symlink, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, parse } from 'node:path';
-import { confinedPath } from '@davidniessen/spec';
+import { confinedPath } from '@davidniessen/doctopus-spec';
 
 const roots: string[] = [];
 afterEach(async () => {
@@ -11,7 +11,7 @@ afterEach(async () => {
   );
 });
 async function fixture() {
-  const root = await mkdtemp(join(tmpdir(), 'api-docs-path-boundary-'));
+  const root = await mkdtemp(join(tmpdir(), 'doctopus-path-boundary-'));
   roots.push(root);
   const project = join(root, 'project'),
     outside = join(root, 'project-other');

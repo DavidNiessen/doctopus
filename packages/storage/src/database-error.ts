@@ -1,4 +1,4 @@
-import { RepositoryUnavailableError } from '@davidniessen/domain';
+import { RepositoryUnavailableError } from '@davidniessen/doctopus-domain';
 
 const unavailableCodes = new Set([
   'ECONNREFUSED',

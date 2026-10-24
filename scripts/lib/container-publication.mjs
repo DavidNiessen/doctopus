@@ -9,7 +9,7 @@ import { verifyReleaseAssets } from './release-assets.mjs';
 
 const digestPattern = /^sha256:[a-f0-9]{64}$/;
 export const promotionPredicateType =
-  'https://github.com/DavidNiessen/api-docs/attestations/promotion/v1';
+  'https://github.com/DavidNiessen/doctopus/attestations/promotion/v1';
 
 function repositoryPath(repository) {
   assert.match(
@@ -147,7 +147,7 @@ export async function loadContainerPublication(root, context, plan) {
     assert.equal(plan[key], context[key]);
   repositoryPath(plan.container.repository);
   assert.equal(plan.container.tag, context.version);
-  const directory = join(root, '.api-docs/release-assets/container');
+  const directory = join(root, '.doctopus/release-assets/container');
   const manifest = await verifyReleaseAssets(directory, context, 'container');
   const archive = manifest.files.find((file) => file.name === 'server.tar.gz');
   assert(archive);
@@ -332,7 +332,7 @@ export async function probePublishedContainer(
   version,
   { run = runReleaseDocker } = {},
 ) {
-  const name = 'api-docs-public-probe-' + randomUUID();
+  const name = 'doctopus-public-probe-' + randomUUID();
   await run(config, [
     'container',
     'create',
@@ -358,7 +358,7 @@ export async function probePublishedContainer(
     reference,
     '--input-type=module',
     '-e',
-    "import {toolVersion} from '@davidniessen/contracts'; process.stdout.write(JSON.stringify({uid:process.getuid(),toolVersion,node:process.version}));",
+    "import {toolVersion} from '@davidniessen/doctopus-contracts'; process.stdout.write(JSON.stringify({uid:process.getuid(),toolVersion,node:process.version}));",
   ]);
   try {
     const probe = await run(config, ['container', 'start', '--attach', name]);

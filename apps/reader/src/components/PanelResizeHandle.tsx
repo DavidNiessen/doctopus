@@ -34,7 +34,7 @@ export function PanelResizeHandle({
   const drag = useRef<{ pointer: number; x: number; size: number } | null>(
     null,
   );
-  const key = `api-docs-layout:${storageKey}:${property}`;
+  const key = `doctopus-layout:${storageKey}:${property}`;
   const clamp = (next: number) => Math.max(min, Math.min(max, next));
   function apply(next: number) {
     const width = clamp(Math.round(next));

@@ -1,8 +1,8 @@
-import { confinedPath, readBoundedFile } from '@davidniessen/spec';
+import { confinedPath, readBoundedFile } from '@davidniessen/doctopus-spec';
 import type {
   ProjectConfig,
   ReaderExtensionAsset,
-} from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-contracts';
 import { digest } from './manifest.js';
 
 /** Copy reviewed ESM bytes; source modules are never imported or evaluated by the builder. */

@@ -7,7 +7,7 @@ import { tmpdir } from 'node:os';
 import { readRegularFile } from '../lib/read-regular-file.mjs';
 
 async function fixture(t) {
-  const root = await mkdtemp(join(tmpdir(), 'api-docs-regular-read-'));
+  const root = await mkdtemp(join(tmpdir(), 'doctopus-regular-read-'));
   t.after(() => rm(root, { recursive: true, force: true }));
   return root;
 }

@@ -8,8 +8,8 @@ import {
 } from 'node:fs/promises';
 import { uptime } from 'node:os';
 import { basename, join } from 'node:path';
-import { safeOutput } from '@davidniessen/compiler';
-import { readTextFile } from '@davidniessen/spec';
+import { safeOutput } from '@davidniessen/doctopus-compiler';
+import { readTextFile } from '@davidniessen/doctopus-spec';
 import { record, identifier } from './config.js';
 
 const markerName = 'worker-owner.json';
@@ -153,7 +153,7 @@ export async function reclaimWorkerWorkspaces(
 ): Promise<{ scanned: number; removed: number }> {
   signal.throwIfAborted();
   const current = host ?? (await workspaceEnvironment());
-  const parent = await safeOutput(sourceDirectory, '.api-docs/worker-jobs');
+  const parent = await safeOutput(sourceDirectory, '.doctopus/worker-jobs');
   const parentIdentity = await lstat(parent);
   let scanned = 0,
     removed = 0;

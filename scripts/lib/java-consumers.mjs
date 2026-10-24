@@ -14,8 +14,8 @@ import { tmpdir } from 'node:os';
 import { delimiter, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
-import { buildSite } from '@davidniessen/cli';
-import { parseSource } from '@davidniessen/spec';
+import { buildSite } from '@davidniessen/doctopus-cli';
+import { parseSource } from '@davidniessen/doctopus-spec';
 import { auditReleaseVersions } from './release-versions.mjs';
 import { bindJavaSbom, validateSpringMetadata } from './java-distributions.mjs';
 
@@ -142,7 +142,7 @@ export async function buildJavaCandidate({
     ).stdout.trim().length > 0;
   const output = join(
     repository,
-    '.api-docs/java-candidates',
+    '.doctopus/java-candidates',
     `${commit.slice(0, 12)}-${Date.now()}`,
   );
   await mkdir(output, { recursive: true });
@@ -181,16 +181,16 @@ export async function buildJavaCandidate({
     );
     await cp(
       join(javaRoot, 'pom.xml'),
-      join(output, `api-docs-parent-${versions.javaVersion}.pom`),
+      join(output, `doctopus-parent-${versions.javaVersion}.pom`),
     );
     report.parentPom = {
-      filename: `api-docs-parent-${versions.javaVersion}.pom`,
+      filename: `doctopus-parent-${versions.javaVersion}.pom`,
       sha256: sha(await readFile(join(javaRoot, 'pom.xml'))),
     };
     const license = sha(await readFile(join(repository, 'LICENSE'))),
       notice = sha(await readFile(join(repository, 'NOTICE')));
     for (const module of ['core', 'spring-boot-starter']) {
-      const artifact = `api-docs-${module}`,
+      const artifact = `doctopus-${module}`,
         name = `${artifact}-${versions.javaVersion}`;
       await cp(
         join(javaRoot, module, `target/${name}.jar`),
@@ -347,7 +347,8 @@ export async function prepareJavaPublications(candidate) {
     const publication = join(candidate.output, item.name);
     await cp(join(repository, 'examples/demo'), publication, {
       recursive: true,
-      filter: (file) => !file.includes('.api-docs'),
+      filter: (file) =>
+        !file.includes('.doctopus') && !file.includes('.api-docs'),
     });
     const config = join(publication, 'docs.config.yaml');
     const value = parseSource(
@@ -357,7 +358,7 @@ export async function prepareJavaPublications(candidate) {
     value.basePath = item.basePath;
     await writeFile(config, JSON.stringify(value, null, 2) + '\n');
     await buildSite(publication);
-    candidate[item.pathKey] = join(publication, '.api-docs/site');
+    candidate[item.pathKey] = join(publication, '.doctopus/site');
     const manifest = JSON.parse(
       await readFile(join(candidate[item.pathKey], 'manifest.json'), 'utf8'),
     );
@@ -373,11 +374,11 @@ export async function saveJavaCandidate(candidate) {
 export async function currentConsumerResults(directory, hostSuite) {
   const requiredCases = new Map([
     [
-      'io.apidocs.consumer.PackagedPublicationTest',
+      'dev.niessen.doctopus.consumer.PackagedPublicationTest',
       ['publicClassesComeFromTheExactInstalledJarsAndVerifyTheRealPublication'],
     ],
     [
-      'io.apidocs.consumer.MvcConsumerTest',
+      'dev.niessen.doctopus.consumer.MvcConsumerTest',
       [
         'installedStarterWorksWithOnlyMvcBehindHostSecurityAndContextPath',
         'installedMvcStarterSupportsRootMountWithAContextPrefix',
@@ -385,7 +386,7 @@ export async function currentConsumerResults(directory, hostSuite) {
       ],
     ],
     [
-      'io.apidocs.consumer.ReactiveConsumerTest',
+      'dev.niessen.doctopus.consumer.ReactiveConsumerTest',
       [
         'installedStarterWorksWithOnlyWebFluxBehindHostSecurityAndContextPath',
         'installedReactiveStarterSupportsRootMountWithAContextPrefix',
@@ -442,10 +443,11 @@ export async function currentConsumerResults(directory, hostSuite) {
   }
   assert(
     results.some(
-      (entry) => entry.suite === 'io.apidocs.consumer.PackagedPublicationTest',
+      (entry) =>
+        entry.suite === 'dev.niessen.doctopus.consumer.PackagedPublicationTest',
     ) &&
       results.some(
-        (entry) => entry.suite === `io.apidocs.consumer.${hostSuite}`,
+        (entry) => entry.suite === `dev.niessen.doctopus.consumer.${hostSuite}`,
       ),
     'Required installed consumer suites did not execute.',
   );
@@ -479,14 +481,17 @@ export async function testJavaConsumers(
     'Candidate inspection must complete before consumption.',
   );
   for (const mode of ['mvc', 'reactive']) {
-    const directory = await mkdtemp(join(tmpdir(), 'api-docs-installed-java-'));
+    const directory = await mkdtemp(join(tmpdir(), 'doctopus-installed-java-'));
     const entry = { java, boot, mode, passed: false };
     candidate.report.consumers.push(entry);
     const prefix = `java-${java.split('.')[0]}-boot-${boot}-${mode}`;
     try {
       const hostSuite =
         mode === 'mvc' ? 'MvcConsumerTest' : 'ReactiveConsumerTest';
-      const target = join(directory, 'src/test/java/io/apidocs/consumer');
+      const target = join(
+        directory,
+        'src/test/java/dev/niessen/doctopus/consumer',
+      );
       await mkdir(target, { recursive: true });
       for (const name of [
         'PackagedPublicationTest.java',
@@ -496,7 +501,7 @@ export async function testJavaConsumers(
         await cp(join(fixture, name), join(target, name));
       const pom = (await readFile(join(fixture, 'pom.xml'), 'utf8'))
         .replaceAll('__BOOT_VERSION__', boot)
-        .replaceAll('__API_DOCS_VERSION__', candidate.report.version)
+        .replaceAll('__DOCTOPUS_VERSION__', candidate.report.version)
         .replaceAll(
           '__WEB_STARTER__',
           mode === 'mvc'

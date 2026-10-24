@@ -13,11 +13,11 @@ import { tmpdir, uptime } from 'node:os';
 import { join, resolve } from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
 import { promisify } from 'node:util';
-import { buildSite, inspectIsolatedSource } from '@davidniessen/cli';
-import { readBuildPolicy } from '@davidniessen/contracts';
-import { verifyArtifact } from '@davidniessen/compiler';
-import { PostgresRepository } from '@davidniessen/storage';
-import { createServer } from '@davidniessen/server';
+import { buildSite, inspectIsolatedSource } from '@davidniessen/doctopus-cli';
+import { readBuildPolicy } from '@davidniessen/doctopus-contracts';
+import { verifyArtifact } from '@davidniessen/doctopus-compiler';
+import { PostgresRepository } from '@davidniessen/doctopus-storage';
+import { createServer } from '@davidniessen/doctopus-server';
 import { readWorkerConfig } from '../apps/worker/dist/config.js';
 import { createWorkerClient } from '../apps/worker/dist/protocol.js';
 import {
@@ -61,14 +61,14 @@ const resources = async () => ({
     '--quiet',
     '--no-trunc',
     '--filter',
-    'label=io.api-docs.isolated-job',
+    'label=io.doctopus.isolated-job',
   ),
   volumes: await docker(
     'volume',
     'ls',
     '--quiet',
     '--filter',
-    'label=io.api-docs.isolated-output',
+    'label=io.doctopus.isolated-output',
   ),
 });
 async function until(predicate, timeoutMs = 45000) {
@@ -82,7 +82,7 @@ async function until(predicate, timeoutMs = 45000) {
   }
 }
 const before = await resources();
-const root = await mkdtemp(join(tmpdir(), 'api-docs-worker-docker-'));
+const root = await mkdtemp(join(tmpdir(), 'doctopus-worker-docker-'));
 const artifactRoot = join(root, 'artifacts');
 await mkdir(artifactRoot);
 const repository = new PostgresRepository(database, { migrate: true });
@@ -256,7 +256,7 @@ try {
   );
   assert.deepEqual(await repository.publications(project.id), []);
   assert.deepEqual(
-    await readdir(join(source.directory, '.api-docs/worker-jobs')),
+    await readdir(join(source.directory, '.doctopus/worker-jobs')),
     [],
   );
   evidence.checks.push(
@@ -283,7 +283,7 @@ try {
   );
   evidence.checks.push('changed-source-rejected-and-prior-output-retained');
 
-  const plugin = `import {definePlugin} from '@davidniessen/plugin-sdk';\nawait new Promise(resolve=>setTimeout(resolve,2000));\nexport default definePlugin({name:'worker-acceptance',version:'0.1.0',pluginApi:'1',capabilities:['transform'],transform(site){return site}});\n`;
+  const plugin = `import {definePlugin} from '@davidniessen/doctopus-plugin-sdk';\nawait new Promise(resolve=>setTimeout(resolve,2000));\nexport default definePlugin({name:'worker-acceptance',version:'0.1.0',pluginApi:'1',capabilities:['transform'],transform(site){return site}});\n`;
   const cancellable = await prepare('cancellation', plugin);
   const cancelling = await enqueue(cancellable);
   const cancellationTask = run(cancellable);
@@ -295,7 +295,7 @@ try {
     'cancelled',
   );
   assert.deepEqual(
-    await readdir(join(cancellable.directory, '.api-docs/worker-jobs')),
+    await readdir(join(cancellable.directory, '.doctopus/worker-jobs')),
     [],
   );
   await until(
@@ -352,19 +352,19 @@ try {
   const lost = await repository.buildJobs.job(project.id, abandoned.id);
   assert.equal(lost.state, 'running');
   const orphanedDirectories = await readdir(
-    join(recoverable.directory, '.api-docs/worker-jobs'),
+    join(recoverable.directory, '.doctopus/worker-jobs'),
   );
   assert.equal(orphanedDirectories.length, 1);
   await readFile(
     join(
       recoverable.directory,
-      '.api-docs/worker-jobs',
+      '.doctopus/worker-jobs',
       orphanedDirectories[0],
       '.build.lock',
     ),
   );
   assert.deepEqual(
-    (await readdir(join(recoverable.directory, '.api-docs'))).filter((name) =>
+    (await readdir(join(recoverable.directory, '.doctopus'))).filter((name) =>
       /^(?:isolated|previous)-/.test(name),
     ),
     [],
@@ -373,7 +373,7 @@ try {
     await readFile(
       join(
         recoverable.directory,
-        '.api-docs/worker-jobs',
+        '.doctopus/worker-jobs',
         orphanedDirectories[0],
         'worker-owner.json',
       ),
@@ -395,7 +395,7 @@ try {
   assert.equal(recovered.attempts, 2);
   assert.equal(recovered.workerId, 'docker-acceptance');
   assert.deepEqual(
-    await readdir(join(recoverable.directory, '.api-docs/worker-jobs')),
+    await readdir(join(recoverable.directory, '.doctopus/worker-jobs')),
     [],
   );
   assert.equal(

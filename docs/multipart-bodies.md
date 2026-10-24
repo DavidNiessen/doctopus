@@ -15,7 +15,10 @@ Previews retain ordinary text/plain and JSON values while redacting password/wri
 Supply logical text values as a JSON object, and selected files separately. File fields declare `format: binary`, directly or inside array items. Arrays of files and arrays of text/JSON values repeat the part name. The encoder resolves local root, property and item references using the API's schema map and dialect.
 
 ```ts
-import { prepareRequest, toFetchRequest } from '@davidniessen/explorer';
+import {
+  prepareRequest,
+  toFetchRequest,
+} from '@davidniessen/doctopus-explorer';
 
 const request = prepareRequest(operation, api.securitySchemes, {
   server: 'https://api.example.com',

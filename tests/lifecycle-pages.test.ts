@@ -7,14 +7,14 @@ import {
   lifecycleRoutes,
   operationHref,
   pageMetadata,
-} from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-contracts';
 import {
   compileProject,
   verifyArtifact,
   auditDocumentation,
-} from '@davidniessen/compiler';
-import { buildSite, createStaticServer } from '@davidniessen/cli';
-import { renderDocument } from '@davidniessen/reader/render';
+} from '@davidniessen/doctopus-compiler';
+import { buildSite, createStaticServer } from '@davidniessen/doctopus-cli';
+import { renderDocument } from '@davidniessen/doctopus-reader/render';
 
 describe('static lifecycle reader data', () => {
   it('resolves replacements before navigation is bounded and preserves route data when rendering twice', async () => {
@@ -91,11 +91,12 @@ describe('static lifecycle reader data', () => {
     );
   });
   it('exports verified routes, SEO and base-path-safe data, and preserves the previous artifact on redirect collision', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'api-docs-lifecycle-pages-'));
+    const root = await mkdtemp(join(tmpdir(), 'doctopus-lifecycle-pages-'));
     try {
       await cp(resolve('examples/lifecycle'), root, {
         recursive: true,
-        filter: (file) => !file.includes('.api-docs'),
+        filter: (file) =>
+          !file.includes('.doctopus') && !file.includes('.api-docs'),
       });
       const config = join(root, 'docs.config.yaml');
       await writeFile(

@@ -25,7 +25,7 @@ import {
   loadReaderExtensions,
   digest,
   createArtifactPathFilter,
-} from '@davidniessen/compiler';
+} from '@davidniessen/doctopus-compiler';
 import {
   guideHref,
   operationHref,
@@ -36,12 +36,15 @@ import {
   localeRoute,
   pageContentLocale,
   pageMetadata,
-} from '@davidniessen/contracts';
-import type { SiteData, ArtifactManifest } from '@davidniessen/contracts';
-import { renderDocument } from '@davidniessen/reader/render';
+} from '@davidniessen/doctopus-contracts';
+import type {
+  SiteData,
+  ArtifactManifest,
+} from '@davidniessen/doctopus-contracts';
+import { renderDocument } from '@davidniessen/doctopus-reader/render';
 import { searchAssets } from './search-assets.js';
 import { operationIndexAssets } from './operation-index.js';
-import { confinedPath, readTextFile } from '@davidniessen/spec';
+import { confinedPath, readTextFile } from '@davidniessen/doctopus-spec';
 import { activateDirectory } from './activate.js';
 export { vendorRemoteSpec } from './vendor-spec.js';
 export type { VendorSpecOptions } from './vendor-spec.js';
@@ -75,24 +78,24 @@ export async function buildSite(
   );
   const directory = await safeOutput(
     project,
-    options.output ?? '.api-docs/site',
+    options.output ?? '.doctopus/site',
   );
-  const stage = await safeOutput(project, `.api-docs/build-${randomUUID()}`);
+  const stage = await safeOutput(project, `.doctopus/build-${randomUUID()}`);
   const previous = await safeOutput(
     project,
-    `.api-docs/previous-${randomUUID()}`,
+    `.doctopus/previous-${randomUUID()}`,
   );
   const lockPath = join(dirname(directory), '.build.lock');
   const lock = await open(lockPath, 'wx').catch(() => {
     throw new Error(
-      'Another build is active. If a process crashed, inspect and remove .api-docs/.build.lock before retrying.',
+      'Another build is active. If a process crashed, inspect and remove .doctopus/.build.lock before retrying.',
     );
   });
   try {
     const assets = fileURLToPath(
       new URL(
         './client/assets',
-        import.meta.resolve('@davidniessen/reader/render'),
+        import.meta.resolve('@davidniessen/doctopus-reader/render'),
       ),
     );
     await cp(assets, join(stage, 'assets'), { recursive: true });
@@ -470,7 +473,7 @@ export function createDevelopmentBuilder(
     try {
       temporary = await safeOutput(
         project,
-        `.api-docs/preview-${randomUUID()}`,
+        `.doctopus/preview-${randomUUID()}`,
       );
       for (const [file, value] of updates) {
         const staged = join(temporary, file);

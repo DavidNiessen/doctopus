@@ -4,8 +4,12 @@ import {
   serializeJsonValue,
   resolveSchema,
   objectFieldSchema,
-} from '@davidniessen/contracts';
-import type { JsonValueNode, Media, Schema } from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-contracts';
+import type {
+  JsonValueNode,
+  Media,
+  Schema,
+} from '@davidniessen/doctopus-contracts';
 import { encodeValue } from './parameters.js';
 import { hasBodyStyle, styledBodyParts } from './body-style.js';
 

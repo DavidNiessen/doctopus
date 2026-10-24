@@ -5,8 +5,8 @@ import { mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { promisify } from 'node:util';
-import { compileProject } from '@davidniessen/compiler';
-import { runPluginFiles } from '@davidniessen/plugin-sdk';
+import { compileProject } from '@davidniessen/doctopus-compiler';
+import { runPluginFiles } from '@davidniessen/doctopus-plugin-sdk';
 import { goSnippet } from '../examples/snippet-plugin/go-code.mjs';
 
 const exec = promisify(execFile);
@@ -17,7 +17,7 @@ assert.match(
   /^go version go1\.(?:2[3-9]|[3-9][0-9])\./,
   'Use a real Go toolchain, version 1.23 or newer',
 );
-const directory = await mkdtemp(join(tmpdir(), 'api-docs-go-snippets-'));
+const directory = await mkdtemp(join(tmpdir(), 'doctopus-go-snippets-'));
 const requests = [];
 let redirectHits = 0;
 const server = createServer(async (request, response) => {
@@ -106,7 +106,7 @@ const environment = {
   GO111MODULE: 'off',
   CGO_ENABLED: '0',
   GOPATH: join(directory, 'gopath'),
-  GOCACHE: process.env.GOCACHE ?? join(tmpdir(), 'api-docs-go-build-cache'),
+  GOCACHE: process.env.GOCACHE ?? join(tmpdir(), 'doctopus-go-build-cache'),
 };
 async function execute(code, index) {
   const source = join(directory, `example-${index}.go`);

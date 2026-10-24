@@ -15,28 +15,29 @@ import {
   buildSite,
   createDevelopmentBuilder,
   createStaticServer,
-} from '@davidniessen/cli';
+} from '@davidniessen/doctopus-cli';
 import {
   compileProject,
   auditDocumentation,
   verifyArtifact,
-} from '@davidniessen/compiler';
-import { loadGuides } from '@davidniessen/content';
-import { parseConfig } from '@davidniessen/spec';
+} from '@davidniessen/doctopus-compiler';
+import { loadGuides } from '@davidniessen/doctopus-content';
+import { parseConfig } from '@davidniessen/doctopus-spec';
 import {
   createPageData,
   pageMetadata,
   guidesForLocale,
   validateGuideTranslations,
-} from '@davidniessen/contracts';
-import { createSearchIndex, search } from '@davidniessen/search';
+} from '@davidniessen/doctopus-contracts';
+import { createSearchIndex, search } from '@davidniessen/doctopus-search';
 let root = '',
   built: Awaited<ReturnType<typeof buildSite>>;
 async function project() {
-  const root = await mkdtemp(join(tmpdir(), 'api-docs-guide-translations-'));
+  const root = await mkdtemp(join(tmpdir(), 'doctopus-guide-translations-'));
   await cp(resolve('examples/localized'), root, {
     recursive: true,
-    filter: (path) => !path.includes('.api-docs'),
+    filter: (path) =>
+      !path.includes('.doctopus') && !path.includes('.api-docs'),
   });
   return root;
 }

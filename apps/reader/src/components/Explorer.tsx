@@ -4,8 +4,12 @@ import {
   formatExample,
   hasExternalExamples,
   isJsonMediaType,
-} from '@davidniessen/contracts';
-import type { ApiDocument, Operation, Media } from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-contracts';
+import type {
+  ApiDocument,
+  Operation,
+  Media,
+} from '@davidniessen/doctopus-contracts';
 import {
   generateSnippet,
   generateMockResponse,
@@ -17,14 +21,14 @@ import {
   toFetchRequest,
   isMultipartMediaType,
   canSerializeEmptyParameter,
-} from '@davidniessen/explorer';
+} from '@davidniessen/doctopus-explorer';
 import type {
   PreparedRequest,
   SnippetLanguage,
   MultipartFiles,
   MultipartHeaders,
   MockResponse,
-} from '@davidniessen/explorer';
+} from '@davidniessen/doctopus-explorer';
 import { CodeBlock } from './CodeBlock.js';
 import { Icon } from './Icon.js';
 import { CopyButton } from './CopyButton.js';

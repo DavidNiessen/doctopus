@@ -91,7 +91,7 @@ if (typeof archive === 'string') {
     metadata.versions[version].dist.integrity,
   );
 }
-const pom = `${registry.maven}/dev/niessen/api-docs-parent/${version}/api-docs-parent-${version}.pom`;
+const pom = `${registry.maven}/dev/niessen/doctopus-parent/${version}/doctopus-parent-${version}.pom`;
 await observe(pom, 'maven', 'maven-parent');
 await download(pom, 'maven', 'maven-download');
 const report = JSON.stringify({ repository, version, observations }, null, 2);

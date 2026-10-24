@@ -1,7 +1,7 @@
 import { createWriteStream } from 'node:fs';
 import { finished } from 'node:stream/promises';
 import { pathToFileURL } from 'node:url';
-import type { SiteData } from '@davidniessen/contracts';
+import type { SiteData } from '@davidniessen/doctopus-contracts';
 import { applyPlugins, definePlugin } from './index.js';
 import type { BuildPlugin } from './index.js';
 import { pluginFile, pluginDigest } from './files.js';

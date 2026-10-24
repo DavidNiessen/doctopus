@@ -1,5 +1,5 @@
-<project child.project.url.inherit.append.path="false" xmlns="http://maven.apache.org/POM/4.0.0"><modelVersion>4.0.0</modelVersion><parent><groupId>dev.niessen</groupId><artifactId>api-docs-parent</artifactId><version>0.2.0-candidate.7</version></parent><artifactId>api-docs-spring-boot-starter</artifactId><dependencies>
-<dependency><groupId>dev.niessen</groupId><artifactId>api-docs-core</artifactId><version>${project.version}</version></dependency>
+<project child.project.url.inherit.append.path="false" xmlns="http://maven.apache.org/POM/4.0.0"><modelVersion>4.0.0</modelVersion><parent><groupId>dev.niessen</groupId><artifactId>doctopus-parent</artifactId><version>0.2.0-candidate.7</version></parent><artifactId>doctopus-spring-boot-starter</artifactId><dependencies>
+<dependency><groupId>dev.niessen</groupId><artifactId>doctopus-core</artifactId><version>${project.version}</version></dependency>
 <dependency><groupId>org.springframework.boot</groupId><artifactId>spring-boot-autoconfigure</artifactId></dependency>
 <dependency><groupId>org.springframework</groupId><artifactId>spring-webmvc</artifactId><optional>true</optional></dependency>
 <dependency><groupId>org.springframework</groupId><artifactId>spring-webflux</artifactId><optional>true</optional></dependency>

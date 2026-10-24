@@ -1,7 +1,14 @@
-import { parseArtifactManifest, verifyArtifact } from '@davidniessen/compiler';
-import { confinedPath, readTextFile, parseConfig } from '@davidniessen/spec';
-import type { Project } from '@davidniessen/domain';
-import { BuildInputError } from '@davidniessen/domain';
+import {
+  parseArtifactManifest,
+  verifyArtifact,
+} from '@davidniessen/doctopus-compiler';
+import {
+  confinedPath,
+  readTextFile,
+  parseConfig,
+} from '@davidniessen/doctopus-spec';
+import type { Project } from '@davidniessen/doctopus-domain';
+import { BuildInputError } from '@davidniessen/doctopus-domain';
 import { join } from 'node:path';
 
 /** Verify staged bytes before registering a worker result or publication. */

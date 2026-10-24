@@ -1,8 +1,11 @@
 import { useMemo, useState } from 'react';
-import { resolveSchema } from '@davidniessen/contracts';
-import type { Media, Schema } from '@davidniessen/contracts';
-import { multipartHeaderFields } from '@davidniessen/explorer';
-import type { MultipartFiles, MultipartHeaders } from '@davidniessen/explorer';
+import { resolveSchema } from '@davidniessen/doctopus-contracts';
+import type { Media, Schema } from '@davidniessen/doctopus-contracts';
+import { multipartHeaderFields } from '@davidniessen/doctopus-explorer';
+import type {
+  MultipartFiles,
+  MultipartHeaders,
+} from '@davidniessen/doctopus-explorer';
 import { multipartEditorModel } from '../multipart-input.js';
 import { BodyEditor } from './BodyEditor.js';
 

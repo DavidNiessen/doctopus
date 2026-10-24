@@ -4,8 +4,12 @@ import {
   resolveSchema,
   serializeJsonValue,
   objectFieldSchema,
-} from '@davidniessen/contracts';
-import type { JsonValueNode, Media, Schema } from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-contracts';
+import type {
+  JsonValueNode,
+  Media,
+  Schema,
+} from '@davidniessen/doctopus-contracts';
 import {
   multipartHeaderLines,
   prepareMultipartHeaders,
@@ -156,7 +160,7 @@ export function createMultipartParts(
     );
   }
   if (
-    schema['x-api-docs-boolean-schema'] === false ||
+    schema['x-doctopus-boolean-schema'] === false ||
     (schema.type && typeOf(schema) !== 'object') ||
     ['allOf', 'anyOf', 'oneOf', 'if', 'then', 'else'].some((key) =>
       Object.hasOwn(schema, key),
@@ -302,7 +306,7 @@ export function multipartBody(parts: readonly MultipartPart[]): {
   validateMultipartParts(parts);
   const random = crypto.getRandomValues(new Uint8Array(24));
   const boundary =
-    'api-docs-' +
+    'doctopus-' +
     Array.from(random, (byte) => byte.toString(16).padStart(2, '0')).join('');
   const chunks: BlobPart[] = [];
   for (const part of parts) {

@@ -76,7 +76,7 @@ test('classic reference lists collapsed endpoints in the main page and lazily op
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   await row.scrollIntoViewIfNeeded();
   await page.screenshot({
-    path: '.api-docs/classic-endpoints-expanded-light.png',
+    path: '.doctopus/classic-endpoints-expanded-light.png',
   });
   await row.locator('summary').first().click();
   await expect(page.locator('.endpoint-disclosure[open]')).toHaveCount(0);
@@ -171,7 +171,7 @@ test('large classic lists paginate beyond sidebar limits and remain contained on
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   await page.setViewportSize({ width: 390, height: 844 });
   await page.screenshot({
-    path: '.api-docs/classic-endpoints-mobile-dark.png',
+    path: '.doctopus/classic-endpoints-mobile-dark.png',
   });
 });
 

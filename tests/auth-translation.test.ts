@@ -2,7 +2,7 @@ import { createElement } from 'react';
 import type { ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { afterEach, expect, it, vi } from 'vitest';
-import { createUiTranslation } from '@davidniessen/contracts';
+import { createUiTranslation } from '@davidniessen/doctopus-contracts';
 import { UiContext } from '../apps/reader/src/ui-translation.js';
 import { AuthField } from '../apps/reader/src/components/AuthField.js';
 import { RelayControls } from '../apps/reader/src/components/RelayControls.js';

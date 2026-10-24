@@ -31,14 +31,14 @@ class InspectDocumentation {
       String legal = classifier.equals("sources") ? "META-INF/" : "resources/legal/";
       require(sha(content(jar, legal + "LICENSE")).equals(args[4]), "Source license is missing or changed");
       require(sha(content(jar, legal + "NOTICE")).equals(args[5]), "Source notice is missing or changed");
-      String publicType = module.equals("core") ? "io/apidocs/core/Publication" : "io/apidocs/spring/ApiDocsProperties";
+      String publicType = module.equals("core") ? "dev/niessen/doctopus/core/Publication" : "dev/niessen/doctopus/spring/DoctopusProperties";
       String metadata = "";
       if (classifier.equals("sources")) {
         require(unique.contains(publicType + ".java"), "Public sources are missing");
-        String maven = "META-INF/maven/dev.niessen/api-docs-" + module + "/";
+        String maven = "META-INF/maven/dev.niessen/doctopus-" + module + "/";
         var properties = new Properties();
         try (var input = jar.getInputStream(jar.getJarEntry(maven + "pom.properties"))) { properties.load(input); }
-        require(version.equals(properties.getProperty("version")) && ("api-docs-" + module).equals(properties.getProperty("artifactId"))
+        require(version.equals(properties.getProperty("version")) && ("doctopus-" + module).equals(properties.getProperty("artifactId"))
             && "dev.niessen".equals(properties.getProperty("groupId")), "Source Maven coordinates disagree");
         metadata = ",\"pomSha256\":\"" + sha(content(jar, maven + "pom.xml")) + "\"";
       } else {

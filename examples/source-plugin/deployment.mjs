@@ -1,10 +1,10 @@
 import { readFile } from 'node:fs/promises';
-import { definePlugin } from '@davidniessen/plugin-sdk';
+import { definePlugin } from '@davidniessen/doctopus-plugin-sdk';
 import {
   parseJsonValue,
   serializeJsonValue,
   setJsonProperty,
-} from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-contracts';
 
 // Review this file and deployment.json before enabling --trust-plugins.
 // This example uses the bounded lossless JSON editor: 1 MiB, 32 levels, 10k values.

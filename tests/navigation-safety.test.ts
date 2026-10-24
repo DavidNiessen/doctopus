@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest';
-import { safeNavigationHref, withBase } from '@davidniessen/contracts';
+import { safeNavigationHref, withBase } from '@davidniessen/doctopus-contracts';
 
 it('retains local navigation, query values, fragments and explicitly allowed HTTP(S) links', () => {
   expect(withBase('/docs', '/api/pets/?q=hello%20world#response')).toBe(

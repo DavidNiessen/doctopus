@@ -1,31 +1,31 @@
-name: api-docs
+name: doctopus
 services:
   db:
     image: postgres:17-alpine@sha256:1bcc18d81671b02906296aad470ec9778a6b71016ce953092024b680bad007b0
     restart: unless-stopped
     environment:
-      POSTGRES_DB: apidocs
+      POSTGRES_DB: doctopus
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD_FILE: /run/secrets/db_password
     secrets: [db_password, owner_password, runtime_password]
     volumes:
       - database:/var/lib/postgresql/data
-      - ./init-database.sh:/docker-entrypoint-initdb.d/10-api-docs.sh:ro
+      - ./init-database.sh:/docker-entrypoint-initdb.d/10-doctopus.sh:ro
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U postgres -d apidocs']
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d doctopus']
       interval: 5s
       timeout: 5s
       retries: 10
     networks: [backend]
   migrate:
-    image: ${DOCS_IMAGE:-api-docs:local}
+    image: ${DOCS_IMAGE:-doctopus:local}
     command: ['node', 'apps/server/dist/migrate.js']
     depends_on:
       db:
         condition: service_healthy
     environment:
       DATABASE_URL_FILE: /run/secrets/migration_url
-      DB_RUNTIME_ROLE: apidocs_runtime
+      DB_RUNTIME_ROLE: doctopus_runtime
     secrets: [migration_url]
     read_only: true
     cap_drop: [ALL]
@@ -36,7 +36,7 @@ services:
     build:
       context: ..
       dockerfile: Dockerfile
-    image: ${DOCS_IMAGE:-api-docs:local}
+    image: ${DOCS_IMAGE:-doctopus:local}
     restart: unless-stopped
     depends_on:
       db:

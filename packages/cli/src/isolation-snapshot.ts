@@ -1,7 +1,7 @@
 import { chmod, lstat, mkdir, opendir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { createHash } from 'node:crypto';
-import { readBoundedFile } from '@davidniessen/spec';
+import { readBoundedFile } from '@davidniessen/doctopus-spec';
 
 /** Stage data only. No source/package scripts run on the operator host. */
 export async function snapshotProject(
@@ -54,7 +54,7 @@ export async function snapshotProject(
     }
   }
   await walk(root, target);
-  await mkdir(join(target, '.api-docs'), { mode: 0o755 });
+  await mkdir(join(target, '.doctopus'), { mode: 0o755 });
   files.sort((a, b) => (a.path < b.path ? -1 : a.path > b.path ? 1 : 0));
   directories.sort();
   return {

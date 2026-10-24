@@ -1,5 +1,5 @@
-import { methods } from '@davidniessen/contracts';
-import type { ApiDocument, Operation } from '@davidniessen/contracts';
+import { methods } from '@davidniessen/doctopus-contracts';
+import type { ApiDocument, Operation } from '@davidniessen/doctopus-contracts';
 
 export interface OperationCatalog {
   schemaVersion: 1;

@@ -210,7 +210,7 @@ export const defaultUiMessages = Object.freeze({
   'footer.source': 'Source:',
   'footer.feedback': 'Report an issue',
   'footer.newTab': ' (opens in a new tab)',
-  'footer.builtWith': 'Built with api-docs',
+  'footer.builtWith': 'Built with doctopus',
   'settings.region': 'Personal preferences',
   'settings.saved':
     'Saved in this browser for this documentation site. Your settings do not change the published project.',

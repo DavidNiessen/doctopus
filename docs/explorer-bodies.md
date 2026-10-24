@@ -10,7 +10,7 @@ JSON bodies with one root `oneOf` or `anyOf` can expose an **Editing schema** ch
 
 Switching a root branch discards incomplete field drafts throughout the body and retains the last valid body. Valid values, unknown properties, read-only values and exact numeric tokens remain until explicitly edited. A mismatched `const`, including a discriminator value, has a **Use fixed value** action; selecting the branch alone never writes it. Sensitive constants keep concealed labels. The API still enforces `oneOf` exclusivity, `anyOf` matching, required fields and other constraints. Snippet redaction continues checking all original branches, including branches that are not displayed.
 
-The chooser supports JSON body roots, nested properties and individual array items. Simultaneous `oneOf`/`anyOf`, more than eight choices per union, scalar-root controls, unresolved references, overlapping common properties and unsupported sibling constraints keep JSON editing. No automatic discriminator inference or assignment is performed. Form-urlencoded and multipart encoders keep their existing schema restrictions and do not use this chooser. `schemaVariants(schema, schemas, legacy)` from `@davidniessen/contracts` exposes the same bounded editing choices to integrations; it does not validate body instances.
+The chooser supports JSON body roots, nested properties and individual array items. Simultaneous `oneOf`/`anyOf`, more than eight choices per union, scalar-root controls, unresolved references, overlapping common properties and unsupported sibling constraints keep JSON editing. No automatic discriminator inference or assignment is performed. Form-urlencoded and multipart encoders keep their existing schema restrictions and do not use this chooser. `schemaVariants(schema, schemas, legacy)` from `@davidniessen/doctopus-contracts` exposes the same bounded editing choices to integrations; it does not validate body instances.
 
 ## Choose nested branches
 
@@ -42,7 +42,7 @@ Invalid, duplicate-key, oversized, excessively complex or unresolved JSON bodies
 
 Annotations and known credentials cannot identify every secret. Mark sensitive schema fields, review copied requests and avoid entering production credentials in demo sites. Logical form-urlencoded inputs use schema-aware JSON redaction before encoding; literal encoded-form snippets omit the body. Other non-JSON body formats rely on known-credential replacement. Schema-aware JSON redaction is not an XML/form-data parser.
 
-Programmatic clients can pass `{ schema, schemas, openapiVersion }` as the third argument to `redactRequest`, or call `redactJsonBody` directly. Generic request redaction without that context does not perform schema-aware body traversal. The public `parseJsonValue`, `serializeJsonValue` and `setJsonProperty` helpers in `@davidniessen/contracts` preserve number tokens for integrations that build their own editors.
+Programmatic clients can pass `{ schema, schemas, openapiVersion }` as the third argument to `redactRequest`, or call `redactJsonBody` directly. Generic request redaction without that context does not perform schema-aware body traversal. The public `parseJsonValue`, `serializeJsonValue` and `setJsonProperty` helpers in `@davidniessen/doctopus-contracts` preserve number tokens for integrations that build their own editors.
 
 See [form-urlencoded bodies](form-bodies.md), [request serialization](request-serialization.md), [OAuth authentication](explorer-auth.md) and [generated snippets](snippets.md) for the remaining request behavior.
 

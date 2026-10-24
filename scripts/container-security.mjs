@@ -10,7 +10,7 @@ import {
   writeFile,
 } from 'node:fs/promises';
 import { join, relative, resolve } from 'node:path';
-import { toolVersion } from '@davidniessen/contracts';
+import { toolVersion } from '@davidniessen/doctopus-contracts';
 import { sha256, verifyScanner } from './lib/container-inventory.mjs';
 import {
   validateContainerSecurity,
@@ -25,7 +25,7 @@ assert.equal(
 );
 assert.match(image, /^sha256:[a-f0-9]{64}$/);
 const executable = resolve(
-  '.api-docs/tools',
+  '.doctopus/tools',
   `grype-${vulnerabilityScanner.version}`,
   'grype',
 );
@@ -36,9 +36,9 @@ await promisify(execFile)(
   { timeout: 30000, maxBuffer: 1024 * 1024 },
 );
 const inventory = JSON.parse(
-  await readFile('.api-docs/container-inventory-evidence.json', 'utf8'),
+  await readFile('.doctopus/container-inventory-evidence.json', 'utf8'),
 );
-const parent = resolve('.api-docs/container-security-candidates');
+const parent = resolve('.doctopus/container-security-candidates');
 await mkdir(parent, { recursive: true });
 const directory = await mkdtemp(join(parent, image.slice(7, 19) + '-'));
 await writeFile(
@@ -60,7 +60,7 @@ try {
     'The security scan requires the verified inventory bytes.',
   );
   const configFile = join(temporary, 'grype.json');
-  const databaseCache = resolve('.api-docs/tools/grype-db');
+  const databaseCache = resolve('.doctopus/tools/grype-db');
   await writeFile(
     configFile,
     JSON.stringify({

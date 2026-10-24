@@ -11,26 +11,27 @@ import {
   createPageData,
   operationHref,
   pageMetadata,
-} from '@davidniessen/contracts';
-import type { SiteData } from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-contracts';
+import type { SiteData } from '@davidniessen/doctopus-contracts';
 import {
   buildSite,
   createDevelopmentBuilder,
   createStaticServer,
-} from '@davidniessen/cli';
+} from '@davidniessen/doctopus-cli';
 import {
   verifyArtifact,
   auditDocumentation,
   compileProject,
-} from '@davidniessen/compiler';
+} from '@davidniessen/doctopus-compiler';
 const config = { locales: ['en', 'de', 'pt-BR'], defaultLocale: 'en' };
 let root = '',
   built: Awaited<ReturnType<typeof buildSite>>;
 beforeAll(async () => {
-  root = await mkdtemp(join(tmpdir(), 'api-docs-locales-'));
+  root = await mkdtemp(join(tmpdir(), 'doctopus-locales-'));
   await cp(resolve('examples/localized'), root, {
     recursive: true,
-    filter: (path) => !path.includes('.api-docs'),
+    filter: (path) =>
+      !path.includes('.doctopus') && !path.includes('.api-docs'),
   });
   const configPath = join(root, 'docs.config.yaml');
   const authored = parse(await readFile(configPath, 'utf8'));

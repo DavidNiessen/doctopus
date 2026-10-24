@@ -14,7 +14,7 @@ The signed `v0.2.0-candidate.2` passed all 22 candidate jobs and verified all 39
 
 Source policy schema 3 records each review as `pending`, `approved` or `deferred`. A deferral records the source repository owner, a public reason and a `prerelease` scope. Deferred reviews do not block a prerelease, but remain blockers for stable versions. Pending reviews always block publication. Unrecognized statuses, missing or malformed deferral metadata, and a foreign owner fail validation.
 
-Enable prerelease publication under this explicit owner decision. Preserve the outstanding reviews in generated plans and workflow summaries. Do not mark reviews approved, describe the project as independently reviewed, or claim a production launch from this deferral. Product naming remains provisional by the owner's earlier instruction.
+Enable prerelease publication under this explicit owner decision. Preserve the outstanding reviews in generated plans and workflow summaries. Do not mark reviews approved, describe the project as independently reviewed, or claim a production launch from this deferral. The project was subsequently named Doctopus; this naming decision does not change the deferred review status.
 
 Retain the normal automated gates: exact-source candidate acceptance, dependency/source/container severity checks, producer and promotion attestations, repository protections, protected publishing, public visibility and fresh registry consumers. A changed policy requires a new clean-tag candidate; earlier immutable tags and their evidence remain unchanged.
 

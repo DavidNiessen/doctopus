@@ -54,10 +54,10 @@ test('island navigation and inspectors resize with pointer and keyboard, persist
     ),
   ).toBe(true);
   await inspector.dblclick();
-  await page.screenshot({ path: '.api-docs/island-layout-light.png' });
+  await page.screenshot({ path: '.doctopus/island-layout-light.png' });
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   await page.getByRole('button', { name: 'Switch to dark theme' }).click();
-  await page.screenshot({ path: '.api-docs/island-layout-dark.png' });
+  await page.screenshot({ path: '.doctopus/island-layout-dark.png' });
 });
 
 test('playground islands resize independently and stack without overflow on touch screens', async ({
@@ -104,7 +104,7 @@ test('playground islands resize independently and stack without overflow on touc
       expect(response.width).toBeGreaterThanOrEqual(260);
     }
   }
-  await page.screenshot({ path: '.api-docs/island-playground-mobile.png' });
+  await page.screenshot({ path: '.doctopus/island-playground-mobile.png' });
   await dialog.getByRole('button', { name: 'Close playground' }).click();
   await page.getByRole('button', { name: 'Toggle navigation' }).click();
   await expect(
@@ -197,7 +197,7 @@ test('Studio uses responsive islands with a persistent accessible navigation wid
   await expect
     .poll(() => width(page.locator('.studio-layout > aside')))
     .toBe(360);
-  await page.screenshot({ path: '.api-docs/island-studio-desktop.png' });
+  await page.screenshot({ path: '.doctopus/island-studio-desktop.png' });
   await page.setViewportSize({ width: 390, height: 844 });
   await expect(divider).not.toBeVisible();
   expect(
@@ -211,5 +211,5 @@ test('Studio uses responsive islands with a persistent accessible navigation wid
   await expect(
     page.getByRole('heading', { name: 'Access control', exact: true }),
   ).toBeVisible();
-  await page.screenshot({ path: '.api-docs/island-studio-mobile.png' });
+  await page.screenshot({ path: '.doctopus/island-studio-mobile.png' });
 });

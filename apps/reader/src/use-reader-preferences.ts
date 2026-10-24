@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from 'react';
-import { resolvePalette, themePresets } from '@davidniessen/contracts';
-import type { Palette } from '@davidniessen/contracts';
+import { resolvePalette, themePresets } from '@davidniessen/doctopus-contracts';
+import type { Palette } from '@davidniessen/doctopus-contracts';
 import {
   defaultReaderPreferences,
   parseReaderPreferences,
@@ -35,7 +35,7 @@ export function useReaderPreferences(basePath: string) {
           localStorage.getItem(key) ?? localStorage.getItem(legacyKey);
         const next = parseReaderPreferences(source);
         if (!source) {
-          const legacy = localStorage.getItem('api-docs-theme');
+          const legacy = localStorage.getItem('doctopus-theme');
           if (legacy === 'light' || legacy === 'dark') next.mode = legacy;
         }
         setPreferences(next);

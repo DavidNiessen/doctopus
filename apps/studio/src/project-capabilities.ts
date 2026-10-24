@@ -1,4 +1,4 @@
-import type { ProjectCapabilities } from '@davidniessen/domain';
+import type { ProjectCapabilities } from '@davidniessen/doctopus-domain';
 
 export function readProjectCapabilities(
   value: unknown,

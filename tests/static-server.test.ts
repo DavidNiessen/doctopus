@@ -13,10 +13,10 @@ import { tmpdir } from 'node:os';
 import {
   createDevelopmentBuilder,
   createStaticServer,
-} from '@davidniessen/cli';
-import type { StaticDocsServer } from '@davidniessen/cli';
-import { artifactIdentity } from '@davidniessen/compiler';
-import type { ArtifactManifest } from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-cli';
+import type { StaticDocsServer } from '@davidniessen/doctopus-cli';
+import { artifactIdentity } from '@davidniessen/doctopus-compiler';
+import type { ArtifactManifest } from '@davidniessen/doctopus-contracts';
 import { spawn } from 'node:child_process';
 import { createServer } from 'node:net';
 import { setTimeout as delay } from 'node:timers/promises';
@@ -29,12 +29,13 @@ afterEach(async () => {
   }
 });
 async function fixture(prefix: string) {
-  const root = await mkdtemp(join(tmpdir(), 'api-docs-static-'));
+  const root = await mkdtemp(join(tmpdir(), 'doctopus-static-'));
   const cleanup: (typeof owned)[number] = { root };
   owned.push(cleanup);
   await cp(resolve('examples/demo'), root, {
     recursive: true,
-    filter: (path) => !path.includes('.api-docs'),
+    filter: (path) =>
+      !path.includes('.doctopus') && !path.includes('.api-docs'),
   });
   const config = join(root, 'docs.config.yaml');
   await writeFile(

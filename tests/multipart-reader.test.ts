@@ -1,18 +1,21 @@
 import { describe, expect, it } from 'vitest';
-import { compileProject } from '@davidniessen/compiler';
-import { renderDocument } from '@davidniessen/reader/render';
-import { operationHref } from '@davidniessen/contracts';
+import { compileProject } from '@davidniessen/doctopus-compiler';
+import { renderDocument } from '@davidniessen/doctopus-reader/render';
+import { operationHref } from '@davidniessen/doctopus-contracts';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { Explorer } from '../apps/reader/dist/components/Explorer.js';
 import { resolve } from 'node:path';
-import { createMultipartParts, redactRequest } from '@davidniessen/explorer';
+import {
+  createMultipartParts,
+  redactRequest,
+} from '@davidniessen/doctopus-explorer';
 import type {
   BodyRedaction,
   MultipartPart,
   PreparedRequest,
-} from '@davidniessen/explorer';
-import type { Media } from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-explorer';
+import type { Media } from '@davidniessen/doctopus-contracts';
 import {
   multipartEditorModel,
   multipartExampleBody,

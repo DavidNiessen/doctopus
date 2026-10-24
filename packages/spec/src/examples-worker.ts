@@ -1,13 +1,16 @@
 import { Ajv2020 } from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
 import type { FormatsPlugin } from 'ajv-formats';
-import { isJsonMediaType, resolveSchema } from '@davidniessen/contracts';
+import {
+  isJsonMediaType,
+  resolveSchema,
+} from '@davidniessen/doctopus-contracts';
 import type {
   ApiDocument,
   Diagnostic,
   Schema,
   Media,
-} from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-contracts';
 import type { ValidateFunction } from 'ajv';
 import { record } from './source.js';
 import { unsupportedSchemaScopeKeywords } from './schema-boundaries.js';
@@ -72,7 +75,7 @@ function validateExamples(api: ApiDocument): Diagnostic[] {
         : ref;
     const name = refs.get(key);
     if (!name) throw new Error('Unresolved local reference');
-    return `urn:api-docs:examples#/$defs/${name}`;
+    return `urn:doctopus:examples#/$defs/${name}`;
   };
   let nodes = 0,
     examples = 0;
@@ -95,8 +98,8 @@ function validateExamples(api: ApiDocument): Diagnostic[] {
         throw new Error('Schema conversion budget');
       if (typeof raw === 'boolean') return raw;
       const schema = record(raw);
-      if (typeof schema['x-api-docs-boolean-schema'] === 'boolean')
-        return schema['x-api-docs-boolean-schema'] as boolean;
+      if (typeof schema['x-doctopus-boolean-schema'] === 'boolean')
+        return schema['x-doctopus-boolean-schema'] as boolean;
       if (legacy && typeof schema.$ref === 'string')
         return { $ref: convertRef(schema.$ref) };
       const result: Schema = Object.create(null) as Schema;
@@ -183,7 +186,7 @@ function validateExamples(api: ApiDocument): Diagnostic[] {
         convert(schema, `${api.source}#/components/schemas/${key}`),
       ]),
     );
-    ajv.addSchema({ $id: 'urn:api-docs:examples', $defs: definitions });
+    ajv.addSchema({ $id: 'urn:doctopus:examples', $defs: definitions });
     const validators = new WeakMap<Schema, ValidateFunction | false>();
     const validate = (schema: Schema, example: unknown, source: string) => {
       if (++examples > 10_000) throw new Error('Example count budget');
@@ -230,7 +233,7 @@ function validateExamples(api: ApiDocument): Diagnostic[] {
           mediaType &&
           !isJsonMediaType(mediaType) &&
           !plainString &&
-          actual['x-api-docs-boolean-schema'] !== false
+          actual['x-doctopus-boolean-schema'] !== false
         ) {
           if (typeof example !== 'string') validate(schema, example, location);
           else if (++examples > 10_000) throw new Error('Example count budget');

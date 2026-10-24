@@ -28,7 +28,7 @@ test('PKCE acquisition binds the popup, sends a real API request and clears expi
   await page.evaluate(
     (query) =>
       window.postMessage(
-        { type: 'api-docs:oauth-callback', query },
+        { type: 'doctopus:oauth-callback', query },
         location.origin,
       ),
     forged,
@@ -36,7 +36,7 @@ test('PKCE acquisition binds the popup, sends a real API request and clears expi
   await popup.evaluate(
     (query) =>
       window.opener.postMessage(
-        { type: 'api-docs:oauth-callback', query },
+        { type: 'doctopus:oauth-callback', query },
         'http://127.0.0.1:4174',
       ),
     forged,

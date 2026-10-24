@@ -1,8 +1,11 @@
 import { useState } from 'react';
-import { exampleChoices, isJsonMediaType } from '@davidniessen/contracts';
-import type { ApiDocument, Operation } from '@davidniessen/contracts';
-import { generateMockResponse } from '@davidniessen/explorer';
-import type { MockResponse } from '@davidniessen/explorer';
+import {
+  exampleChoices,
+  isJsonMediaType,
+} from '@davidniessen/doctopus-contracts';
+import type { ApiDocument, Operation } from '@davidniessen/doctopus-contracts';
+import { generateMockResponse } from '@davidniessen/doctopus-explorer';
+import type { MockResponse } from '@davidniessen/doctopus-explorer';
 
 export function MockResponseControls({
   api,

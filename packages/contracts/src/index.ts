@@ -266,7 +266,7 @@ export function withBase(base: string, path: string): string {
   );
 }
 
-const navigationOrigin = 'https://api-docs.invalid';
+const navigationOrigin = 'https://doctopus.invalid';
 function navigationHref(value: string, localOnly: boolean): string {
   try {
     const url = new URL(value, navigationOrigin + '/');

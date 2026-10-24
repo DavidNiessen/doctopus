@@ -37,16 +37,16 @@ const env = {
 
 test('an authenticated install cannot claim an open source package while it remains private or disconnected', () => {
   const metadata = {
-    name: 'contracts',
+    name: 'doctopus-contracts',
     package_type: 'npm',
     visibility: 'public',
-    repository: { full_name: 'DavidNiessen/api-docs' },
+    repository: { full_name: 'DavidNiessen/doctopus' },
   };
   assert.equal(
     validateGitHubNpmVisibility(
       metadata,
-      '@davidniessen/contracts',
-      'DavidNiessen/api-docs',
+      '@davidniessen/doctopus-contracts',
+      'DavidNiessen/doctopus',
     ).visibility,
     'public',
   );
@@ -54,8 +54,8 @@ test('an authenticated install cannot claim an open source package while it rema
     () =>
       validateGitHubNpmVisibility(
         { ...metadata, visibility: 'private' },
-        '@davidniessen/contracts',
-        'DavidNiessen/api-docs',
+        '@davidniessen/doctopus-contracts',
+        'DavidNiessen/doctopus',
       ),
     /visibility to Public/,
   );
@@ -63,20 +63,20 @@ test('an authenticated install cannot claim an open source package while it rema
     () =>
       validateGitHubNpmVisibility(
         { ...metadata, repository: { full_name: 'another/repository' } },
-        '@davidniessen/contracts',
-        'DavidNiessen/api-docs',
+        '@davidniessen/doctopus-contracts',
+        'DavidNiessen/doctopus',
       ),
     /source repository/,
   );
   assert.throws(() =>
     validateGitHubNpmVisibility(
       { ...metadata, name: 'another-package' },
-      '@davidniessen/contracts',
-      'DavidNiessen/api-docs',
+      '@davidniessen/doctopus-contracts',
+      'DavidNiessen/doctopus',
     ),
   );
 });
-const registries = githubPackageRegistries('DavidNiessen/api-docs');
+const registries = githubPackageRegistries('DavidNiessen/doctopus');
 const digest = (bytes) => createHash('sha256').update(bytes).digest('hex');
 const response = (bytes, status = 200) => ({
   status,
@@ -93,35 +93,35 @@ test('package visibility follows verified user or organization ownership and rej
         stdout: JSON.stringify(
           endpoint.startsWith('repos/')
             ? {
-                full_name: 'DavidNiessen/api-docs',
+                full_name: 'DavidNiessen/doctopus',
                 private: false,
                 owner: { type, login: 'DavidNiessen' },
               }
             : {
-                name: 'contracts',
+                name: 'doctopus-contracts',
                 package_type: 'npm',
                 visibility: 'public',
-                repository: { full_name: 'DavidNiessen/api-docs' },
+                repository: { full_name: 'DavidNiessen/doctopus' },
               },
         ),
       };
     };
     await githubNpmVisibility(
-      '@davidniessen/contracts',
-      'DavidNiessen/api-docs',
+      '@davidniessen/doctopus-contracts',
+      'DavidNiessen/doctopus',
       { run },
     );
     assert.equal(
       calls[1],
       (type === 'User' ? 'users' : 'orgs') +
-        '/DavidNiessen/packages/npm/contracts',
+        '/DavidNiessen/packages/npm/doctopus-contracts',
     );
   }
   await assert.rejects(
-    githubPackageRepository('DavidNiessen/api-docs', {
+    githubPackageRepository('DavidNiessen/doctopus', {
       run: async () => ({
         stdout: JSON.stringify({
-          full_name: 'DavidNiessen/api-docs',
+          full_name: 'DavidNiessen/doctopus',
           private: true,
         }),
       }),
@@ -134,7 +134,7 @@ test('GitHub registry coordinates and credentials reject foreign repositories an
   assert.deepEqual(registries, {
     scope: '@davidniessen',
     npm: 'https://npm.pkg.github.com',
-    maven: 'https://maven.pkg.github.com/davidniessen/api-docs',
+    maven: 'https://maven.pkg.github.com/davidniessen/doctopus',
   });
   for (const repository of [
     '../other',
@@ -171,7 +171,7 @@ test('GitHub registry coordinates and credentials reject foreign repositories an
 
 const archive = Buffer.from('accepted GitHub npm archive fixture');
 const pkg = {
-  name: '@davidniessen/contracts',
+  name: '@davidniessen/doctopus-contracts',
   version: '0.2.0',
   filename: 'davidniessen-contracts-0.2.0.tgz',
   bytes: archive.length,
@@ -179,7 +179,7 @@ const pkg = {
   integrity: 'sha512-' + createHash('sha512').update(archive).digest('base64'),
 };
 const tarball =
-  registries.npm + '/download/@davidniessen/contracts/0.2.0/archive';
+  registries.npm + '/download/@davidniessen/doctopus-contracts/0.2.0/archive';
 const metadata = () => ({
   name: pkg.name,
   version: pkg.version,
@@ -306,7 +306,7 @@ function mavenFixture() {
   return {
     candidate: {
       directory: '/accepted',
-      repository: 'DavidNiessen/api-docs',
+      repository: 'DavidNiessen/doctopus',
       registry: registries.maven,
       files,
     },
@@ -353,7 +353,7 @@ test('fresh Maven cache validation rejects different bytes and non-GitHub origin
 test('GitHub Maven resumes complete artifact groups using exact accepted files and private environment-reference settings', async () => {
   const { candidate, bytes } = mavenFixture();
   const remote = new Map(
-    [...bytes].filter(([path]) => path.includes('/api-docs-parent/')),
+    [...bytes].filter(([path]) => path.includes('/doctopus-parent/')),
   );
   let commands = 0,
     settings;
@@ -386,8 +386,8 @@ test('GitHub Maven resumes complete artifact groups using exact accepted files a
       assert.equal((await stat(settings)).mode & 0o777, 0o600);
       const binary = args.find((arg) => arg.startsWith('-Dfile=')).slice(7);
       const artifact = binary.includes('spring-boot-starter')
-        ? 'api-docs-spring-boot-starter'
-        : 'api-docs-core';
+        ? 'doctopus-spring-boot-starter'
+        : 'doctopus-core';
       for (const [path, data] of bytes)
         if (path.includes('/' + artifact + '/')) remote.set(path, data);
     },
@@ -407,7 +407,7 @@ test('conflicting or partially visible GitHub Maven groups fail before any deplo
     }),
   );
   const first = candidate.files.find((file) =>
-    file.name.startsWith('api-docs-core'),
+    file.name.startsWith('doctopus-core'),
   );
   let writes = 0;
   await assert.rejects(

@@ -8,9 +8,12 @@ import {
   lifecycleReport,
   isCalendarDate,
   parseOperationLifecycle,
-} from '@davidniessen/contracts';
-import { compileProject, auditDocumentation } from '@davidniessen/compiler';
-import { loadSpec, diffApi } from '@davidniessen/spec';
+} from '@davidniessen/doctopus-contracts';
+import {
+  compileProject,
+  auditDocumentation,
+} from '@davidniessen/doctopus-compiler';
+import { loadSpec, diffApi } from '@davidniessen/doctopus-spec';
 import { validatePluginSite } from '../packages/plugin-sdk/src/validation.js';
 
 const project = resolve('examples/lifecycle');
@@ -97,7 +100,7 @@ describe('lifecycle metadata and inventory', () => {
     ).toThrow(/window/);
   });
   it('keeps YAML/JSON source parity and fails invalid extensions with a source pointer', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'api-docs-lifecycle-'));
+    const root = await mkdtemp(join(tmpdir(), 'doctopus-lifecycle-'));
     try {
       const source = parse(await readFile(join(project, 'v1.yaml'), 'utf8'));
       await writeFile(join(root, 'api.json'), JSON.stringify(source));
@@ -114,12 +117,12 @@ describe('lifecycle metadata and inventory', () => {
       expect(json.operations.map((operation) => operation.lifecycle)).toEqual(
         yaml.operations.map((operation) => operation.lifecycle),
       );
-      source.paths['/widgets'].get['x-api-docs-lifecycle'].sunsetOn =
+      source.paths['/widgets'].get['x-doctopus-lifecycle'].sunsetOn =
         'bad-date';
       await writeFile(join(root, 'api.json'), JSON.stringify(source));
       await expect(
         loadSpec(root, { id: 'catalog', path: 'api.json' }),
-      ).rejects.toThrow(/paths.*get\/x-api-docs-lifecycle.*sunsetOn/);
+      ).rejects.toThrow(/paths.*get\/x-doctopus-lifecycle.*sunsetOn/);
     } finally {
       await rm(root, { recursive: true, force: true });
     }
@@ -170,7 +173,7 @@ describe('lifecycle metadata and inventory', () => {
     expect(diagnostics).toContainEqual(
       expect.objectContaining({
         code: 'broken-anchor',
-        source: expect.stringContaining('x-api-docs-lifecycle/migrationUrl'),
+        source: expect.stringContaining('x-doctopus-lifecycle/migrationUrl'),
       }),
     );
     expect(diagnostics).toContainEqual(
@@ -253,7 +256,7 @@ describe('lifecycle metadata and inventory', () => {
     ).toBe(1);
   });
   it('fails the CLI replacement gate for an unresolved declared target', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'api-docs-lifecycle-cli-'));
+    const root = await mkdtemp(join(tmpdir(), 'doctopus-lifecycle-cli-'));
     try {
       const source = parse(await readFile(join(project, 'v1.yaml'), 'utf8'));
       await writeFile(join(root, 'api.json'), JSON.stringify(source));

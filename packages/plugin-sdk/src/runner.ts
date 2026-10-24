@@ -2,7 +2,7 @@ import { spawn } from 'node:child_process';
 import { realpath } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import type { Readable } from 'node:stream';
-import type { Diagnostic, SiteData } from '@davidniessen/contracts';
+import type { Diagnostic, SiteData } from '@davidniessen/doctopus-contracts';
 import { pluginFile, pluginDigest } from './files.js';
 import type { PluginInput } from './files.js';
 import { validatePluginSite } from './validation.js';

@@ -3,8 +3,8 @@ import { join, resolve } from 'node:path';
 import {
   verifyArtifact,
   createArtifactPathFilter,
-} from '@davidniessen/compiler';
-import type { SiteData } from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-compiler';
+import type { SiteData } from '@davidniessen/doctopus-contracts';
 export const headers: Record<string, string> = {
   'X-Content-Type-Options': 'nosniff',
   'Referrer-Policy': 'no-referrer',

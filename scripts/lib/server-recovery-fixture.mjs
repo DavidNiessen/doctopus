@@ -19,13 +19,13 @@ import { sha256 } from './container-inventory.mjs';
 export async function verifyServerRecovery(source) {
   assert.match(
     source.project,
-    /^api-docs-runtime-[a-f0-9]{16}$/,
+    /^doctopus-runtime-[a-f0-9]{16}$/,
     'Recovery must use an owned source fixture',
   );
   assert.match(source.image, /^sha256:[a-f0-9]{64}$/);
-  const root = await mkdtemp(join(tmpdir(), 'api-docs-recovery-check-'));
+  const root = await mkdtemp(join(tmpdir(), 'doctopus-recovery-check-'));
   const project =
-    'api-docs-restore-' + randomUUID().replaceAll('-', '').slice(0, 16);
+    'doctopus-restore-' + randomUUID().replaceAll('-', '').slice(0, 16);
   const secrets = join(root, 'secrets');
   const backup = join(root, 'backup');
   const imageOverride = join(root, 'compose.images.json');
@@ -143,7 +143,7 @@ export async function verifyServerRecovery(source) {
       'db',
       'psql',
       '--username=postgres',
-      '--dbname=apidocs',
+      '--dbname=doctopus',
       '--set',
       'ON_ERROR_STOP=1',
       '-c',
@@ -156,7 +156,7 @@ export async function verifyServerRecovery(source) {
         'db',
         'psql',
         '--username=postgres',
-        '--dbname=apidocs',
+        '--dbname=doctopus',
         '-Atc',
         'SELECT (SELECT count(*)>0 FROM docs_sessions),(SELECT count(*)>0 FROM docs_oidc)',
       ),
@@ -314,7 +314,7 @@ export async function verifyServerRecovery(source) {
         'db',
         'psql',
         '--username=postgres',
-        '--dbname=apidocs',
+        '--dbname=doctopus',
         '-Atc',
         'SELECT (SELECT count(*) FROM docs_sessions),(SELECT count(*) FROM docs_oidc)',
       ),
@@ -340,9 +340,9 @@ export async function verifyServerRecovery(source) {
         'db',
         'psql',
         '--username=postgres',
-        '--dbname=apidocs',
+        '--dbname=doctopus',
         '-Atc',
-        "SELECT has_schema_privilege('apidocs_runtime','public','CREATE'), has_table_privilege('apidocs_runtime','docs_audit','UPDATE'), has_table_privilege('apidocs_runtime','docs_audit','DELETE')",
+        "SELECT has_schema_privilege('doctopus_runtime','public','CREATE'), has_table_privilege('doctopus_runtime','docs_audit','UPDATE'), has_table_privilege('doctopus_runtime','docs_audit','DELETE')",
       ),
       'f|f|f',
     );

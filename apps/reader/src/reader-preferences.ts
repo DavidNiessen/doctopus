@@ -1,5 +1,5 @@
-import { themePresets } from '@davidniessen/contracts';
-import type { Theme } from '@davidniessen/contracts';
+import { themePresets } from '@davidniessen/doctopus-contracts';
+import type { Theme } from '@davidniessen/doctopus-contracts';
 export type ReaderTheme = 'published' | keyof typeof themePresets;
 export interface ReaderPreferences {
   version: 2;
@@ -16,9 +16,9 @@ export function defaultReaderPreferences(): ReaderPreferences {
   };
 }
 export const readerPreferencesKey = (basePath: string) =>
-  'api-docs:reader-settings:v2:' + (basePath || '/');
+  'doctopus:reader-settings:v2:' + (basePath || '/');
 export const legacyReaderPreferencesKey = (basePath: string) =>
-  'api-docs:reader-settings:v1:' + (basePath || '/');
+  'doctopus:reader-settings:v1:' + (basePath || '/');
 const record = (value: unknown): value is Record<string, unknown> =>
   !!value && typeof value === 'object' && !Array.isArray(value);
 const choice = <T extends string>(

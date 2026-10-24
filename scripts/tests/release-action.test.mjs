@@ -26,14 +26,14 @@ const action = parse(
 );
 const script = action.runs.steps[0].run;
 const defaults = {
-  API_DOCS_CANDIDATE_VERSION: '0.2.0',
-  API_DOCS_RELEASE_DATE: '2026-10-22',
-  API_DOCS_INITIAL_RELEASE: 'true',
-  API_DOCS_RELEASE_BASELINE: '',
-  API_DOCS_APPLY_RELEASE: 'false',
+  DOCTOPUS_CANDIDATE_VERSION: '0.2.0',
+  DOCTOPUS_RELEASE_DATE: '2026-10-22',
+  DOCTOPUS_INITIAL_RELEASE: 'true',
+  DOCTOPUS_RELEASE_BASELINE: '',
+  DOCTOPUS_APPLY_RELEASE: 'false',
 };
 async function fixture(t) {
-  const root = await mkdtemp(join(tmpdir(), 'api-docs-release-action-test-'));
+  const root = await mkdtemp(join(tmpdir(), 'doctopus-release-action-test-'));
   t.after(() => rm(root, { recursive: true, force: true }));
   return root;
 }
@@ -41,9 +41,9 @@ async function fixture(t) {
 test('release action rejects ambiguous boolean and baseline inputs before invoking tools', async (t) => {
   const root = await fixture(t);
   for (const fields of [
-    { API_DOCS_INITIAL_RELEASE: 'yes' },
-    { API_DOCS_APPLY_RELEASE: 'yes' },
-    { API_DOCS_INITIAL_RELEASE: 'true', API_DOCS_RELEASE_BASELINE: 'HEAD' },
+    { DOCTOPUS_INITIAL_RELEASE: 'yes' },
+    { DOCTOPUS_APPLY_RELEASE: 'yes' },
+    { DOCTOPUS_INITIAL_RELEASE: 'true', DOCTOPUS_RELEASE_BASELINE: 'HEAD' },
   ]) {
     await assert.rejects(
       exec('bash', ['-c', script], {
@@ -53,7 +53,7 @@ test('release action rejects ambiguous boolean and baseline inputs before invoki
       (error) => error.code === 1 && error.stdout.includes('::error::'),
     );
     await assert.rejects(
-      lstat(join(root, '.api-docs')),
+      lstat(join(root, '.doctopus')),
       (error) => error.code === 'ENOENT',
     );
   }
@@ -81,9 +81,9 @@ test('release action preserves input argument boundaries and never evaluates she
       ...defaults,
       PATH: bin + delimiter + process.env.PATH,
       ARGUMENT_LOG: log,
-      API_DOCS_CANDIDATE_VERSION: version,
-      API_DOCS_INITIAL_RELEASE: 'false',
-      API_DOCS_RELEASE_BASELINE: baseline,
+      DOCTOPUS_CANDIDATE_VERSION: version,
+      DOCTOPUS_INITIAL_RELEASE: 'false',
+      DOCTOPUS_RELEASE_BASELINE: baseline,
     },
   });
   const calls = (await readFile(log, 'utf8'))

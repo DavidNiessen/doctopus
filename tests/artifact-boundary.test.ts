@@ -8,9 +8,9 @@ import {
   parseArtifactManifest,
   artifactIdentity,
   verifyArtifact,
-} from '@davidniessen/compiler';
-import { readBoundedFile } from '@davidniessen/spec';
-import type { ArtifactManifest } from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-compiler';
+import { readBoundedFile } from '@davidniessen/doctopus-spec';
+import type { ArtifactManifest } from '@davidniessen/doctopus-contracts';
 function manifest(files: Record<string, string> = {}): ArtifactManifest {
   const metadata = {
     schemaVersion: 1 as const,
@@ -63,7 +63,7 @@ describe('artifact and source file boundaries', () => {
     ).toThrow(/identity mismatch/);
   });
   it('checks all bytes of a large file and catches corruption at its end', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'api-docs-large-artifact-'));
+    const root = await mkdtemp(join(tmpdir(), 'doctopus-large-artifact-'));
     try {
       const value = Buffer.alloc(8 * 1024 * 1024, 42),
         path = join(root, 'large.json');
@@ -89,7 +89,7 @@ describe('artifact and source file boundaries', () => {
   it.skipIf(process.platform === 'win32')(
     'rejects named pipes promptly in source and artifact payload reads',
     async () => {
-      const root = await mkdtemp(join(tmpdir(), 'api-docs-pipe-boundary-'));
+      const root = await mkdtemp(join(tmpdir(), 'doctopus-pipe-boundary-'));
       try {
         const path = join(root, 'pipe.json');
         execFileSync('mkfifo', [path]);
@@ -108,7 +108,7 @@ describe('artifact and source file boundaries', () => {
     },
   );
   it('bounds manifest reads before JSON parsing', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'api-docs-large-manifest-'));
+    const root = await mkdtemp(join(tmpdir(), 'doctopus-large-manifest-'));
     try {
       const file = await open(join(root, 'manifest.json'), 'w');
       try {

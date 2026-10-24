@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest';
-import { PostgresRepository } from '@davidniessen/storage';
+import { PostgresRepository } from '@davidniessen/doctopus-storage';
 import { databaseOptions } from '../apps/server/src/database-options.js';
 
 it('rejects invalid timeout and migration options before opening database resources', () => {

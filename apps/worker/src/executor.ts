@@ -1,9 +1,9 @@
 import { mkdtemp, rm, statfs } from 'node:fs/promises';
 import { basename, join } from 'node:path';
 import { isDeepStrictEqual } from 'node:util';
-import { buildIsolatedSite, stageArtifact } from '@davidniessen/cli';
-import { safeOutput } from '@davidniessen/compiler';
-import type { BuildLease, BuildResult } from '@davidniessen/domain';
+import { buildIsolatedSite, stageArtifact } from '@davidniessen/doctopus-cli';
+import { safeOutput } from '@davidniessen/doctopus-compiler';
+import type { BuildLease, BuildResult } from '@davidniessen/doctopus-domain';
 import type { PreparedSource } from './config.js';
 import { markWorkerWorkspace, reclaimWorkerWorkspaces } from './workspaces.js';
 export class SourceApprovalChanged extends Error {}
@@ -67,7 +67,7 @@ export function createIsolatedExecutor(artifactRoot: string): BuildExecutor {
         'Source approval does not match local registry',
       );
     signal.throwIfAborted();
-    const parent = await safeOutput(source.directory, '.api-docs/worker-jobs');
+    const parent = await safeOutput(source.directory, '.doctopus/worker-jobs');
     const directory = await mkdtemp(
       join(parent, `job-${lease.job.id}-${lease.job.attempts}-`),
     );
@@ -85,7 +85,7 @@ export function createIsolatedExecutor(artifactRoot: string): BuildExecutor {
         trustPlugins: source.policy.trustPlugins,
         trustContent: source.policy.trustContent,
         ...source.policy.limits,
-        output: `.api-docs/worker-jobs/${basename(directory)}/site`,
+        output: `.doctopus/worker-jobs/${basename(directory)}/site`,
         signal,
       });
       signal.throwIfAborted();

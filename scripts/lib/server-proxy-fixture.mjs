@@ -9,11 +9,11 @@ export const proxyImage =
 
 /** Run the shipped proxy template against an owned installation with production HTTPS settings. */
 export async function verifyServerProxy(source) {
-  assert.match(source.project, /^api-docs-runtime-[a-f0-9]{16}$/);
+  assert.match(source.project, /^doctopus-runtime-[a-f0-9]{16}$/);
   assert.match(source.image, /^sha256:[a-f0-9]{64}$/);
   const { docker, compose, environment } = source;
   const name = source.project + '-tls';
-  const label = `dev.niessen.api-docs.tls-fixture=${name}`;
+  const label = `dev.niessen.doctopus.tls-fixture=${name}`;
   const frontend = source.project + '_frontend';
   const original = {
     PUBLIC_URL: environment.PUBLIC_URL,

@@ -2,14 +2,14 @@ import { isDeepStrictEqual as equal } from 'node:util';
 import {
   resolveSchema,
   parseOperationLifecycle,
-} from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-contracts';
 import type {
   ApiDocument,
   Operation,
   Schema,
   Media,
   SecurityScheme,
-} from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-contracts';
 import { record } from './source.js';
 
 export interface ContractChange {
@@ -52,12 +52,12 @@ const understood = new Set([
   'minProperties',
   'maxProperties',
   'uniqueItems',
-  'x-api-docs-boolean-schema',
+  'x-doctopus-boolean-schema',
 ]);
 const escape = (key: string) => key.replace(/~/g, '~0').replace(/\//g, '~1');
 const objectSchema = (value: unknown): Schema =>
   typeof value === 'boolean'
-    ? { 'x-api-docs-boolean-schema': value }
+    ? { 'x-doctopus-boolean-schema': value }
     : record(value);
 const identity = (op: Operation) =>
   JSON.stringify([
@@ -322,8 +322,8 @@ export function diffApi(
             location,
             message,
           );
-        const oldFalse = a['x-api-docs-boolean-schema'] === false;
-        const nextFalse = b['x-api-docs-boolean-schema'] === false;
+        const oldFalse = a['x-doctopus-boolean-schema'] === false;
+        const nextFalse = b['x-doctopus-boolean-schema'] === false;
         if (oldFalse !== nextFalse)
           incompatible(
             nextFalse,
@@ -621,7 +621,7 @@ export function diffApi(
       add(
         tighter ? 'review' : 'info',
         'operation-lifecycle',
-        '/x-api-docs-lifecycle',
+        '/x-doctopus-lifecycle',
         tighter
           ? 'A retirement deadline was introduced or brought forward; review the migration timeline.'
           : 'Lifecycle dates, replacements or migration guidance changed.',

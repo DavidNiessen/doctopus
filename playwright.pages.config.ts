@@ -4,7 +4,7 @@ import { defineConfig } from '@playwright/test';
 const deployed = process.env.PAGES_DEMO_URL;
 const site = deployed
   ? undefined
-  : JSON.parse(readFileSync('.api-docs/pages-demo/site.json', 'utf8'));
+  : JSON.parse(readFileSync('.doctopus/pages-demo/site.json', 'utf8'));
 const address = new URL(
   deployed ?? `http://127.0.0.1:4180${site.config.basePath}/`,
 );

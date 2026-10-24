@@ -1,4 +1,4 @@
-package io.apidocs.consumer;
+package dev.niessen.doctopus.consumer;
 
 import static org.junit.jupiter.api.Assertions.*;
 import java.net.URI;
@@ -32,8 +32,8 @@ final class HostProbe {
     try (var context = new SpringApplicationBuilder(application).web(type).properties(
         "server.port=0", "server.servlet.context-path=" + (type == WebApplicationType.SERVLET ? contextPath : "/inactive-stack"),
         "spring.webflux.base-path=" + (type == WebApplicationType.REACTIVE ? contextPath : "/inactive-stack"),
-        "api-docs.directory=" + root, "api-docs.path=" + mount,
-        "api-docs.artifact-digest=" + System.getProperty(digestProperty),
+        "doctopus.directory=" + root, "doctopus.path=" + mount,
+        "doctopus.artifact-digest=" + System.getProperty(digestProperty),
         "spring.main.banner-mode=off", "logging.level.root=WARN").run()) {
       String base = "http://127.0.0.1:" + context.getEnvironment().getProperty("local.server.port");
       var client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build();

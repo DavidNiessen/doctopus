@@ -1,5 +1,5 @@
 {
-  "name": "@davidniessen/studio",
+  "name": "@davidniessen/doctopus-studio",
   "version": "0.2.0-candidate.7",
   "private": true,
   "type": "module",
@@ -9,7 +9,7 @@
   "dependencies": {
     "react": "19.3.1",
     "react-dom": "19.3.1",
-    "@davidniessen/domain": "0.2.0-candidate.7",
-    "@davidniessen/contracts": "0.2.0-candidate.7"
+    "@davidniessen/doctopus-domain": "0.2.0-candidate.7",
+    "@davidniessen/doctopus-contracts": "0.2.0-candidate.7"
   }
 }

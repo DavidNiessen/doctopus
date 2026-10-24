@@ -1,6 +1,10 @@
 import { afterEach, expect, it, vi } from 'vitest';
-import { generateMockResponse } from '@davidniessen/explorer';
-import type { Media, Operation, Schema } from '@davidniessen/contracts';
+import { generateMockResponse } from '@davidniessen/doctopus-explorer';
+import type {
+  Media,
+  Operation,
+  Schema,
+} from '@davidniessen/doctopus-contracts';
 
 const operation = (media: Media, status = '200'): Operation => ({
   id: 'mock',
@@ -174,7 +178,7 @@ it.each([
   { type: 'integer', minimum: 5, maximum: 1 },
   { type: 'number', multipleOf: 0.1 },
   { type: 'string', format: 'binary' },
-  { 'x-api-docs-boolean-schema': false },
+  { 'x-doctopus-boolean-schema': false },
 ] as Schema[])(
   'requires an explicit example for unsupported or unsatisfiable constraints %#',
   (schema) => {

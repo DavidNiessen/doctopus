@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import type { Media } from '@davidniessen/contracts';
-import { compileProject } from '@davidniessen/compiler';
+import type { Media } from '@davidniessen/doctopus-contracts';
+import { compileProject } from '@davidniessen/doctopus-compiler';
 import {
   createMultipartParts,
   multipartHeaderFields,
   redactRequest,
   toFetchRequest,
   prepareRequest,
-} from '@davidniessen/explorer';
+} from '@davidniessen/doctopus-explorer';
 import { resolve } from 'node:path';
 import { multipartPartHeader } from '../packages/explorer/src/multipart.js';
 import { normalizeSpec } from '../packages/spec/src/normalize.js';

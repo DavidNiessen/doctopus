@@ -29,8 +29,31 @@ test('static demo renders guides and direct endpoint links without backend or SP
   baseURL,
 }) => {
   await page.goto('./');
+  await expect(page.locator('.brand')).toContainText('Doctopus');
+  const mascot = page.locator('.brand img');
+  await expect(mascot).toHaveAttribute(
+    'src',
+    /\/assets\/doctopus-mascot\.webp$/,
+  );
+  await expect
+    .poll(() =>
+      mascot.evaluate((image: HTMLImageElement) => image.naturalWidth),
+    )
+    .toBe(192);
+  const favicon = page.locator('link[rel="icon"]');
+  await expect(favicon).toHaveAttribute(
+    'href',
+    /\/assets\/doctopus-icon\.svg$/,
+  );
+  expect(
+    (
+      await request.get(
+        new URL((await favicon.getAttribute('href'))!, baseURL).href,
+      )
+    ).status(),
+  ).toBe(200);
   await expect(
-    page.getByRole('heading', { name: 'Welcome to Orbit', exact: true }),
+    page.getByRole('heading', { name: 'Welcome to Doctopus', exact: true }),
   ).toBeVisible();
   await expect(page.locator('.guide-content')).toContainText('No API server');
   await page.goto('api/orbit/v1/list-projects/');
@@ -190,7 +213,7 @@ test('demo search, presets and mobile playground remain accessible', async ({
   ).toBe(true);
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   await page.screenshot({
-    path: '.api-docs/pages-screenshots/playground-mobile.png',
+    path: '.doctopus/pages-screenshots/playground-mobile.png',
     fullPage: true,
   });
 });

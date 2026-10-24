@@ -2,14 +2,14 @@ import type {
   Operation,
   Schema,
   SecurityScheme,
-} from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-contracts';
 import {
   encodeValue,
   serializeParameters,
   setRequestHeader,
   fetchHeaderEntries,
 } from './parameters.js';
-import { isJsonMediaType } from '@davidniessen/contracts';
+import { isJsonMediaType } from '@davidniessen/doctopus-contracts';
 import { redactJsonBody } from './redact-body.js';
 import type { BodyRedaction } from './redact-body.js';
 import { encodeFormBody, isFormMediaType } from './form.js';

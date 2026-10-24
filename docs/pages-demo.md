@@ -1,12 +1,12 @@
 # Public GitHub Pages demo
 
-The public demo is intended for [davidniessen.github.io/api-docs](https://davidniessen.github.io/api-docs/). Deployment availability depends on repository Pages settings and successful GitHub Actions runs. The source is [examples/pages-demo](../examples/pages-demo), separate from the localhost API example.
+The public demo is intended for [davidniessen.github.io/doctopus](https://davidniessen.github.io/doctopus/). Deployment availability depends on repository Pages settings and successful GitHub Actions runs. The source is [examples/pages-demo](../examples/pages-demo), separate from the localhost API example.
 
 ## Verified public deployment
 
-[Quality run 39983896039](https://github.com/DavidNiessen/api-docs/actions/runs/39983896039) passed all required jobs at `6f1e5ce`. [Deployment run 39984904851](https://github.com/DavidNiessen/api-docs/actions/runs/39984904851) deployed that exact tested demo artifact and passed all five browser journeys against the public Pages URL on 23 October 2026. This is development-demo evidence, with bundled fixture data and no live API service.
+[Quality run 39983896039](https://github.com/DavidNiessen/doctopus/actions/runs/39983896039) passed all required jobs at `6f1e5ce`. [Deployment run 39984904851](https://github.com/DavidNiessen/doctopus/actions/runs/39984904851) deployed that exact tested demo artifact and passed all five browser journeys against the public Pages URL on 23 October 2026. This is development-demo evidence, with bundled fixture data and no live API service.
 
-The later [published .7 acceptance](release-acceptance.md) includes signed candidate and actual registry-consumer verification. After documentation-only changes, [main 40118398261](https://github.com/DavidNiessen/api-docs/actions/runs/40118398261) passed all 15 jobs and [Pages 40118976356](https://github.com/DavidNiessen/api-docs/actions/runs/40118976356) passed deployment and hosted browser checks. All 28 deployed reader assets also match the exact published reader archive and original tested demo artifact byte-for-byte; hashes are recorded in the [release index](release-evidence/0.2.0-candidate.7.json). This asset comparison does not claim a registry-installed demo build or independent pilot acceptance.
+The later [published .7 acceptance](release-acceptance.md) includes signed candidate and actual registry-consumer verification. After documentation-only changes, [main 40118398261](https://github.com/DavidNiessen/doctopus/actions/runs/40118398261) passed all 15 jobs and [Pages 40118976356](https://github.com/DavidNiessen/doctopus/actions/runs/40118976356) passed deployment and hosted browser checks. All 28 deployed reader assets also match the exact published reader archive and original tested demo artifact byte-for-byte; hashes are recorded in the [release index](release-evidence/0.2.0-candidate.7.json). This asset comparison does not claim a registry-installed demo build or independent pilot acceptance.
 
 ## What visitors can try
 
@@ -33,9 +33,9 @@ pnpm run demo:pages
 pnpm run test:pages
 ```
 
-The verified static root is `.api-docs/pages-demo/`. The build copies only the dedicated demo into temporary storage, applies the deployment origin/base path and removes the temporary project afterward. It replaces this generated output directory. The default URL derives from `GITHUB_REPOSITORY`, falling back to this repository. `PAGES_SITE_URL=https://docs.example.com/preview` overrides the build URL when testing another static host; it must be HTTPS without credentials, query or fragment. Custom-domain deployment additionally requires the corresponding GitHub Pages domain configuration.
+The verified static root is `.doctopus/pages-demo/`. The build copies only the dedicated demo into temporary storage, applies the deployment origin/base path and removes the temporary project afterward. It replaces this generated output directory. The default URL derives from `GITHUB_REPOSITORY`, falling back to this repository. `PAGES_SITE_URL=https://docs.example.com/preview` overrides the build URL when testing another static host; it must be HTTPS without credentials, query or fragment. Custom-domain deployment additionally requires the corresponding GitHub Pages domain configuration.
 
-To inspect the default build interactively, run `node scripts/pages-demo-browser-fixture.mjs` and open `http://127.0.0.1:4180/api-docs/`. This preview serves plain generated files and directory indexes, with no SPA fallback or API routes.
+To inspect the default build interactively, run `node scripts/pages-demo-browser-fixture.mjs` and open `http://127.0.0.1:4180/doctopus/`. This preview serves plain generated files and directory indexes, with no SPA fallback or API routes.
 
 The dedicated browser suite blocks external requests and fails if one is attempted. It exercises direct/reloaded subpath links, 404s, local GET/POST/DELETE responses, error previews, server edits, classic playgrounds, exact response copy, fullscreen/folding, local search, theme matching, mobile accessibility and reading without JavaScript.
 
@@ -50,7 +50,7 @@ A separate **Verify hosted mock demo** job checks out the exact tested source wi
 To repeat those checks against the public site after installing the pinned dependencies and Playwright Chromium:
 
 ```sh
-PAGES_DEMO_URL=https://davidniessen.github.io/api-docs/ pnpm run test:pages
+PAGES_DEMO_URL=https://davidniessen.github.io/doctopus/ pnpm run test:pages
 ```
 
 `PAGES_DEMO_URL` selects an existing HTTPS publication without credentials, query or fragment; the path is normalized to a trailing slash. Explicit loopback HTTP is also supported for acceptance fixtures. Omitting it retains the ordinary local static-preview tests and their verified generated artifact. These tests load public documentation only and never need deployment or API credentials.

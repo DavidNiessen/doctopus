@@ -5,20 +5,20 @@ import { join, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
 import { spawn } from 'node:child_process';
 import { setImmediate as yieldLoop } from 'node:timers/promises';
-import { PostgresRepository } from '@davidniessen/storage';
-import { createServer } from '@davidniessen/server';
+import { PostgresRepository } from '@davidniessen/doctopus-storage';
+import { createServer } from '@davidniessen/doctopus-server';
 import {
   buildSite,
   inspectIsolatedSource,
   stageArtifact,
-} from '@davidniessen/cli';
-import { readBuildPolicy, toolVersion } from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-cli';
+import { readBuildPolicy, toolVersion } from '@davidniessen/doctopus-contracts';
 import type {
   BuildJob,
   BuildLease,
   BuildResult,
   Project,
-} from '@davidniessen/domain';
+} from '@davidniessen/doctopus-domain';
 import { readWorkerConfig } from '../../apps/worker/src/config.js';
 import type { PreparedSource } from '../../apps/worker/src/config.js';
 import { createWorkerClient } from '../../apps/worker/src/protocol.js';
@@ -101,7 +101,7 @@ async function execute(job: BuildExecution): Promise<BuildResult> {
   };
 }
 beforeAll(async () => {
-  root = await mkdtemp(join(tmpdir(), 'api-docs-worker-http-'));
+  root = await mkdtemp(join(tmpdir(), 'doctopus-worker-http-'));
   sourceDirectory = join(root, 'source');
   artifactRoot = join(root, 'artifacts');
   await repository.initialize();
@@ -113,7 +113,8 @@ beforeAll(async () => {
   });
   await cp(resolve('examples/demo'), sourceDirectory, {
     recursive: true,
-    filter: (file) => !file.includes('.api-docs'),
+    filter: (file) =>
+      !file.includes('.doctopus') && !file.includes('.api-docs'),
   });
   const configFile = join(sourceDirectory, 'docs.config.yaml');
   await writeFile(
