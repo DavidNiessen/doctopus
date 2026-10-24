@@ -2893,7 +2893,7 @@ label:has(input[type='radio']) {
   border-top: 1px solid var(--ui-border, var(--border));
 }
 .parameter-row-actions button {
-  color: var(--accent-text);
+  color: var(--text);
   background: transparent;
   border: 0;
   border-radius: 6px;
