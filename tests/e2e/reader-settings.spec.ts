@@ -3,7 +3,7 @@ import AxeBuilder from '@axe-core/playwright';
 
 const route =
   'http://127.0.0.1:4174/gallery/api/gallery/v1/serializeparameters/';
-const settingsKey = 'api-docs:reader-settings:v2:/gallery';
+const settingsKey = 'doctopus:reader-settings:v2:/gallery';
 async function settings(page: import('@playwright/test').Page) {
   await page.getByRole('button', { name: 'Open reader settings' }).click();
   const dialog = page.getByRole('dialog', {
@@ -57,7 +57,7 @@ test('prepared themes and classic layout persist without changing project defaul
   await expect(page.locator('.endpoint-disclosure[open]')).toHaveCount(0);
   await expect(page.locator('.sidebar')).not.toBeVisible();
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
-  await page.screenshot({ path: '.api-docs/classic-layout-dark.png' });
+  await page.screenshot({ path: '.doctopus/classic-layout-dark.png' });
   await page.reload();
   await expect(page.locator('.docs-shell')).toHaveAttribute(
     'data-layout',
@@ -313,7 +313,7 @@ test('settings tolerate blocked/corrupt storage, follow the system, and fit comp
   }
   await page.setViewportSize({ width: 390, height: 844 });
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
-  await page.screenshot({ path: '.api-docs/reader-settings-mobile-dark.png' });
+  await page.screenshot({ path: '.doctopus/reader-settings-mobile-dark.png' });
   await page.keyboard.press('Escape');
   await page.getByRole('button', { name: 'Toggle navigation' }).click();
   const sidebar = page.locator('.sidebar');

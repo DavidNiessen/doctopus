@@ -1,6 +1,6 @@
-import { isRelayEndpoint } from '@davidniessen/contracts';
-import { toFetchRequest } from '@davidniessen/explorer';
-import type { PreparedRequest } from '@davidniessen/explorer';
+import { isRelayEndpoint } from '@davidniessen/doctopus-contracts';
+import { toFetchRequest } from '@davidniessen/doctopus-explorer';
+import type { PreparedRequest } from '@davidniessen/doctopus-explorer';
 
 const REQUEST_LIMIT = 1024 * 1024;
 const RESPONSE_LIMIT = 2 * 1024 * 1024;

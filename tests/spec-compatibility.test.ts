@@ -3,15 +3,19 @@ import { mkdtemp, writeFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { stringify } from 'yaml';
-import { loadSpec, readTextFile, parseConfig } from '@davidniessen/spec';
+import {
+  loadSpec,
+  readTextFile,
+  parseConfig,
+} from '@davidniessen/doctopus-spec';
 import {
   createPageData,
   exampleFor,
   operationHref,
   resolveSchema,
-} from '@davidniessen/contracts';
-import { prepareRequest } from '@davidniessen/explorer';
-import { renderDocument } from '@davidniessen/reader/render';
+} from '@davidniessen/doctopus-contracts';
+import { prepareRequest } from '@davidniessen/doctopus-explorer';
+import { renderDocument } from '@davidniessen/doctopus-reader/render';
 
 const response = { description: 'Accepted' };
 function fixture(version = '3.1.0'): Record<string, unknown> {
@@ -38,7 +42,7 @@ function fixture(version = '3.1.0'): Record<string, unknown> {
   };
 }
 async function load(spec: Record<string, unknown>, yaml = false) {
-  const root = await mkdtemp(join(tmpdir(), 'api-docs-compatibility-'));
+  const root = await mkdtemp(join(tmpdir(), 'doctopus-compatibility-'));
   try {
     const path = yaml ? 'openapi.yaml' : 'openapi.json';
     await writeFile(
@@ -293,7 +297,7 @@ describe('OpenAPI compatibility and semantic validation', () => {
     });
   });
   it('bounds file reads and rejects malformed UTF-8 before parsing', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'api-docs-bounded-read-'));
+    const root = await mkdtemp(join(tmpdir(), 'doctopus-bounded-read-'));
     try {
       const file = join(root, 'input');
       await writeFile(file, '123456789');

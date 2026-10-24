@@ -6,14 +6,14 @@ import { spawnSync } from 'node:child_process';
 import {
   checkProjectPluginConformance,
   compileProject,
-} from '@davidniessen/compiler';
+} from '@davidniessen/doctopus-compiler';
 import {
   runSourcePluginFiles,
   checkSourcePluginConformance,
   definePlugin,
-} from '@davidniessen/plugin-sdk';
-import { buildSite } from '@davidniessen/cli';
-import type { SpecSource } from '@davidniessen/plugin-sdk';
+} from '@davidniessen/doctopus-plugin-sdk';
+import { buildSite } from '@davidniessen/doctopus-cli';
+import type { SpecSource } from '@davidniessen/doctopus-plugin-sdk';
 
 const document = {
   openapi: '3.1.0',
@@ -28,7 +28,7 @@ const source: SpecSource = {
 const plugin = (loadSpec: string, extra = '') =>
   `export default { name: 'source-test', version: '1.0.0', pluginApi: '1', capabilities: ['source'], ${extra} loadSpec: ${loadSpec} };`;
 async function fixture(code: string, run: (root: string) => Promise<void>) {
-  const root = await mkdtemp(join(tmpdir(), 'api-docs-source-plugin-'));
+  const root = await mkdtemp(join(tmpdir(), 'doctopus-source-plugin-'));
   try {
     await writeFile(join(root, 'plugin.mjs'), code);
     await writeFile(join(root, 'openapi.json'), source.content);

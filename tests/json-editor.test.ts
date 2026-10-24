@@ -3,9 +3,9 @@ import {
   parseJsonValue,
   serializeJsonValue,
   setJsonProperty,
-} from '@davidniessen/contracts';
-import { redactJsonBody, redactRequest } from '@davidniessen/explorer';
-import type { BodyRedaction } from '@davidniessen/explorer';
+} from '@davidniessen/doctopus-contracts';
+import { redactJsonBody, redactRequest } from '@davidniessen/doctopus-explorer';
+import type { BodyRedaction } from '@davidniessen/doctopus-explorer';
 
 describe('lossless JSON field editing', () => {
   it('preserves numeric tokens, falsy values and semantic string values', () => {

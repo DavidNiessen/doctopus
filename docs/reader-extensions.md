@@ -17,8 +17,8 @@ readerExtensions:
 Build and preview with the existing explicit operator opt-in:
 
 ```sh
-api-docs build my-docs --trust-plugins
-api-docs dev my-docs --trust-plugins
+doctopus build my-docs --trust-plugins
+doctopus dev my-docs --trust-plugins
 ```
 
 `--trust-plugins` authorizes reviewed build plugins and reviewed browser extensions; `--trust-content` remains separate for executable MDX. Tooling using `--skip-plugins` omits browser extensions too. An ordinary project with no extension declarations needs no flag.
@@ -71,7 +71,7 @@ Navigation inside the reader updates page snapshots and recreates widgets. Reade
 
 ## TypeScript and framework widgets
 
-`@davidniessen/plugin-sdk/browser` exports `ReaderPage`, `ReaderWidget`, `ReaderExtensionContext`, `ReaderExtension`, `defineReaderExtension` and `createReaderExtensionSession`. The subpath has no Node build-worker imports and can be used by browser bundlers. `defineReaderExtension` preserves typed context callbacks and validates metadata. Custom hosts can use `createReaderExtensionSession` with a widget-mount callback; the built-in React host additionally validates actual DOM elements and asset paths.
+`@davidniessen/doctopus-plugin-sdk/browser` exports `ReaderPage`, `ReaderWidget`, `ReaderExtensionContext`, `ReaderExtension`, `defineReaderExtension` and `createReaderExtensionSession`. The subpath has no Node build-worker imports and can be used by browser bundlers. `defineReaderExtension` preserves typed context callbacks and validates metadata. Custom hosts can use `createReaderExtensionSession` with a widget-mount callback; the built-in React host additionally validates actual DOM elements and asset paths.
 
 A bundled React extension can create its own root inside the provided footer element and return `dispose: () => root.unmount()`. Vue, web components and plain DOM code use the same element/disposer contract. Bundle runtime dependencies into the declared ESM packet. The docs reader does not expose its own React root or require sharing a React version with widgets.
 

@@ -1,16 +1,16 @@
 import { cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
-import { buildSite, createStaticServer } from '@davidniessen/cli';
+import { buildSite, createStaticServer } from '@davidniessen/doctopus-cli';
 import { parse } from 'yaml';
 
 const root = new URL(
-  '../.api-docs/lifecycle-browser-fixture/',
+  '../.doctopus/lifecycle-browser-fixture/',
   import.meta.url,
 );
 await rm(root, { recursive: true, force: true });
 await mkdir(root, { recursive: true });
 await cp(new URL('../examples/lifecycle/', import.meta.url), root, {
   recursive: true,
-  filter: (path) => !path.includes('.api-docs'),
+  filter: (path) => !path.includes('.doctopus') && !path.includes('.api-docs'),
 });
 const file = new URL('v1.yaml', root);
 const spec = parse(await readFile(file, 'utf8'));
@@ -21,7 +21,7 @@ for (let index = 0; index < 52; index++)
       summary: `Legacy resource ${index}`,
       tags: ['Legacy'],
       deprecated: true,
-      'x-api-docs-lifecycle': {
+      'x-doctopus-lifecycle': {
         sunsetOn: '2027-06-01',
         migrationUrl: '/guides/migration/#heading-update-your-client',
       },

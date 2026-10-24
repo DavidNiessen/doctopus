@@ -93,9 +93,9 @@ const report = {
   peakInFlight,
   node: process.version,
 };
-await mkdir('.api-docs', { recursive: true });
+await mkdir('.doctopus', { recursive: true });
 await writeFile(
-  `.api-docs/server-benchmark-${report.authentication}.json`,
+  `.doctopus/server-benchmark-${report.authentication}.json`,
   JSON.stringify(report, null, 2) + '\n',
 );
 console.log(JSON.stringify(report, null, 2));

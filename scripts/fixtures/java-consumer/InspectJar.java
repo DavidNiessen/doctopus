@@ -30,7 +30,7 @@ class InspectJar {
         require(!name.contains("Test.class") && !name.startsWith("node_modules/") && !name.endsWith(".java"),
             "Tests and source files do not belong in a runtime JAR");
         if (name.endsWith(".class")) {
-          require(name.startsWith("io/apidocs/"), "Unexpected bundled dependency classes");
+          require(name.startsWith("dev/niessen/doctopus/"), "Unexpected bundled dependency classes");
           byte[] header = content(jar, name);
           require(header.length >= 8 && header[0] == (byte) 0xca && header[1] == (byte) 0xfe
               && header[2] == (byte) 0xba && header[3] == (byte) 0xbe
@@ -41,17 +41,17 @@ class InspectJar {
       require(classes > 0, "Candidate has no runtime classes");
       require(sha(content(jar, "META-INF/LICENSE")).equals(args[3]), "License differs from the source license");
       require(sha(content(jar, "META-INF/NOTICE")).equals(args[4]), "Notice differs from the source notice");
-      String artifact = "api-docs-" + module;
+      String artifact = "doctopus-" + module;
       String maven = "META-INF/maven/dev.niessen/" + artifact + "/";
       var properties = new Properties();
       try (var input = jar.getInputStream(jar.getJarEntry(maven + "pom.properties"))) { properties.load(input); }
       require(version.equals(properties.getProperty("version")) && artifact.equals(properties.getProperty("artifactId"))
           && "dev.niessen".equals(properties.getProperty("groupId")), "Embedded Maven coordinates disagree");
-      require(unique.contains(module.equals("core") ? "io/apidocs/core/Publication.class"
-          : "io/apidocs/spring/ApiDocsAutoConfiguration.class"), "Missing public runtime entrypoint");
+      require(unique.contains(module.equals("core") ? "dev/niessen/doctopus/core/Publication.class"
+          : "dev/niessen/doctopus/spring/DoctopusAutoConfiguration.class"), "Missing public runtime entrypoint");
       if (module.equals("spring-boot-starter")) {
         require(new String(content(jar, "META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports"),
-            java.nio.charset.StandardCharsets.UTF_8).trim().equals("io.apidocs.spring.ApiDocsAutoConfiguration"),
+            java.nio.charset.StandardCharsets.UTF_8).trim().equals("dev.niessen.doctopus.spring.DoctopusAutoConfiguration"),
             "Missing automatic Spring Boot discovery metadata");
       }
       names.sort(String::compareTo);

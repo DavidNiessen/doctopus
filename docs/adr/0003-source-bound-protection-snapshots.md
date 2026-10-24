@@ -6,7 +6,7 @@ Date: 2026-10-24.
 
 ## Context
 
-The signed `.5` candidate and read-only publication preview passed. Confirmed publication run [40103828095](https://github.com/DavidNiessen/api-docs/actions/runs/40103828095) then stopped before registry writes: GitHub omits ruleset bypass actors from the workflow token's response. The administrator connection can inspect them, but the ordinary `GITHUB_TOKEN` cannot. Treating a missing list as empty would misrepresent unknown configuration and weaken the guard.
+The signed `.5` candidate and read-only publication preview passed. Confirmed publication run [40103828095](https://github.com/DavidNiessen/doctopus/actions/runs/40103828095) then stopped before registry writes: GitHub omits ruleset bypass actors from the workflow token's response. The administrator connection can inspect them, but the ordinary `GITHUB_TOKEN` cannot. Treating a missing list as empty would misrepresent unknown configuration and weaken the guard.
 
 ## Decision
 
@@ -18,7 +18,7 @@ When GitHub redacts the actor list, the guard relies on the source-reviewed admi
 
 A read-only manual/daily workflow verifies these same protections and retains actual observations, including drift failures. Existing source signatures, security gates, package permissions and installed-consumer acceptance remain unchanged. No additional Actions secret or administration-write capability is introduced.
 
-[Workflow 40105494720](https://github.com/DavidNiessen/api-docs/actions/runs/40105494720) passes at `6b466c7` using only content/action read permissions. Both bypass lists are reported as hidden, and the receipt records the matching source snapshot, live revisions, reviewer/tag policy and original protection checks. This verifies the intended read-only path; actual registry acceptance remains separate.
+[Workflow 40105494720](https://github.com/DavidNiessen/doctopus/actions/runs/40105494720) passes at `6b466c7` using only content/action read permissions. Both bypass lists are reported as hidden, and the receipt records the matching source snapshot, live revisions, reviewer/tag policy and original protection checks. This verifies the intended read-only path; actual registry acceptance remains separate.
 
 ## Trust and maintenance
 

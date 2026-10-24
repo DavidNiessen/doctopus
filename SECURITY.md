@@ -6,7 +6,7 @@ The project is in pre-release development. No version currently carries a produc
 
 ## Report a vulnerability
 
-Use [GitHub private vulnerability reporting](https://github.com/DavidNiessen/api-docs/security/advisories/new) when it is enabled. If GitHub does not offer a private reporting route, contact the maintainer through their GitHub profile to arrange one before sharing technical details. Do not put credentials, customer data, or exploit details in a public issue.
+Use [GitHub private vulnerability reporting](https://github.com/DavidNiessen/doctopus/security/advisories/new) when it is enabled. If GitHub does not offer a private reporting route, contact the maintainer through their GitHub profile to arrange one before sharing technical details. Do not put credentials, customer data, or exploit details in a public issue.
 
 Include affected versions, a minimal reproduction, impact, and any suggested mitigation. Use synthetic examples. Maintainers aim to acknowledge reports within three business days, communicate a triage decision within seven, and coordinate disclosure with the reporter. These are response goals, not a service-level guarantee.
 

@@ -1,5 +1,5 @@
-import { themePresets } from '@davidniessen/contracts';
-import type { Theme } from '@davidniessen/contracts';
+import { themePresets } from '@davidniessen/doctopus-contracts';
+import type { Theme } from '@davidniessen/doctopus-contracts';
 
 export type ThemePatch = Partial<Theme>;
 const fields: Record<keyof Theme, true> = {

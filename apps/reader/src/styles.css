@@ -2766,3 +2766,25 @@ label:has(input[type='radio']) {
     width: 100%;
   }
 }
+
+/* Doctopus identity remains separate from customer-provided logo assets. */
+.brand-mark {
+  background: transparent;
+  color: var(--accent-text, #6d28d9);
+}
+.brand-mark > img {
+  display: block;
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+.brand-mark.small {
+  width: 24px;
+  height: 24px;
+  background: transparent;
+}
+
+.brand-mark.small > img {
+  width: 20px;
+  height: 20px;
+}

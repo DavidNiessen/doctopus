@@ -4,7 +4,7 @@ inputs:
   image-id-file:
     description: File containing the immutable tested server image ID.
     required: false
-    default: /tmp/api-docs-server.id
+    default: /tmp/doctopus-server.id
 runs:
   using: composite
   steps:
@@ -15,7 +15,7 @@ runs:
       run: |
         node scripts/install-inventory-tool.mjs
         image="$(cat "$IMAGE_ID_FILE")"
-        node scripts/container-inventory.mjs "$image" > .api-docs/container-inventory-evidence.json
+        node scripts/container-inventory.mjs "$image" > .doctopus/container-inventory-evidence.json
         node scripts/check-container-inventory.mjs "$image"
     - name: Assess every known image finding
       shell: bash
@@ -24,5 +24,5 @@ runs:
       run: |
         node scripts/install-security-tool.mjs
         image="$(cat "$IMAGE_ID_FILE")"
-        node scripts/container-security.mjs "$image" > .api-docs/container-security-evidence.json
+        node scripts/container-security.mjs "$image" > .doctopus/container-security-evidence.json
         node scripts/check-container-security.mjs "$image"

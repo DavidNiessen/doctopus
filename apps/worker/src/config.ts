@@ -1,11 +1,14 @@
 import { isAbsolute, relative, sep } from 'node:path';
 import { mkdir, realpath, stat } from 'node:fs/promises';
-import { readTextFile } from '@davidniessen/spec';
+import { readTextFile } from '@davidniessen/doctopus-spec';
 import {
   readBuildPolicy,
   readSourceSnapshotInfo,
-} from '@davidniessen/contracts';
-import type { BuildPolicy, SourceSnapshotInfo } from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-contracts';
+import type {
+  BuildPolicy,
+  SourceSnapshotInfo,
+} from '@davidniessen/doctopus-contracts';
 export interface PreparedSource {
   id: string;
   projectId: string;

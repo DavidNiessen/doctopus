@@ -1,5 +1,8 @@
-import { search } from '@davidniessen/search';
-import type { SearchDocument, SearchResult } from '@davidniessen/contracts';
+import { search } from '@davidniessen/doctopus-search';
+import type {
+  SearchDocument,
+  SearchResult,
+} from '@davidniessen/doctopus-contracts';
 type Input =
   | { kind: 'load'; index: SearchDocument[] }
   | {

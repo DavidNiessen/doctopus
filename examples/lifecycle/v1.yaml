@@ -8,7 +8,7 @@ paths:
       description: Migrate this request to the version 2 catalog before its sunset.
       tags: [Widgets]
       deprecated: true
-      x-api-docs-lifecycle:
+      x-doctopus-lifecycle:
         deprecatedOn: '2026-01-01'
         sunsetOn: '2027-06-01'
         message: Version 1 is being retired.
@@ -34,7 +34,7 @@ paths:
       description: This deliberately overdue example demonstrates the CI deadline gate.
       tags: [Widgets]
       deprecated: true
-      x-api-docs-lifecycle:
+      x-doctopus-lifecycle:
         sunsetOn: '2026-01-01'
         replacement: { version: v2, operationId: listWidgets }
       responses:

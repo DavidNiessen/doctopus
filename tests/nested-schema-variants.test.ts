@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import type { Schema } from '@davidniessen/contracts';
-import { serializeJsonValue } from '@davidniessen/contracts';
+import type { Schema } from '@davidniessen/doctopus-contracts';
+import { serializeJsonValue } from '@davidniessen/doctopus-contracts';
 import {
   bodyFieldModel,
   bodyPathWithin,

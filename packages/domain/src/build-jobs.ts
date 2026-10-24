@@ -1,4 +1,7 @@
-import type { BuildPolicy, SourceSnapshotInfo } from '@davidniessen/contracts';
+import type {
+  BuildPolicy,
+  SourceSnapshotInfo,
+} from '@davidniessen/doctopus-contracts';
 export interface ProjectBuildCapabilities {
   projectId: string;
   approveSource: boolean;

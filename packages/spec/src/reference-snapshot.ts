@@ -5,7 +5,7 @@ import { readdir, lstat } from 'node:fs/promises';
 import { requestAllowedOrigin, abortableOutbound } from './outbound.js';
 import { importDestination } from './remote-policy.js';
 import { confinedPath, readTextFile, readBoundedFile } from './source.js';
-import { toolVersion } from '@davidniessen/contracts';
+import { toolVersion } from '@davidniessen/doctopus-contracts';
 import {
   parseReferencePolicy,
   parseReferenceManifest,
@@ -149,7 +149,7 @@ export async function downloadReferenceSnapshot(
       expectedStatus: 200,
       headers: {
         accept: 'application/json, application/yaml, text/yaml, text/plain',
-        'user-agent': 'api-docs/' + toolVersion,
+        'user-agent': 'doctopus/' + toolVersion,
         ...(token ? { authorization: 'Bearer ' + token } : {}),
       },
     });

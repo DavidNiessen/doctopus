@@ -1,19 +1,19 @@
 import { beforeAll, afterAll, beforeEach, afterEach, expect, it } from 'vitest';
 import { randomUUID, randomBytes } from 'node:crypto';
 import pg from 'pg';
-import { PostgresRepository } from '@davidniessen/storage';
-import { readBuildPolicy, toolVersion } from '@davidniessen/contracts';
+import { PostgresRepository } from '@davidniessen/doctopus-storage';
+import { readBuildPolicy, toolVersion } from '@davidniessen/doctopus-contracts';
 import type {
   BuildSource,
   BuildLease,
   BuildResult,
   Project,
-} from '@davidniessen/domain';
+} from '@davidniessen/doctopus-domain';
 import {
   BuildCapacityError,
   BuildLeaseLostError,
   ConflictError,
-} from '@davidniessen/domain';
+} from '@davidniessen/doctopus-domain';
 const database = process.env.TEST_DATABASE_URL;
 if (!database)
   throw new Error(

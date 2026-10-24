@@ -115,13 +115,15 @@ test('applies unified versions to every npm/lock/runtime/Java reference while pr
   assert.deepEqual(pnpmAfter.snapshots, pnpmBefore.snapshots);
   assert.deepEqual(pnpmAfter.overrides, pnpmBefore.overrides);
   assert.equal(
-    pnpmAfter.importers['apps/reader'].dependencies['@davidniessen/contracts']
-      .specifier,
+    pnpmAfter.importers['apps/reader'].dependencies[
+      '@davidniessen/doctopus-contracts'
+    ].specifier,
     TARGET,
   );
   assert.equal(
-    pnpmAfter.importers['apps/reader'].dependencies['@davidniessen/contracts']
-      .version,
+    pnpmAfter.importers['apps/reader'].dependencies[
+      '@davidniessen/doctopus-contracts'
+    ].version,
     'link:../../packages/contracts',
   );
   for (const pkg of await readWorkspacePackages(root))

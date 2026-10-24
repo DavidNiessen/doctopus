@@ -17,7 +17,7 @@ const result = await inspectPublicationProtections(
   protectionApi(repository),
 );
 await writeFile(
-  root + '.api-docs/publication/protection-verification.json',
+  root + '.doctopus/publication/protection-verification.json',
   JSON.stringify(result, null, 2) + '\n',
 );
 console.log(JSON.stringify(result, null, 2));

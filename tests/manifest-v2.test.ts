@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { readFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
-import type { ArtifactManifest } from '@davidniessen/contracts';
+import type { ArtifactManifest } from '@davidniessen/doctopus-contracts';
 import {
   artifactIdentity,
   parseArtifactManifest,
-} from '@davidniessen/compiler';
+} from '@davidniessen/doctopus-compiler';
 
 const vector = JSON.parse(
   await readFile(

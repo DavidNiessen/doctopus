@@ -1,4 +1,4 @@
-package io.apidocs.consumer;
+package dev.niessen.doctopus.consumer;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.SpringBootConfiguration;

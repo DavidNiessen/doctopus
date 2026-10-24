@@ -2,8 +2,8 @@ import { beforeAll, afterAll, expect, it } from 'vitest';
 import { readFile } from 'node:fs/promises';
 import { randomUUID, randomBytes } from 'node:crypto';
 import pg from 'pg';
-import { PostgresRepository } from '@davidniessen/storage';
-import { readBuildPolicy } from '@davidniessen/contracts';
+import { PostgresRepository } from '@davidniessen/doctopus-storage';
+import { readBuildPolicy } from '@davidniessen/doctopus-contracts';
 const database = process.env.TEST_DATABASE_URL;
 if (!database)
   throw new Error(

@@ -41,7 +41,7 @@ export async function releaseSource(
   const versions = await auditReleaseVersions(root, { release: true });
   assert.equal(
     env.GITHUB_REPOSITORY,
-    'DavidNiessen/api-docs',
+    'DavidNiessen/doctopus',
     'Use the trusted upstream repository.',
   );
   assert.equal(
@@ -90,7 +90,7 @@ export async function releaseSource(
 }
 
 export function validateReleaseContext(context) {
-  assert.equal(context.repository, 'DavidNiessen/api-docs');
+  assert.equal(context.repository, 'DavidNiessen/doctopus');
   assert.match(context.commit, /^[a-f0-9]{40}$/);
   assert.equal(valid(context.version), context.version);
   assert(!context.version.includes('+') && context.version.length <= 100);
@@ -231,10 +231,10 @@ export async function stageReleaseAssets(
     assert.equal(report.distributions.length, 4);
     assert.equal(
       report.parentPom.filename,
-      `api-docs-parent-${context.version}.pom`,
+      `doctopus-parent-${context.version}.pom`,
     );
     await add(report.parentPom.filename, report.parentPom.sha256);
-    for (const artifact of ['api-docs-core', 'api-docs-spring-boot-starter']) {
+    for (const artifact of ['doctopus-core', 'doctopus-spring-boot-starter']) {
       const entry = report.artifacts.find((item) => item.artifact === artifact);
       assert(entry, 'Missing Java module.');
       const stem = `${artifact}-${context.version}`;

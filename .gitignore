@@ -11,9 +11,12 @@ test-results/
 !.env.example
 .DS_Store
 *.tsbuildinfo
-.api-docs/
+.doctopus/
 target/
 .secrets/
 
 playwright-pages-report/
 playwright-studio-report/
+
+# Keep pre-rename local artifacts and reports out of source control.
+.api-docs/

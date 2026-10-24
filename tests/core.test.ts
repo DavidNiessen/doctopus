@@ -8,14 +8,14 @@ import {
   parseSource,
   confinedPath,
   exampleFor,
-} from '@davidniessen/spec';
+} from '@davidniessen/doctopus-spec';
 import {
   prepareRequest,
   generateSnippet,
   redactRequest,
-} from '@davidniessen/explorer';
-import { definePlugin, applyPlugins } from '@davidniessen/plugin-sdk';
-import type { Operation, SiteData } from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-explorer';
+import { definePlugin, applyPlugins } from '@davidniessen/doctopus-plugin-sdk';
+import type { Operation, SiteData } from '@davidniessen/doctopus-contracts';
 
 const fixture = {
   openapi: '3.1.0',
@@ -55,7 +55,7 @@ const fixture = {
   },
 };
 async function project(): Promise<string> {
-  const root = await mkdtemp(join(tmpdir(), 'api-docs-spec-'));
+  const root = await mkdtemp(join(tmpdir(), 'doctopus-spec-'));
   await writeFile(join(root, 'openapi.json'), JSON.stringify(fixture));
   return root;
 }
@@ -118,7 +118,7 @@ describe('spec compiler', () => {
         name: 'Docs',
         specs: [{ id: 'api', path: 'openapi.yaml' }],
       }).theme.accent,
-    ).toBe('#16a076');
+    ).toBe('#7c3aed');
     expect(() =>
       parseConfig({ name: 'Docs', specs: [{ id: '../api', path: 'x' }] }),
     ).toThrow();

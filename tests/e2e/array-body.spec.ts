@@ -123,7 +123,7 @@ test('array items support edits, additions and removal with precise requests and
       .locator('.playground-inputs')
       .evaluate((element) => element.scrollWidth <= element.clientWidth),
   ).toBe(true);
-  await page.screenshot({ path: '.api-docs/array-body-mobile-dark.png' });
+  await page.screenshot({ path: '.doctopus/array-body-mobile-dark.png' });
   expect(errors).toEqual([]);
 });
 
@@ -204,7 +204,7 @@ test('root array bodies use referenced item fields and preserve exact batch requ
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto(route);
   const playground = page.getByLabel('API playground');
-  const media = 'application/vnd.api-docs.list+json';
+  const media = 'application/vnd.doctopus.list+json';
   await playground
     .getByRole('combobox', { name: 'Content type', exact: true })
     .selectOption(media);

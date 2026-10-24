@@ -28,14 +28,14 @@ jobs:
       - run: npm ci --ignore-scripts
       - name: Check current advisories at the moderate threshold
         run: |
-          mkdir -p .api-docs
-          npm audit --audit-level=moderate --json > .api-docs/npm-audit.json
+          mkdir -p .doctopus
+          npm audit --audit-level=moderate --json > .doctopus/npm-audit.json
       - name: Retain the audit result
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: application-advisories-${{ github.sha }}
-          path: .api-docs/npm-audit.json
+          path: .doctopus/npm-audit.json
           include-hidden-files: true
           if-no-files-found: error
           retention-days: 14
@@ -54,7 +54,7 @@ jobs:
           cache: npm
       - run: npm ci --ignore-scripts
       - run: npm run build
-      - run: docker build --target server --iidfile /tmp/api-docs-server.id .
+      - run: docker build --target server --iidfile /tmp/doctopus-server.id .
       - uses: ./.github/actions/image-security
       - name: Retain findings and incomplete evidence on failure
         if: always()
@@ -62,13 +62,13 @@ jobs:
         with:
           name: server-advisories-${{ github.sha }}
           path: |
-            .api-docs/container-inventory-evidence.json
-            .api-docs/container-candidates/**/server.cdx.json
-            .api-docs/container-candidates/**/report.json
-            .api-docs/container-security-evidence.json
-            .api-docs/container-security-candidates/**/server.grype.json
-            .api-docs/container-security-candidates/**/report.json
-            .api-docs/container-security-candidates/**/.incomplete
+            .doctopus/container-inventory-evidence.json
+            .doctopus/container-candidates/**/server.cdx.json
+            .doctopus/container-candidates/**/report.json
+            .doctopus/container-security-evidence.json
+            .doctopus/container-security-candidates/**/server.grype.json
+            .doctopus/container-security-candidates/**/report.json
+            .doctopus/container-security-candidates/**/.incomplete
           include-hidden-files: true
           if-no-files-found: error
           retention-days: 14

@@ -1,10 +1,10 @@
 import { useContext, useEffect, useRef, useState } from 'react';
-import type { SecurityScheme } from '@davidniessen/contracts';
+import type { SecurityScheme } from '@davidniessen/doctopus-contracts';
 import { requestOAuthToken, OAuthPopupError } from '../oauth-popup.js';
 import type { OAuthPopupErrorCode } from '../oauth-popup.js';
 import { UiContext } from '../ui-translation.js';
 import { popupErrorText } from '../auth-messages.js';
-import { resolveOAuthEndpoint } from '@davidniessen/explorer';
+import { resolveOAuthEndpoint } from '@davidniessen/doctopus-explorer';
 
 export function AuthField({
   name,

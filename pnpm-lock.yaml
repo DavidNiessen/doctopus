@@ -16,43 +16,43 @@ importers:
       '@axe-core/playwright':
         specifier: 4.11.0
         version: 4.11.0(playwright-core@1.64.1)
-      '@davidniessen/cli':
+      '@davidniessen/doctopus-cli':
         specifier: 0.2.0-candidate.7
         version: link:packages/cli
-      '@davidniessen/compiler':
+      '@davidniessen/doctopus-compiler':
         specifier: 0.2.0-candidate.7
         version: link:packages/compiler
-      '@davidniessen/content':
+      '@davidniessen/doctopus-content':
         specifier: 0.2.0-candidate.7
         version: link:packages/content
-      '@davidniessen/contracts':
+      '@davidniessen/doctopus-contracts':
         specifier: 0.2.0-candidate.7
         version: link:packages/contracts
-      '@davidniessen/domain':
+      '@davidniessen/doctopus-domain':
         specifier: 0.2.0-candidate.7
         version: link:packages/domain
-      '@davidniessen/explorer':
+      '@davidniessen/doctopus-explorer':
         specifier: 0.2.0-candidate.7
         version: link:packages/explorer
-      '@davidniessen/node':
+      '@davidniessen/doctopus-node':
         specifier: 0.2.0-candidate.7
         version: link:integrations/node
-      '@davidniessen/plugin-sdk':
+      '@davidniessen/doctopus-plugin-sdk':
         specifier: 0.2.0-candidate.7
         version: link:packages/plugin-sdk
-      '@davidniessen/reader':
+      '@davidniessen/doctopus-reader':
         specifier: 0.2.0-candidate.7
         version: link:apps/reader
-      '@davidniessen/search':
+      '@davidniessen/doctopus-search':
         specifier: 0.2.0-candidate.7
         version: link:packages/search
-      '@davidniessen/server':
+      '@davidniessen/doctopus-server':
         specifier: 0.2.0-candidate.7
         version: link:apps/server
-      '@davidniessen/spec':
+      '@davidniessen/doctopus-spec':
         specifier: 0.2.0-candidate.7
         version: link:packages/spec
-      '@davidniessen/storage':
+      '@davidniessen/doctopus-storage':
         specifier: 0.2.0-candidate.7
         version: link:packages/storage
       '@eslint/js':
@@ -151,16 +151,16 @@ importers:
 
   apps/reader:
     dependencies:
-      '@davidniessen/contracts':
+      '@davidniessen/doctopus-contracts':
         specifier: 0.2.0-candidate.7
         version: link:../../packages/contracts
-      '@davidniessen/explorer':
+      '@davidniessen/doctopus-explorer':
         specifier: 0.2.0-candidate.7
         version: link:../../packages/explorer
-      '@davidniessen/plugin-sdk':
+      '@davidniessen/doctopus-plugin-sdk':
         specifier: 0.2.0-candidate.7
         version: link:../../packages/plugin-sdk
-      '@davidniessen/search':
+      '@davidniessen/doctopus-search':
         specifier: 0.2.0-candidate.7
         version: link:../../packages/search
       dompurify:
@@ -178,22 +178,22 @@ importers:
 
   apps/server:
     dependencies:
-      '@davidniessen/cli':
+      '@davidniessen/doctopus-cli':
         specifier: 0.2.0-candidate.7
         version: link:../../packages/cli
-      '@davidniessen/compiler':
+      '@davidniessen/doctopus-compiler':
         specifier: 0.2.0-candidate.7
         version: link:../../packages/compiler
-      '@davidniessen/contracts':
+      '@davidniessen/doctopus-contracts':
         specifier: 0.2.0-candidate.7
         version: link:../../packages/contracts
-      '@davidniessen/domain':
+      '@davidniessen/doctopus-domain':
         specifier: 0.2.0-candidate.7
         version: link:../../packages/domain
-      '@davidniessen/spec':
+      '@davidniessen/doctopus-spec':
         specifier: 0.2.0-candidate.7
         version: link:../../packages/spec
-      '@davidniessen/storage':
+      '@davidniessen/doctopus-storage':
         specifier: 0.2.0-candidate.7
         version: link:../../packages/storage
       '@fastify/cookie':
@@ -217,10 +217,10 @@ importers:
 
   apps/studio:
     dependencies:
-      '@davidniessen/contracts':
+      '@davidniessen/doctopus-contracts':
         specifier: 0.2.0-candidate.7
         version: link:../../packages/contracts
-      '@davidniessen/domain':
+      '@davidniessen/doctopus-domain':
         specifier: 0.2.0-candidate.7
         version: link:../../packages/domain
       react:
@@ -232,28 +232,28 @@ importers:
 
   apps/worker:
     dependencies:
-      '@davidniessen/cli':
+      '@davidniessen/doctopus-cli':
         specifier: 0.2.0-candidate.7
         version: link:../../packages/cli
-      '@davidniessen/compiler':
+      '@davidniessen/doctopus-compiler':
         specifier: 0.2.0-candidate.7
         version: link:../../packages/compiler
-      '@davidniessen/contracts':
+      '@davidniessen/doctopus-contracts':
         specifier: 0.2.0-candidate.7
         version: link:../../packages/contracts
-      '@davidniessen/domain':
+      '@davidniessen/doctopus-domain':
         specifier: 0.2.0-candidate.7
         version: link:../../packages/domain
-      '@davidniessen/spec':
+      '@davidniessen/doctopus-spec':
         specifier: 0.2.0-candidate.7
         version: link:../../packages/spec
 
   integrations/node:
     dependencies:
-      '@davidniessen/compiler':
+      '@davidniessen/doctopus-compiler':
         specifier: 0.2.0-candidate.7
         version: link:../../packages/compiler
-      '@davidniessen/contracts':
+      '@davidniessen/doctopus-contracts':
         specifier: 0.2.0-candidate.7
         version: link:../../packages/contracts
       '@fastify/static':
@@ -271,22 +271,22 @@ importers:
 
   packages/cli:
     dependencies:
-      '@davidniessen/compiler':
+      '@davidniessen/doctopus-compiler':
         specifier: 0.2.0-candidate.7
         version: link:../compiler
-      '@davidniessen/contracts':
+      '@davidniessen/doctopus-contracts':
         specifier: 0.2.0-candidate.7
         version: link:../contracts
-      '@davidniessen/plugin-sdk':
+      '@davidniessen/doctopus-plugin-sdk':
         specifier: 0.2.0-candidate.7
         version: link:../plugin-sdk
-      '@davidniessen/reader':
+      '@davidniessen/doctopus-reader':
         specifier: 0.2.0-candidate.7
         version: link:../../apps/reader
-      '@davidniessen/search':
+      '@davidniessen/doctopus-search':
         specifier: 0.2.0-candidate.7
         version: link:../search
-      '@davidniessen/spec':
+      '@davidniessen/doctopus-spec':
         specifier: 0.2.0-candidate.7
         version: link:../spec
       '@fastify/static':
@@ -304,28 +304,28 @@ importers:
 
   packages/compiler:
     dependencies:
-      '@davidniessen/content':
+      '@davidniessen/doctopus-content':
         specifier: 0.2.0-candidate.7
         version: link:../content
-      '@davidniessen/contracts':
+      '@davidniessen/doctopus-contracts':
         specifier: 0.2.0-candidate.7
         version: link:../contracts
-      '@davidniessen/plugin-sdk':
+      '@davidniessen/doctopus-plugin-sdk':
         specifier: 0.2.0-candidate.7
         version: link:../plugin-sdk
-      '@davidniessen/search':
+      '@davidniessen/doctopus-search':
         specifier: 0.2.0-candidate.7
         version: link:../search
-      '@davidniessen/spec':
+      '@davidniessen/doctopus-spec':
         specifier: 0.2.0-candidate.7
         version: link:../spec
 
   packages/content:
     dependencies:
-      '@davidniessen/contracts':
+      '@davidniessen/doctopus-contracts':
         specifier: 0.2.0-candidate.7
         version: link:../contracts
-      '@davidniessen/spec':
+      '@davidniessen/doctopus-spec':
         specifier: 0.2.0-candidate.7
         version: link:../spec
       '@mdx-js/mdx':
@@ -369,19 +369,19 @@ importers:
 
   packages/domain:
     dependencies:
-      '@davidniessen/contracts':
+      '@davidniessen/doctopus-contracts':
         specifier: 0.2.0-candidate.7
         version: link:../contracts
 
   packages/explorer:
     dependencies:
-      '@davidniessen/contracts':
+      '@davidniessen/doctopus-contracts':
         specifier: 0.2.0-candidate.7
         version: link:../contracts
 
   packages/plugin-sdk:
     dependencies:
-      '@davidniessen/contracts':
+      '@davidniessen/doctopus-contracts':
         specifier: 0.2.0-candidate.7
         version: link:../contracts
       zod:
@@ -390,7 +390,7 @@ importers:
 
   packages/search:
     dependencies:
-      '@davidniessen/contracts':
+      '@davidniessen/doctopus-contracts':
         specifier: 0.2.0-candidate.7
         version: link:../contracts
 
@@ -399,7 +399,7 @@ importers:
       '@apidevtools/swagger-parser':
         specifier: 13.1.0
         version: 13.1.0(openapi-types@12.1.3)
-      '@davidniessen/contracts':
+      '@davidniessen/doctopus-contracts':
         specifier: 0.2.0-candidate.7
         version: link:../contracts
       ajv:
@@ -420,7 +420,7 @@ importers:
 
   packages/storage:
     dependencies:
-      '@davidniessen/domain':
+      '@davidniessen/doctopus-domain':
         specifier: 0.2.0-candidate.7
         version: link:../domain
       pg:

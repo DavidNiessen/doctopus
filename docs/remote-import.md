@@ -1,12 +1,12 @@
 # Importing remote OpenAPI snapshots
 
-`api-docs import-spec` explicitly downloads a self-contained OpenAPI 3.0/3.1 YAML or JSON document, validates it, and saves its original bytes inside a project. Builds, doctor and preview continue using local files; they never fetch a configured URL automatically. For relative or remote external references, use [pinned reference snapshots](reference-snapshots.md) or bundle the document first. Local fragment references, including recursive schemas, are supported.
+`doctopus import-spec` explicitly downloads a self-contained OpenAPI 3.0/3.1 YAML or JSON document, validates it, and saves its original bytes inside a project. Builds, doctor and preview continue using local files; they never fetch a configured URL automatically. For relative or remote external references, use [pinned reference snapshots](reference-snapshots.md) or bundle the document first. Local fragment references, including recursive schemas, are supported.
 
 Create the destination parent directory, then import from an exact allowed origin:
 
 ```sh
 mkdir -p specs
-api-docs import-spec https://api.example.com/openapi.yaml . \
+doctopus import-spec https://api.example.com/openapi.yaml . \
   --allow-origin https://api.example.com \
   --output specs/openapi.yaml
 ```
@@ -26,7 +26,7 @@ Output paths must stay inside the real project root. Parent directories must alr
 For an explicitly approved local springdoc endpoint:
 
 ```sh
-api-docs import-spec http://127.0.0.1:8080/v3/api-docs . \
+doctopus import-spec http://127.0.0.1:8080/v3/doctopus . \
   --allow-origin http://127.0.0.1:8080 \
   --allow-http --allow-private-network \
   --output openapi.json
@@ -45,4 +45,4 @@ Add `--replace` for later refreshes, and `--bearer-env` if the generator is prot
 
 Configured HTTP(S) proxies and `NO_PROXY` are selected against the original origin. A proxied HTTPS connection uses the pinned IP in its CONNECT authority while keeping the original TLS identity. Proxy/egress rules must permit that secure route. A rejected or invalid proxy does not trigger a direct or unpinned fallback. Existing certificate trust remains in effect; there is no insecure-TLS option.
 
-Programmatic callers can use `downloadSpec(url, options)` from `@davidniessen/spec`, or `importRemoteSpec(project, url, options)` from `@davidniessen/cli`. Their required `allowedOrigins` must come from operator-controlled policy. `RemoteSpecOptions` also accepts an abort signal and lower `maxBytes`/`timeoutMs` limits within the defaults above. The returned snapshot contains source bytes, SHA-256 and origin; it does not retain the query or authentication headers.
+Programmatic callers can use `downloadSpec(url, options)` from `@davidniessen/doctopus-spec`, or `importRemoteSpec(project, url, options)` from `@davidniessen/doctopus-cli`. Their required `allowedOrigins` must come from operator-controlled policy. `RemoteSpecOptions` also accepts an abort signal and lower `maxBytes`/`timeoutMs` limits within the defaults above. The returned snapshot contains source bytes, SHA-256 and origin; it does not retain the query or authentication headers.

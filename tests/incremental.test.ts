@@ -14,13 +14,14 @@ import {
   createDevelopmentBuilder,
   buildSite,
   stageArtifact,
-} from '@davidniessen/cli';
-import { verifyArtifact } from '@davidniessen/compiler';
+} from '@davidniessen/doctopus-cli';
+import { verifyArtifact } from '@davidniessen/doctopus-compiler';
 async function project() {
-  const root = await mkdtemp(join(tmpdir(), 'api-docs-incremental-'));
+  const root = await mkdtemp(join(tmpdir(), 'doctopus-incremental-'));
   await cp(resolve('examples/demo'), root, {
     recursive: true,
-    filter: (path) => !path.includes('.api-docs'),
+    filter: (path) =>
+      !path.includes('.doctopus') && !path.includes('.api-docs'),
   });
   return root;
 }
@@ -48,7 +49,7 @@ describe('incremental development builds', () => {
       await readFile(join(first.directory, 'index.html'), 'utf8'),
     ).toContain('New incremental body text.');
     await verifyArtifact(changed.directory);
-    const target = await mkdtemp(join(tmpdir(), 'api-docs-incremental-store-'));
+    const target = await mkdtemp(join(tmpdir(), 'doctopus-incremental-store-'));
     expect(await stageArtifact(changed.directory, target)).toBe(
       changed.manifest.artifactDigest,
     );
@@ -97,7 +98,7 @@ describe('incremental development builds', () => {
   });
   it('rejects output directory symlinks before an incremental update writes outside the project', async () => {
     const root = await project(),
-      outside = await mkdtemp(join(tmpdir(), 'api-docs-incremental-outside-'));
+      outside = await mkdtemp(join(tmpdir(), 'doctopus-incremental-outside-'));
     const builder = createDevelopmentBuilder(root);
     const first = await builder.build();
     const path = join(first.directory, 'guides');

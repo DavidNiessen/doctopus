@@ -14,8 +14,8 @@ export function validateSpringMetadata(metadata) {
   assert(
     metadata.groups.some(
       (entry) =>
-        entry.name === 'api-docs' &&
-        entry.type === 'io.apidocs.spring.ApiDocsProperties',
+        entry.name === 'doctopus' &&
+        entry.type === 'dev.niessen.doctopus.spring.DoctopusProperties',
     ),
     'Missing Spring configuration group.',
   );
@@ -25,7 +25,7 @@ export function validateSpringMetadata(metadata) {
     'enabled',
     'path',
     'public-base-path',
-  ].map((name) => 'api-docs.' + name);
+  ].map((name) => 'doctopus.' + name);
   assert.equal(
     metadata.properties.length,
     names.length,
@@ -41,9 +41,12 @@ export function validateSpringMetadata(metadata) {
     const entry = entries[0];
     assert.equal(
       entry.type,
-      name === 'api-docs.enabled' ? 'java.lang.Boolean' : 'java.lang.String',
+      name === 'doctopus.enabled' ? 'java.lang.Boolean' : 'java.lang.String',
     );
-    assert.equal(entry.sourceType, 'io.apidocs.spring.ApiDocsProperties');
+    assert.equal(
+      entry.sourceType,
+      'dev.niessen.doctopus.spring.DoctopusProperties',
+    );
     assert(
       typeof entry.description === 'string' && entry.description.length >= 10,
       'Spring properties need useful descriptions.',
@@ -51,15 +54,15 @@ export function validateSpringMetadata(metadata) {
     return entry;
   });
   assert.equal(
-    properties.find((entry) => entry.name === 'api-docs.enabled').defaultValue,
+    properties.find((entry) => entry.name === 'doctopus.enabled').defaultValue,
     true,
   );
   assert.equal(
-    properties.find((entry) => entry.name === 'api-docs.path').defaultValue,
+    properties.find((entry) => entry.name === 'doctopus.path').defaultValue,
     '/docs',
   );
   for (const entry of properties.filter(
-    (entry) => !['api-docs.enabled', 'api-docs.path'].includes(entry.name),
+    (entry) => !['doctopus.enabled', 'doctopus.path'].includes(entry.name),
   ))
     assert(
       entry.defaultValue === undefined || entry.defaultValue === null,
@@ -89,7 +92,7 @@ export function bindJavaSbom(input, { version, artifacts, parentPom }) {
   assert(
     record(root) &&
       root.group === group &&
-      root.name === 'api-docs-parent' &&
+      root.name === 'doctopus-parent' &&
       root.version === version,
     'Java SBOM root coordinates disagree.',
   );
@@ -211,7 +214,7 @@ export function bindJavaSbom(input, { version, artifacts, parentPom }) {
   );
   assert.deepEqual(
     artifacts.map((entry) => entry.artifact).sort(),
-    ['api-docs-core', 'api-docs-spring-boot-starter'],
+    ['doctopus-core', 'doctopus-spring-boot-starter'],
     'The core and starter candidates must both be present.',
   );
   for (const artifact of artifacts) {

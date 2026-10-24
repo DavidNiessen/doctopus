@@ -3,7 +3,7 @@ import {
   contrastRatio,
   resolvePalette,
   themePresets,
-} from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-contracts';
 import { responseEditorTheme } from '../apps/reader/src/response-editor-theme.js';
 
 it.each(['light', 'dark'] as const)(

@@ -2,12 +2,12 @@ import {
   guideHref,
   operationHref,
   guidesForLocale,
-} from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-contracts';
 import type {
   SearchDocument,
   SearchResult,
   SiteData,
-} from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-contracts';
 
 export function createSearchIndex(
   site: SiteData,

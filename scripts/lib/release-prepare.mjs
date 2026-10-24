@@ -91,7 +91,7 @@ function changelog(previous, plan) {
 }
 async function atomicWrite(root, path, content, mode) {
   const file = join(root, path),
-    temporary = join(dirname(file), '.api-docs-release-' + randomUUID());
+    temporary = join(dirname(file), '.doctopus-release-' + randomUUID());
   try {
     await writeFile(temporary, content, { flag: 'wx', mode });
     await chmod(temporary, mode);
@@ -234,7 +234,7 @@ async function prepareReleaseUnlocked(
     proposed.set(
       path,
       pom.replace(
-        /(<artifactId>api-docs-parent<\/artifactId>\s*<version>)[^<]+(<\/version>)/g,
+        /(<artifactId>doctopus-parent<\/artifactId>\s*<version>)[^<]+(<\/version>)/g,
         (_all, prefix, suffix) => prefix + version + suffix,
       ),
     );
@@ -246,7 +246,7 @@ async function prepareReleaseUnlocked(
   const changes = [...proposed]
     .filter(([path, after]) => snapshots.get(path) !== after)
     .map(([path, after]) => ({ path, before: snapshots.get(path), after }));
-  const stage = await mkdtemp(join(tmpdir(), 'api-docs-release-preparation-'));
+  const stage = await mkdtemp(join(tmpdir(), 'doctopus-release-preparation-'));
   let keepStage = false;
   try {
     for (const [path, content] of proposed) {
@@ -342,7 +342,7 @@ async function prepareReleaseUnlocked(
 export async function prepareRelease(root, plan, options = {}) {
   root = await realpath(root);
   if (!options.apply) return prepareReleaseUnlocked(root, plan, options);
-  const lock = join(tmpdir(), 'api-docs-release-' + digest(root) + '.lock');
+  const lock = join(tmpdir(), 'doctopus-release-' + digest(root) + '.lock');
   try {
     await mkdir(lock, { mode: 0o700 });
   } catch (cause) {

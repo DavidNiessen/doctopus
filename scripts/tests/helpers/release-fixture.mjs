@@ -15,7 +15,7 @@ export const poms = [
   'integrations/java/spring-boot-starter/pom.xml',
 ];
 export async function fixture(t) {
-  const root = await mkdtemp(join(tmpdir(), 'api-docs-versions-'));
+  const root = await mkdtemp(join(tmpdir(), 'doctopus-versions-'));
   t.after(() => rm(root, { recursive: true, force: true }));
   const paths = [
     ...(await readWorkspacePackages(repository)).map(
@@ -36,7 +36,7 @@ export async function fixture(t) {
     await writeFile(
       file,
       (await readFile(file, 'utf8')).replace(
-        /(<artifactId>api-docs-parent<\/artifactId>\s*<version>)[^<]+(<\/version>)/g,
+        /(<artifactId>doctopus-parent<\/artifactId>\s*<version>)[^<]+(<\/version>)/g,
         (_match, prefix, suffix) =>
           prefix + BASE_VERSION + '-SNAPSHOT' + suffix,
       ),

@@ -4,7 +4,7 @@ import { createServer, connect } from 'node:net';
 import type { Socket } from 'node:net';
 import { once } from 'node:events';
 import pg from 'pg';
-import { PostgresRepository } from '@davidniessen/storage';
+import { PostgresRepository } from '@davidniessen/doctopus-storage';
 
 const database = process.env.TEST_DATABASE_URL;
 if (!database)

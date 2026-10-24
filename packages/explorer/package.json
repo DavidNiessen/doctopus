@@ -1,5 +1,5 @@
 {
-  "name": "@davidniessen/explorer",
+  "name": "@davidniessen/doctopus-explorer",
   "version": "0.2.0-candidate.7",
   "type": "module",
   "license": "Apache-2.0",
@@ -13,7 +13,7 @@
     }
   },
   "dependencies": {
-    "@davidniessen/contracts": "0.2.0-candidate.7"
+    "@davidniessen/doctopus-contracts": "0.2.0-candidate.7"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"

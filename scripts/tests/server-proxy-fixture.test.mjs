@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { verifyServerProxy } from '../lib/server-proxy-fixture.mjs';
 
-const project = 'api-docs-runtime-' + 'a'.repeat(16);
+const project = 'doctopus-runtime-' + 'a'.repeat(16);
 const image = 'sha256:' + 'b'.repeat(64);
 function source(docker) {
   return {
@@ -27,8 +27,8 @@ function source(docker) {
 test('TLS acceptance refuses foreign projects and mutable server images before any Docker command', async () => {
   const fixture = source(() => assert.fail('No Docker access is allowed.'));
   for (const overrides of [
-    { project: 'api-docs' },
-    { image: 'api-docs:local' },
+    { project: 'doctopus' },
+    { image: 'doctopus:local' },
   ])
     await assert.rejects(verifyServerProxy({ ...fixture, ...overrides }));
 });
@@ -60,7 +60,7 @@ test('TLS acceptance refuses a database network with an external route without c
 
 test('TLS failure cleanup refuses a label match whose container name belongs to another resource', async (t) => {
   t.mock.method(console, 'error', () => {});
-  const root = await mkdtemp(join(tmpdir(), 'api-docs-tls-guard-'));
+  const root = await mkdtemp(join(tmpdir(), 'doctopus-tls-guard-'));
   const commands = [];
   let created = false;
   const fixture = source(async (args) => {

@@ -1,5 +1,8 @@
-import { isJsonMediaType, resolveSchema } from '@davidniessen/contracts';
-import type { Parameter, Schema } from '@davidniessen/contracts';
+import {
+  isJsonMediaType,
+  resolveSchema,
+} from '@davidniessen/doctopus-contracts';
+import type { Parameter, Schema } from '@davidniessen/doctopus-contracts';
 
 export const encodeValue = (value: unknown): string =>
   encodeURIComponent(String(value)).replace(

@@ -15,7 +15,7 @@ for (const name of [
   'DOCKER_CERT_PATH',
 ])
   delete env[name];
-const root = await mkdtemp(join(tmpdir(), 'api-docs-baseline-build-'));
+const root = await mkdtemp(join(tmpdir(), 'doctopus-baseline-build-'));
 const run = (file, args, input) =>
   new Promise((resolve, reject) => {
     const child = spawn(file, args, {
@@ -66,8 +66,8 @@ try {
   ]);
   const image = (await readFile(imageFile, 'utf8')).trim();
   assert.match(image, /^sha256:[a-f0-9]{64}$/);
-  await mkdir('.api-docs', { recursive: true });
-  await writeFile(resolve('.api-docs/upgrade-baseline.id'), image + '\n');
+  await mkdir('.doctopus', { recursive: true });
+  await writeFile(resolve('.doctopus/upgrade-baseline.id'), image + '\n');
   console.log(
     JSON.stringify(
       {

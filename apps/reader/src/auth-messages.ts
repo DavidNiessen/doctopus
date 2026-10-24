@@ -1,4 +1,4 @@
-import type { UiText, UiMessageKey } from '@davidniessen/contracts';
+import type { UiText, UiMessageKey } from '@davidniessen/doctopus-contracts';
 import type { RelayErrorCode } from './relay-transport.js';
 import type { OAuthPopupErrorCode } from './oauth-popup.js';
 

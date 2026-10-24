@@ -1,4 +1,4 @@
-import { buildSite, createStaticServer } from '@davidniessen/cli';
+import { buildSite, createStaticServer } from '@davidniessen/doctopus-cli';
 const built = await buildSite(
   new URL('../examples/localized/', import.meta.url).pathname,
 );

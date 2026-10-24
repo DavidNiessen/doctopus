@@ -74,7 +74,7 @@ test('localized classic lists retain translated retry states, counts, pagination
   page.on('pageerror', (error) => errors.push(error.message));
   await page.addInitScript(() =>
     localStorage.setItem(
-      'api-docs:reader-settings:v1:/localized',
+      'doctopus:reader-settings:v1:/localized',
       JSON.stringify({ version: 1, layout: 'classic' }),
     ),
   );

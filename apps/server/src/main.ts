@@ -1,9 +1,9 @@
 import { databaseOptions } from './database-options.js';
 import { readFile, realpath } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
-import { PostgresRepository } from '@davidniessen/storage';
+import { PostgresRepository } from '@davidniessen/doctopus-storage';
 import { createServer } from './index.js';
-import { readTextFile } from '@davidniessen/spec';
+import { readTextFile } from '@davidniessen/doctopus-spec';
 import { parseRelayPolicy } from './relay-policy.js';
 import {
   runProcessLifecycle,

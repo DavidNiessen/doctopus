@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { objectFieldSchema } from '@davidniessen/contracts';
-import type { Media, Schema } from '@davidniessen/contracts';
+import { objectFieldSchema } from '@davidniessen/doctopus-contracts';
+import type { Media, Schema } from '@davidniessen/doctopus-contracts';
 import {
   encodeFormBody,
   createMultipartParts,
   redactRequest,
   toFetchRequest,
-} from '@davidniessen/explorer';
+} from '@davidniessen/doctopus-explorer';
 import {
   multipartEditorModel,
   multipartExampleBody,

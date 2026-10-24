@@ -1,10 +1,10 @@
 {
-  "name": "@davidniessen/cli",
+  "name": "@davidniessen/doctopus-cli",
   "version": "0.2.0-candidate.7",
   "type": "module",
   "license": "Apache-2.0",
   "bin": {
-    "api-docs": "./dist/main.js"
+    "doctopus": "./dist/main.js"
   },
   "files": [
     "dist"
@@ -16,12 +16,12 @@
     }
   },
   "dependencies": {
-    "@davidniessen/compiler": "0.2.0-candidate.7",
-    "@davidniessen/contracts": "0.2.0-candidate.7",
-    "@davidniessen/plugin-sdk": "0.2.0-candidate.7",
-    "@davidniessen/reader": "0.2.0-candidate.7",
-    "@davidniessen/search": "0.2.0-candidate.7",
-    "@davidniessen/spec": "0.2.0-candidate.7",
+    "@davidniessen/doctopus-compiler": "0.2.0-candidate.7",
+    "@davidniessen/doctopus-contracts": "0.2.0-candidate.7",
+    "@davidniessen/doctopus-plugin-sdk": "0.2.0-candidate.7",
+    "@davidniessen/doctopus-reader": "0.2.0-candidate.7",
+    "@davidniessen/doctopus-search": "0.2.0-candidate.7",
+    "@davidniessen/doctopus-spec": "0.2.0-candidate.7",
     "@fastify/static": "10.1.7",
     "commander": "14.0.2",
     "fastify": "5.12.7",

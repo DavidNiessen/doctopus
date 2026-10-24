@@ -16,12 +16,15 @@ import { join, delimiter } from 'node:path';
 import { tmpdir } from 'node:os';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
-import { inspectIsolatedSource, buildIsolatedSite } from '@davidniessen/cli';
-import { readTextFile } from '@davidniessen/spec';
+import {
+  inspectIsolatedSource,
+  buildIsolatedSite,
+} from '@davidniessen/doctopus-cli';
+import { readTextFile } from '@davidniessen/doctopus-spec';
 const exec = promisify(execFile);
 const roots: string[] = [];
 async function temporary() {
-  const root = await mkdtemp(join(tmpdir(), 'api-docs-source-pin-'));
+  const root = await mkdtemp(join(tmpdir(), 'doctopus-source-pin-'));
   roots.push(root);
   return root;
 }
@@ -122,7 +125,7 @@ it('the CLI returns source metadata without creating a publication or executing 
     schemaVersion: 1,
     source: await inspectIsolatedSource(root),
   });
-  await expect(access(join(root, '.api-docs'))).rejects.toThrow();
+  await expect(access(join(root, '.doctopus'))).rejects.toThrow();
   expect(result.stderr).toBe('');
 });
 it('a changed approved snapshot fails before any Docker command and retains an existing publication', async () => {
@@ -131,14 +134,14 @@ it('a changed approved snapshot fails before any Docker command and retains an e
     bin = join(root, 'bin');
   await mkdir(project);
   await mkdir(bin);
-  await mkdir(join(project, '.api-docs', 'site'), { recursive: true });
+  await mkdir(join(project, '.doctopus', 'site'), { recursive: true });
   await writeFile(
     join(project, 'docs.config.yaml'),
     'name: Approval fixture\nspecs: [{id:api,path:openapi.json}]\n',
   );
   await writeFile(join(project, 'openapi.json'), '{}');
   await writeFile(
-    join(project, '.api-docs', 'site', 'sentinel'),
+    join(project, '.doctopus', 'site', 'sentinel'),
     'prior publication',
   );
   const approved = await inspectIsolatedSource(project);
@@ -149,7 +152,7 @@ it('a changed approved snapshot fails before any Docker command and retains an e
   await writeFile(join(bin, 'package.json'), '{"type":"commonjs"}\n');
   await writeFile(
     executable,
-    `#!${process.execPath}\nrequire('node:fs').writeFileSync(process.env.API_DOCS_DOCKER_CALL, JSON.stringify(process.argv.slice(2)));process.exit(2);\n`,
+    `#!${process.execPath}\nrequire('node:fs').writeFileSync(process.env.DOCTOPUS_DOCKER_CALL, JSON.stringify(process.argv.slice(2)));process.exit(2);\n`,
   );
   await chmod(executable, 0o755);
   const socket = join(root, 'docker.sock');
@@ -163,7 +166,7 @@ it('a changed approved snapshot fails before any Docker command and retains an e
   const environment = {
     ...process.env,
     PATH: bin + delimiter + (process.env.PATH ?? ''),
-    API_DOCS_DOCKER_CALL: marker,
+    DOCTOPUS_DOCKER_CALL: marker,
   };
   const run = (digest: string) =>
     exec(
@@ -189,9 +192,9 @@ it('a changed approved snapshot fails before any Docker command and retains an e
     await expect(access(marker)).rejects.toThrow();
     expect(connections).toBe(0);
     expect(
-      await readFile(join(project, '.api-docs', 'site', 'sentinel'), 'utf8'),
+      await readFile(join(project, '.doctopus', 'site', 'sentinel'), 'utf8'),
     ).toBe('prior publication');
-    expect(await readdir(join(project, '.api-docs'))).toEqual(['site']);
+    expect(await readdir(join(project, '.doctopus'))).toEqual(['site']);
     const current = await inspectIsolatedSource(project);
     await expect(run(current.digest)).rejects.toMatchObject({
       code: 1,
@@ -206,9 +209,9 @@ it('a changed approved snapshot fails before any Docker command and retains an e
       'sha256:' + 'a'.repeat(64),
     ]);
     expect(
-      await readFile(join(project, '.api-docs', 'site', 'sentinel'), 'utf8'),
+      await readFile(join(project, '.doctopus', 'site', 'sentinel'), 'utf8'),
     ).toBe('prior publication');
-    expect(await readdir(join(project, '.api-docs'))).toEqual(['site']);
+    expect(await readdir(join(project, '.doctopus'))).toEqual(['site']);
   } finally {
     await new Promise<void>((resolve, reject) =>
       daemon.close((error) => (error ? reject(error) : resolve())),

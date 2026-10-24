@@ -1,6 +1,6 @@
 # Product specification
 
-Status: proposed product contract. All capabilities are planned unless the repository explicitly marks them implemented. Working name: **api-docs**; final naming and trademark checks precede public launch.
+Status: proposed product contract. All capabilities are planned unless the repository explicitly marks them implemented. Working name: **doctopus**; final naming and trademark checks precede public launch.
 
 ## 1. Mission and position
 

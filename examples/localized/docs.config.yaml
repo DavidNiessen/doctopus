@@ -72,7 +72,7 @@ i18n:
       response.expand: Alles ausklappen
       copy.success: Kopiert
       footer.source: 'Quelle:'
-      footer.builtWith: Erstellt mit api-docs
+      footer.builtWith: Erstellt mit doctopus
       theme.settings: 'Leseeinstellungen öffnen'
       theme.customize: 'Erscheinungsbild anpassen'
       settings.region: 'Persönliche Einstellungen'

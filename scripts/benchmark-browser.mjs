@@ -5,13 +5,13 @@ import { execFileSync } from 'node:child_process';
 import { gzipSync } from 'node:zlib';
 import assert from 'node:assert/strict';
 import { chromium } from '@playwright/test';
-import { createStaticServer } from '@davidniessen/cli';
-import { verifyArtifact } from '@davidniessen/compiler';
-import { toolVersion } from '@davidniessen/contracts';
+import { createStaticServer } from '@davidniessen/doctopus-cli';
+import { verifyArtifact } from '@davidniessen/doctopus-compiler';
+import { toolVersion } from '@davidniessen/doctopus-contracts';
 const count = Number(process.argv[2] ?? 10);
 if (!Number.isInteger(count) || count < 5 || count > 30)
   throw new Error('Choose 5–30 cold samples per route');
-const directory = resolve('.api-docs/browser-benchmark', String(Date.now()));
+const directory = resolve('.doctopus/browser-benchmark', String(Date.now()));
 await mkdir(directory, { recursive: true });
 const profile = {
   viewport: { width: 390, height: 844 },
@@ -22,14 +22,14 @@ const profile = {
   uploadBitsPerSecond: 750_000,
 };
 const publication = await verifyArtifact(
-  resolve('examples/demo/.api-docs/site'),
+  resolve('examples/demo/.doctopus/site'),
 );
 assert.equal(
   publication.compilerVersion,
   toolVersion,
   'Rebuild the demo with the current compiler.',
 );
-const app = await createStaticServer(resolve('examples/demo/.api-docs/site'));
+const app = await createStaticServer(resolve('examples/demo/.doctopus/site'));
 let browser;
 try {
   const origin = await app.listen({ port: 0, host: '127.0.0.1' });
@@ -141,13 +141,13 @@ try {
         });
         assert.equal(response.status(), 200, `${name} route must exist`);
         await page.waitForFunction(
-          () => performance.getEntriesByName('api-docs:hydrated').length > 0,
+          () => performance.getEntriesByName('doctopus:hydrated').length > 0,
         );
         const metrics = await page.evaluate(() => ({
           lcpMs: globalThis.__readerBenchmark.lcp,
           cls: globalThis.__readerBenchmark.cls,
           hydrationMs:
-            performance.getEntriesByName('api-docs:hydrated')[0].startTime,
+            performance.getEntriesByName('doctopus:hydrated')[0].startTime,
         }));
         assert(metrics.lcpMs > 0, 'LCP observer must report an actual paint');
         collectInitial = false;

@@ -2,13 +2,13 @@ import { afterEach, expect, it, vi } from 'vitest';
 import {
   createReaderExtensionSession,
   defineReaderExtension,
-} from '@davidniessen/plugin-sdk/browser';
+} from '@davidniessen/doctopus-plugin-sdk/browser';
 import type {
   ReaderExtension,
   ReaderExtensionContext,
   ReaderPage,
   ReaderWidget,
-} from '@davidniessen/plugin-sdk/browser';
+} from '@davidniessen/doctopus-plugin-sdk/browser';
 const page: ReaderPage = {
   path: '/guides/start/',
   title: 'Start',

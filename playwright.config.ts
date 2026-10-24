@@ -40,7 +40,7 @@ export default defineConfig({
     },
     {
       command:
-        'node packages/cli/dist/main.js serve examples/demo/.api-docs/site --port 4173',
+        'node packages/cli/dist/main.js serve examples/demo/.doctopus/site --port 4173',
       url: 'http://127.0.0.1:4173/health/ready',
       reuseExistingServer: false,
     },

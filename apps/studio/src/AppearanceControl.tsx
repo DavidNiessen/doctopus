@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useState } from 'react';
 
 type Appearance = 'system' | 'light' | 'dark';
-const storageKey = 'api-docs-studio-appearance';
+const storageKey = 'doctopus-studio-appearance';
 function appearanceFrom(value: string | null): Appearance {
   return value === 'light' || value === 'dark' ? value : 'system';
 }

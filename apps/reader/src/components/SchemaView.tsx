@@ -1,5 +1,5 @@
-import { resolveSchema } from '@davidniessen/contracts';
-import type { Schema, UiText } from '@davidniessen/contracts';
+import { resolveSchema } from '@davidniessen/doctopus-contracts';
+import type { Schema, UiText } from '@davidniessen/doctopus-contracts';
 import { useUi } from '../ui-translation.js';
 const object = (value: unknown): Schema =>
   value !== null && typeof value === 'object' && !Array.isArray(value)
@@ -7,11 +7,11 @@ const object = (value: unknown): Schema =>
     : {};
 const asSchema = (value: unknown): Schema =>
   typeof value === 'boolean'
-    ? { 'x-api-docs-boolean-schema': value }
+    ? { 'x-doctopus-boolean-schema': value }
     : object(value);
 function typeLabel(schema: Schema, legacyNullable: boolean, t: UiText): string {
-  if (schema['x-api-docs-boolean-schema'] !== undefined)
-    return schema['x-api-docs-boolean-schema']
+  if (schema['x-doctopus-boolean-schema'] !== undefined)
+    return schema['x-doctopus-boolean-schema']
       ? t('schema.anyValue')
       : t('schema.noValue');
   if (schema.$ref)

@@ -5,8 +5,11 @@ import {
   exchangePkceCode,
   oauthUrl,
   resolveOAuthEndpoint,
-} from '@davidniessen/explorer';
-import type { OAuthClient, PkceTransaction } from '@davidniessen/explorer';
+} from '@davidniessen/doctopus-explorer';
+import type {
+  OAuthClient,
+  PkceTransaction,
+} from '@davidniessen/doctopus-explorer';
 
 const client: OAuthClient = {
   clientId: 'public-reader',

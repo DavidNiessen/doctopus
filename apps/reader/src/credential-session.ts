@@ -1,4 +1,4 @@
-import type { ApiDocument, Operation } from '@davidniessen/contracts';
+import type { ApiDocument, Operation } from '@davidniessen/doctopus-contracts';
 
 export const CREDENTIAL_MEMORY_MS = 30 * 60 * 1000;
 export interface CredentialValue {

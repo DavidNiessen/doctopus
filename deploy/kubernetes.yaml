@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: api-docs
+  name: doctopus
 spec:
   replicas: 1
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: api-docs
+      app: doctopus
   template:
     metadata:
       labels:
-        app: api-docs
+        app: doctopus
     spec:
       terminationGracePeriodSeconds: 45
       automountServiceAccountToken: false
@@ -25,7 +25,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: docs
-          image: api-docs:local
+          image: doctopus:local
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
@@ -33,17 +33,17 @@ spec:
             - name: PUBLIC_URL
               valueFrom:
                 configMapKeyRef:
-                  name: api-docs
+                  name: doctopus
                   key: public-url
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
-                  name: api-docs
+                  name: doctopus
                   key: database-url
             - name: ROOT_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: api-docs
+                  name: doctopus
                   key: root-token
           resources:
             requests:
@@ -76,7 +76,7 @@ spec:
       volumes:
         - name: artifacts
           persistentVolumeClaim:
-            claimName: api-docs-artifacts
+            claimName: doctopus-artifacts
         - name: tmp
           emptyDir:
             sizeLimit: 64Mi
@@ -84,10 +84,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: api-docs
+  name: doctopus
 spec:
   selector:
-    app: api-docs
+    app: doctopus
   ports:
     - port: 8080
       targetPort: 8080

@@ -8,7 +8,7 @@ import {
   compileProject,
   auditDocumentation,
   checkProjectPluginConformance,
-} from '@davidniessen/compiler';
+} from '@davidniessen/doctopus-compiler';
 import {
   confinedPath,
   readTextFile,
@@ -16,12 +16,12 @@ import {
   parseReferencePolicy,
   loadSpec,
   diffApi,
-} from '@davidniessen/spec';
+} from '@davidniessen/doctopus-spec';
 import {
   lifecycleReport,
   isCalendarDate,
   toolVersion,
-} from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-contracts';
 import {
   buildSite,
   createStaticServer,
@@ -33,7 +33,7 @@ import {
   inspectIsolatedSource,
 } from './index.js';
 const program = new Command()
-  .name('api-docs')
+  .name('doctopus')
   .description(
     'Self-hosted API documentation: build, validate, preview and publish.',
   )
@@ -43,8 +43,8 @@ const buildOptions = (command: Command): Command =>
     .option('-c, --config <file>', 'project config file', 'docs.config.yaml')
     .option(
       '-o, --output <directory>',
-      'output directory inside the project .api-docs folder',
-      '.api-docs/site',
+      'output directory inside the project .doctopus folder',
+      '.doctopus/site',
     )
     .option(
       '--trust-plugins',
@@ -562,7 +562,9 @@ buildOptions(
       const watcher = watch(root, { recursive: true }, (_event, filename) => {
         if (
           !filename ||
-          /(^|[/\\])(\.api-docs|node_modules|\.git)([/\\]|$)/.test(filename)
+          /(^|[/\\])(\.doctopus|\.api-docs|node_modules|\.git)([/\\]|$)/.test(
+            filename,
+          )
         )
           return;
         changes.add(filename);

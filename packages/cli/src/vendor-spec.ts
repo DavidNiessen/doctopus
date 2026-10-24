@@ -14,12 +14,12 @@ import {
   loadReferenceSnapshot,
   readBoundedFile,
   parseReferencePolicy,
-} from '@davidniessen/spec';
+} from '@davidniessen/doctopus-spec';
 import type {
   ReferencePolicy,
   ReferenceSnapshotOptions,
-} from '@davidniessen/spec';
-import { digest } from '@davidniessen/compiler';
+} from '@davidniessen/doctopus-spec';
+import { digest } from '@davidniessen/doctopus-compiler';
 export interface VendorSpecOptions extends ReferenceSnapshotOptions {
   output?: string;
 }
@@ -67,7 +67,7 @@ export async function vendorRemoteSpec(
     local = relative(root, target).split(sep).join('/');
   const lockPath = join(
     parent,
-    `.api-docs-vendor-${snapshot.manifest.digest}.lock`,
+    `.doctopus-vendor-${snapshot.manifest.digest}.lock`,
   );
   const lock = await open(lockPath, 'wx', 0o600).catch(() => {
     throw new Error(
@@ -100,7 +100,7 @@ export async function vendorRemoteSpec(
       if (existing.manifest.digest !== snapshot.manifest.digest)
         throw new Error('Existing snapshot integrity failed');
     } else {
-      stage = await mkdtemp(join(parent, '.api-docs-vendor-stage-'));
+      stage = await mkdtemp(join(parent, '.doctopus-vendor-stage-'));
       const staged = [
         ...snapshot.sources,
         {

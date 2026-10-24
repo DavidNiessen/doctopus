@@ -2,14 +2,14 @@ import { describe, expect, it } from 'vitest';
 import { mkdtemp, mkdir, writeFile, symlink } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
-import { loadGuides, renderMarkdown } from '@davidniessen/content';
+import { loadGuides, renderMarkdown } from '@davidniessen/doctopus-content';
 import {
   contrastRatio,
   readableAccent,
   resolvePalette,
-} from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-contracts';
 async function project(source: string, filename = 'intro.md') {
-  const root = await mkdtemp(join(tmpdir(), 'api-docs-content-'));
+  const root = await mkdtemp(join(tmpdir(), 'doctopus-content-'));
   await mkdir(join(root, 'guides'));
   await writeFile(join(root, 'guides', filename), source);
   return root;

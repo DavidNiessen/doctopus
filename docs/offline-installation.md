@@ -11,12 +11,12 @@ The following block requires a fresh directory and stops on any error. It copies
 ```sh
 (
 set -eu
-mkdir -p .api-docs
-mkdir .api-docs/offline-mirror
-mkdir .api-docs/offline-mirror/deploy .api-docs/offline-mirror/scripts
-cp deploy/compose.yaml deploy/compose.restore.yaml deploy/init-database.sh deploy/Caddyfile .api-docs/offline-mirror/deploy/
-cp scripts/init-deployment.mjs scripts/recovery.mjs .api-docs/offline-mirror/scripts/
-cp LICENSE NOTICE .api-docs/offline-mirror/
+mkdir -p .doctopus
+mkdir .doctopus/offline-mirror
+mkdir .doctopus/offline-mirror/deploy .doctopus/offline-mirror/scripts
+cp deploy/compose.yaml deploy/compose.restore.yaml deploy/init-database.sh deploy/Caddyfile .doctopus/offline-mirror/deploy/
+cp scripts/init-deployment.mjs scripts/recovery.mjs .doctopus/offline-mirror/scripts/
+cp LICENSE NOTICE .doctopus/offline-mirror/
 export OFFLINE_DATABASE_IMAGE="$(docker image inspect postgres:17-alpine@sha256:1bcc18d81671b02906296aad470ec9778a6b71016ce953092024b680bad007b0 --format '{{.Id}}')"
 node --input-type=module <<'NODE'
 import assert from 'node:assert/strict';
@@ -25,12 +25,12 @@ const server = process.env.DOCS_IMAGE;
 const database = process.env.OFFLINE_DATABASE_IMAGE;
 for (const image of [server, database]) assert.match(image ?? '', /^sha256:[a-f0-9]{64}$/);
 const service = (image) => ({ image, pull_policy: 'never' });
-await writeFile('.api-docs/offline-mirror/deploy/compose.offline.json', JSON.stringify({
+await writeFile('.doctopus/offline-mirror/deploy/compose.offline.json', JSON.stringify({
   services: { db: service(database), migrate: service(server), docs: service(server) },
 }, null, 2) + '\n');
 NODE
-docker image save --output .api-docs/offline-mirror/images.tar "$DOCS_IMAGE" "$OFFLINE_DATABASE_IMAGE"
-cd .api-docs/offline-mirror
+docker image save --output .doctopus/offline-mirror/images.tar "$DOCS_IMAGE" "$OFFLINE_DATABASE_IMAGE"
+cd .doctopus/offline-mirror
 sha256sum images.tar LICENSE NOTICE deploy/compose.yaml deploy/compose.restore.yaml deploy/compose.offline.json deploy/init-database.sh deploy/Caddyfile scripts/init-deployment.mjs scripts/recovery.mjs > SHA256SUMS
 )
 ```
@@ -44,7 +44,7 @@ Retain the image inventory, source commit, release version and acceptance receip
 From the transferred directory, verify every checksum before importing images or running the supplied scripts:
 
 ```sh
-export COMPOSE_PROJECT_NAME=api-docs-offline
+export COMPOSE_PROJECT_NAME=doctopus-offline
 export PUBLIC_URL=https://docs.example.com
 (
   set -eu

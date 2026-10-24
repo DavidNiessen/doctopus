@@ -11,9 +11,13 @@ import rehypeSanitize, { defaultSchema } from 'rehype-sanitize';
 import rehypeStringify from 'rehype-stringify';
 import { visit } from 'unist-util-visit';
 import type { Element, Root } from 'hast';
-import { confinedPath, parseSource, readTextFile } from '@davidniessen/spec';
-import { slugify, withBase } from '@davidniessen/contracts';
-import type { Guide } from '@davidniessen/contracts';
+import {
+  confinedPath,
+  parseSource,
+  readTextFile,
+} from '@davidniessen/doctopus-spec';
+import { slugify, withBase } from '@davidniessen/doctopus-contracts';
+import type { Guide } from '@davidniessen/doctopus-contracts';
 
 const nodeText = (node: {
   type: string;

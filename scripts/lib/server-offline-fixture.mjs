@@ -19,7 +19,7 @@ async function probeOfflineInstallation() {
   const { default: assert } = await import('node:assert/strict');
   const { readFile } = await import('node:fs/promises');
   const { randomUUID } = await import('node:crypto');
-  const { toolVersion } = await import('@davidniessen/contracts');
+  const { toolVersion } = await import('@davidniessen/doctopus-contracts');
   let input = '';
   for await (const chunk of process.stdin) input += chunk;
   const fixture = JSON.parse(input);
@@ -100,15 +100,15 @@ async function probeOfflineInstallation() {
 
 /** Reimport untagged images and boot a fresh isolated deployment without registry pulls. */
 export async function verifyOfflineInstall(source) {
-  assert.match(source.project, /^api-docs-runtime-[a-f0-9]{16}$/);
+  assert.match(source.project, /^doctopus-runtime-[a-f0-9]{16}$/);
   assert.match(source.image, /^sha256:[a-f0-9]{64}$/);
   assert.match(
     source.databaseReference,
     /^postgres:17-alpine@sha256:[a-f0-9]{64}$/,
   );
-  const root = await mkdtemp(join(tmpdir(), 'api-docs-offline-'));
+  const root = await mkdtemp(join(tmpdir(), 'doctopus-offline-'));
   const project =
-    'api-docs-offline-' + randomUUID().replaceAll('-', '').slice(0, 16);
+    'doctopus-offline-' + randomUUID().replaceAll('-', '').slice(0, 16);
   const secrets = join(root, 'secrets');
   const archive = join(root, 'images.tar');
   const override = join(root, 'compose.offline.json');

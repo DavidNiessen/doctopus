@@ -1,14 +1,18 @@
-# api-docs
+# Doctopus
+
+![Doctopus](assets/brand/doctopus-wordmark.svg)
+
+**Give your API a helping hand.**
 
 An open source, self-hosted API documentation platform: polished documentation, interactive API references, and framework integrations without a required hosted service.
 
-**Status: published prerelease.** [0.2.0-candidate.7](https://github.com/DavidNiessen/api-docs/releases/tag/v0.2.0-candidate.7) includes the OpenAPI compiler, React reader, worker-based local search, API explorer, CLI, publication server, Studio, and Java/Spring Boot/Node integrations. Signed candidate acceptance, protected publication and all three fresh registry consumers passed. See the [release evidence and limitations](docs/release-acceptance.md). `api-docs` is a temporary name pending the product rename.
+**Status: prerelease development.** Doctopus is the new name of this project. The renamed source includes the OpenAPI compiler, React reader, worker-based search, interactive API explorer, CLI, optional publication server and Studio, plus Java/Spring Boot/Node integrations. The last published prerelease, [0.2.0-candidate.7](docs/release-acceptance.md), uses legacy coordinates and predates this rename. Renamed packages have not yet been published. See the [rename and migration guide](docs/migration-doctopus.md).
 
 The owner has [deferred independent launch reviews and pilots for prereleases](docs/adr/0002-deferred-prerelease-reviews.md). Those reviews remain unfinished; automated checks and protected registry installation acceptance remain required. This deferral is not a stable production release approval.
 
-Try the [GitHub Pages demo](https://davidniessen.github.io/api-docs/): bundled mock responses run entirely in your browser, with no API server or credentials. See [demo deployment and local preview](docs/pages-demo.md).
+Try the [GitHub Pages demo](https://davidniessen.github.io/doctopus/): bundled mock responses run entirely in your browser, with no API server or credentials. See [demo deployment and local preview](docs/pages-demo.md).
 
-Install the prerelease from [GitHub Packages and GHCR](docs/github-packages.md). npm/Maven installation requires GitHub authentication; running generated static documentation requires no account. Independent reviews and stable production approval remain open.
+Build Doctopus from source using the commands below, or consult [GitHub Packages and GHCR](docs/github-packages.md) for the publication status and archived prerelease installation. npm/Maven installation requires GitHub authentication; running generated static documentation requires no account. Independent reviews and stable production approval remain open.
 
 ## Product direction
 
@@ -43,10 +47,10 @@ The documentation server listens on port 3000. In a second terminal, run `npm ru
 ```sh
 node packages/cli/dist/main.js init my-docs
 node packages/cli/dist/main.js build my-docs
-node packages/cli/dist/main.js serve my-docs/.api-docs/site
+node packages/cli/dist/main.js serve my-docs/.doctopus/site
 ```
 
-Edit `docs.config.yaml`, point it to your YAML or JSON OpenAPI document, and add Markdown guides. Copy the generated `.api-docs/site` folder to any static host. Multi-file remote specs can use [pinned offline reference snapshots](docs/reference-snapshots.md). See the [CLI reference](docs/cli.md), [OpenAPI compatibility](docs/openapi-compatibility.md), [guide authoring](docs/authoring.md), and [branding and SEO](docs/customization.md), and [deprecations and migration guidance](docs/lifecycle.md), and [core reader UI translations](docs/internationalization.md).
+Edit `docs.config.yaml`, point it to your YAML or JSON OpenAPI document, and add Markdown guides. Copy the generated `.doctopus/site` folder to any static host. Multi-file remote specs can use [pinned offline reference snapshots](docs/reference-snapshots.md). See the [CLI reference](docs/cli.md), [OpenAPI compatibility](docs/openapi-compatibility.md), [guide authoring](docs/authoring.md), and [branding and SEO](docs/customization.md), and [deprecations and migration guidance](docs/lifecycle.md), and [core reader UI translations](docs/internationalization.md).
 
 ## Repository checks
 
@@ -61,6 +65,8 @@ pnpm run test:e2e
 ```
 
 Prettier, ESLint, and Markdown linting run on feature branch pushes, pull requests, merge queue candidates, and `master`. PR titles use conventional commit format. Strict TypeScript checks, compiler/security unit tests, deterministic publication checks, browser workflows, and automated accessibility checks also run in CI. See [CONTRIBUTING](CONTRIBUTING.md).
+
+See the [Doctopus brand guide and logo kit](docs/branding.md).
 
 ## Project principles
 

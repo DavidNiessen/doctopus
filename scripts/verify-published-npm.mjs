@@ -22,14 +22,14 @@ const source = await releaseSource(root, process.env, {
   workflow: 'release-publish.yml',
 });
 const plan = JSON.parse(
-  await readRegularFile(join(root, '.api-docs/publication/plan.json')),
+  await readRegularFile(join(root, '.doctopus/publication/plan.json')),
 );
 const context = { ...source, runId: plan.runId, runAttempt: plan.runAttempt };
 const candidate = await loadNpmPublication(root, context, plan);
 const registries = githubPackageRegistries(context.repository);
 assert.equal(candidate.registry, registries.npm);
-const consumer = await mkdtemp(join(tmpdir(), 'api-docs-public-npm-consumer-'));
-const destination = join(root, '.api-docs/published-consumers/npm');
+const consumer = await mkdtemp(join(tmpdir(), 'doctopus-public-npm-consumer-'));
+const destination = join(root, '.doctopus/published-consumers/npm');
 await mkdir(destination, { recursive: true });
 const exec = promisify(execFile);
 const metadata = JSON.parse(await readRegularFile(join(root, 'package.json')));
@@ -86,7 +86,7 @@ try {
     join(consumer, 'package.json'),
     JSON.stringify(
       {
-        name: 'api-docs-public-registry-consumer',
+        name: 'doctopus-public-registry-consumer',
         version: '0.0.0',
         private: true,
         type: 'module',

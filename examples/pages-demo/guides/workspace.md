@@ -21,4 +21,4 @@ Your preferences stay in this browser for this documentation site. They synchron
 
 Project authors configure logos, typography, density, colors and sizing in YAML or JSON. The build validates tokens and text contrast. Plugins extend source loading, code examples and other documented integration points.
 
-Visit the [source and operator documentation](https://github.com/DavidNiessen/api-docs) to build and host your own site.
+Visit the [source and operator documentation](https://github.com/DavidNiessen/doctopus) to build and host your own site.

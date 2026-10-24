@@ -1,12 +1,12 @@
 import { afterEach, expect, it, vi } from 'vitest';
-import { parseConfig } from '@davidniessen/spec';
-import { isRelayEndpoint } from '@davidniessen/contracts';
+import { parseConfig } from '@davidniessen/doctopus-spec';
+import { isRelayEndpoint } from '@davidniessen/doctopus-contracts';
 import {
   loadRelayPolicy,
   sendViaRelay,
 } from '../apps/reader/src/relay-transport.js';
 import type { ReaderRelayPolicy } from '../apps/reader/src/relay-transport.js';
-import type { PreparedRequest } from '@davidniessen/explorer';
+import type { PreparedRequest } from '@davidniessen/doctopus-explorer';
 const path = '/api/projects/gallery/relay';
 const policy: ReaderRelayPolicy = {
   maxRequestBytes: 1024 * 1024,

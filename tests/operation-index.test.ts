@@ -2,8 +2,8 @@ import { expect, it } from 'vitest';
 import { mkdtemp, mkdir, writeFile, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { buildSite } from '@davidniessen/cli';
-import { validateSiteData } from '@davidniessen/plugin-sdk';
+import { buildSite } from '@davidniessen/doctopus-cli';
+import { validateSiteData } from '@davidniessen/doctopus-plugin-sdk';
 import {
   readOperationCatalog,
   readOperationRows,
@@ -13,7 +13,7 @@ import {
 
 const api = { id: 'large', version: 'v1' };
 it('exports complete hashed endpoint pages beyond bounded sidebar navigation', async () => {
-  const root = await mkdtemp(join(tmpdir(), 'api-docs-classic-index-'));
+  const root = await mkdtemp(join(tmpdir(), 'doctopus-classic-index-'));
   try {
     await mkdir(join(root, 'guides'));
     await writeFile(
@@ -44,7 +44,7 @@ it('exports complete hashed endpoint pages beyond bounded sidebar navigation', a
     expect(result.site.apis[0]!.operationIndex).toBe(
       'api-index/0/catalog.json',
     );
-    const output = join(root, '.api-docs/site');
+    const output = join(root, '.doctopus/site');
     const exported = JSON.parse(
       await readFile(join(output, 'site.json'), 'utf8'),
     );

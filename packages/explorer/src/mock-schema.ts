@@ -1,5 +1,8 @@
-import { objectFieldSchema, resolveSchema } from '@davidniessen/contracts';
-import type { Schema } from '@davidniessen/contracts';
+import {
+  objectFieldSchema,
+  resolveSchema,
+} from '@davidniessen/doctopus-contracts';
+import type { Schema } from '@davidniessen/doctopus-contracts';
 
 const object = (value: unknown): Schema =>
   value !== null && typeof value === 'object' && !Array.isArray(value)
@@ -49,7 +52,7 @@ export function mockSchemaValue(
     let actual = resolveSchema(input, schemas, {
       ignoreReferenceSiblings: legacy,
     });
-    if (actual.$ref || actual['x-api-docs-boolean-schema'] === false)
+    if (actual.$ref || actual['x-doctopus-boolean-schema'] === false)
       throw unsupported();
     for (const key of ['const', 'example', 'default'])
       if (Object.hasOwn(actual, key)) return actual[key];

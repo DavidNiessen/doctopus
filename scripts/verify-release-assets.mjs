@@ -10,7 +10,7 @@ assert.equal(
 );
 const context = await releaseSource(process.cwd());
 for (const kind of ['npm', 'java', 'container']) {
-  const directory = join('.api-docs/release-assets', kind);
+  const directory = join('.doctopus/release-assets', kind);
   const manifest = await verifyReleaseAssets(directory, context, kind);
   console.log(
     `${kind}: ${manifest.files.length} exact assets bound to ${context.ref}, run ${context.runId}/${context.runAttempt}.`,

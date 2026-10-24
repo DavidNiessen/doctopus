@@ -105,7 +105,7 @@ test('translated navigation is prerendered and readable without JavaScript', asy
       page.getByRole('heading', { name: 'Einstieg', exact: true }),
     ).toBeVisible();
     await expect(
-      page.getByText('Erstellt mit api-docs', { exact: true }),
+      page.getByText('Erstellt mit doctopus', { exact: true }),
     ).toBeVisible();
     await page.getByRole('link', { name: 'API-Referenz', exact: true }).click();
     await expect(

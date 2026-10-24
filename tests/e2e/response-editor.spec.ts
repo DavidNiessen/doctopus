@@ -117,7 +117,7 @@ test('response-only Monaco highlights and folds read-only JSON while copying the
         .analyze()
     ).violations,
   ).toEqual([]);
-  await page.screenshot({ path: '.api-docs/response-fullscreen-light.png' });
+  await page.screenshot({ path: '.doctopus/response-fullscreen-light.png' });
   await page.keyboard.press('Escape');
   await expect(fullscreen).not.toBeVisible();
   await expect(playground).toBeVisible();
@@ -148,7 +148,7 @@ test('response-only Monaco highlights and folds read-only JSON while copying the
     .withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'])
     .analyze();
   expect(audit.violations).toEqual([]);
-  await page.screenshot({ path: '.api-docs/response-editor-light.png' });
+  await page.screenshot({ path: '.doctopus/response-editor-light.png' });
   await page.keyboard.press('Escape');
   await page.getByRole('button', { name: 'Switch to dark theme' }).click();
   await page.getByRole('button', { name: 'Try this endpoint' }).click();
@@ -184,7 +184,7 @@ test('response-only Monaco highlights and folds read-only JSON while copying the
       .locator('.playground-dialog')
       .evaluate((el) => el.scrollWidth <= el.clientWidth),
   ).toBe(true);
-  await page.screenshot({ path: '.api-docs/response-editor-mobile-dark.png' });
+  await page.screenshot({ path: '.doctopus/response-editor-mobile-dark.png' });
   await expect
     .poll(() =>
       page.evaluate(() =>

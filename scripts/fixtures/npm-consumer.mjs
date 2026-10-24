@@ -8,23 +8,26 @@ import { promisify } from 'node:util';
 import { fileURLToPath } from 'node:url';
 import express from 'express';
 import Fastify from 'fastify';
-import { createStaticServer, inspectIsolatedSource } from '@davidniessen/cli';
-import { PostgresRepository } from '@davidniessen/storage';
-import { verifyArtifact } from '@davidniessen/compiler';
-import { validateSiteData } from '@davidniessen/plugin-sdk';
+import {
+  createStaticServer,
+  inspectIsolatedSource,
+} from '@davidniessen/doctopus-cli';
+import { PostgresRepository } from '@davidniessen/doctopus-storage';
+import { verifyArtifact } from '@davidniessen/doctopus-compiler';
+import { validateSiteData } from '@davidniessen/doctopus-plugin-sdk';
 import {
   downloadSpec,
   loadSpec,
   loadReferenceSnapshot,
   parseConfig,
   requestAllowedOrigin,
-} from '@davidniessen/spec';
+} from '@davidniessen/doctopus-spec';
 import {
   defineReaderExtension,
   createReaderExtensionSession,
-} from '@davidniessen/plugin-sdk/browser';
-import { createExpressDocs } from '@davidniessen/node/express';
-import { apiDocsPlugin } from '@davidniessen/node/fastify';
+} from '@davidniessen/doctopus-plugin-sdk/browser';
+import { createExpressDocs } from '@davidniessen/doctopus-node/express';
+import { doctopusPlugin } from '@davidniessen/doctopus-node/fastify';
 import {
   parseJsonValue,
   serializeJsonValue,
@@ -41,7 +44,7 @@ import {
   localeRoute,
   readBuildPolicy,
   readSourceSnapshotInfo,
-} from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-contracts';
 import {
   redactJsonBody,
   encodeFormBody,
@@ -52,7 +55,7 @@ import {
   generateMockResponse,
   prepareRequest,
   canSerializeEmptyParameter,
-} from '@davidniessen/explorer';
+} from '@davidniessen/doctopus-explorer';
 
 const exec = promisify(execFile);
 const disconnectedStore = new PostgresRepository(
@@ -378,9 +381,9 @@ for (const name of Object.keys(metadata.dependencies).filter((name) =>
   name.startsWith('@davidniessen/'),
 )) {
   const entry =
-    name === '@davidniessen/reader'
+    name === '@davidniessen/doctopus-reader'
       ? `${name}/render`
-      : name === '@davidniessen/node'
+      : name === '@davidniessen/doctopus-node'
         ? `${name}/express`
         : name;
   assert(
@@ -397,16 +400,16 @@ for (const name of Object.keys(metadata.dependencies).filter((name) =>
     `import * as Component${typeImports.length} from ${JSON.stringify(entry)};\nvoid Component${typeImports.length};`,
   );
 }
-typeImports.push(`import {defineReaderExtension as defineTypedReaderExtension} from '@davidniessen/plugin-sdk/browser';
+typeImports.push(`import {defineReaderExtension as defineTypedReaderExtension} from '@davidniessen/doctopus-plugin-sdk/browser';
 const typedReaderExtension=defineTypedReaderExtension({id:'typed-reader',version:'1.0.0',pluginApi:'1',capabilities:['page','footer'],activate(context){context.setFooter(page=>{const element=document.createElement('p');element.textContent=page.title;return {element};});}});void typedReaderExtension;`);
-typeImports.push(`import {createPageDataFactory as createTypedPageDataFactory} from '@davidniessen/contracts';
-import type {SiteData as ProjectionSiteData} from '@davidniessen/contracts';
+typeImports.push(`import {createPageDataFactory as createTypedPageDataFactory} from '@davidniessen/doctopus-contracts';
+import type {SiteData as ProjectionSiteData} from '@davidniessen/doctopus-contracts';
 function projectPages(site:ProjectionSiteData):(path:string)=>ProjectionSiteData{return createTypedPageDataFactory(site);}
 void projectPages;`);
-typeImports.push(`import {PostgresRepository as TypedPostgresRepository} from '@davidniessen/storage';
-import type {PostgresRepositoryOptions} from '@davidniessen/storage';
-import type {BuildJobRepository, BuildLease, BuildQueueLimits} from '@davidniessen/domain';
-import type {BuildPolicy, SourceSnapshotInfo} from '@davidniessen/contracts';
+typeImports.push(`import {PostgresRepository as TypedPostgresRepository} from '@davidniessen/doctopus-storage';
+import type {PostgresRepositoryOptions} from '@davidniessen/doctopus-storage';
+import type {BuildJobRepository, BuildLease, BuildQueueLimits} from '@davidniessen/doctopus-domain';
+import type {BuildPolicy, SourceSnapshotInfo} from '@davidniessen/doctopus-contracts';
 const queueLimits:Partial<BuildQueueLimits>={maxPending:1};
 const databaseOptions: PostgresRepositoryOptions = {statementTimeoutMs:1000,queryTimeoutMs:2000,buildQueue:queueLimits};
 const typedStore = new TypedPostgresRepository('postgresql://fixture@127.0.0.1/unused',databaseOptions);
@@ -414,8 +417,8 @@ const typedQueue:BuildJobRepository=typedStore.buildJobs;
 function leasePolicy(lease:BuildLease):BuildPolicy{return lease.source.policy;}
 function leaseSource(lease:BuildLease):SourceSnapshotInfo{return lease.source.snapshot;}
 void [typedQueue,leasePolicy,leaseSource];`);
-typeImports.push(`import {inspectIsolatedSource as typedInspectSource} from '@davidniessen/cli';
-import type {IsolatedSourceInfo, IsolatedSourceOptions, IsolatedBuildOptions} from '@davidniessen/cli';
+typeImports.push(`import {inspectIsolatedSource as typedInspectSource} from '@davidniessen/doctopus-cli';
+import type {IsolatedSourceInfo, IsolatedSourceOptions, IsolatedBuildOptions} from '@davidniessen/doctopus-cli';
 const sourceOptions:IsolatedSourceOptions={sourceMiB:1};
 const sourcePromise:Promise<IsolatedSourceInfo>=typedInspectSource('docs',sourceOptions);
 const pinnedBuild:IsolatedBuildOptions={image:'sha256:'+'a'.repeat(64),expectedSourceDigest:'b'.repeat(64)};
@@ -423,7 +426,7 @@ void [sourcePromise,pinnedBuild];`);
 await writeFile(
   'types.mts',
   typeImports.join('\n') +
-    `\nimport { definePlugin } from '@davidniessen/plugin-sdk';\nimport type { ThemePatch, BuildPluginContext, SpecSource, SnippetInput, SnippetSample } from '@davidniessen/plugin-sdk';\nimport type { SiteData } from '@davidniessen/contracts';\nimport { createExpressDocs } from '@davidniessen/node/express';\nimport { apiDocsPlugin } from '@davidniessen/node/fastify';\nimport { buildSite } from '@davidniessen/cli';\nconst plugin = definePlugin({ name: 'installed-types', version: '1.0.0', pluginApi: '1', capabilities: ['source', 'theme', 'transform', 'snippets'], loadSpec: (source: Readonly<SpecSource>) => source.content, theme: (theme, context: BuildPluginContext): ThemePatch => ({ radius: context.signal.aborted ? theme.radius : 12 }), transform: (site: SiteData) => site, generateSnippets: ({operation}: SnippetInput): SnippetSample[] => [{id:'sdk', label:'SDK', language:'javascript', code:operation.id}] });\nconst pinnedSource: SpecSource = { id: 'pinned', path: 'source-0.yaml', content: '', references: 'snapshot.json' };\nvoid [plugin, pinnedSource, createExpressDocs, apiDocsPlugin, buildSite];\n`,
+    `\nimport { definePlugin } from '@davidniessen/doctopus-plugin-sdk';\nimport type { ThemePatch, BuildPluginContext, SpecSource, SnippetInput, SnippetSample } from '@davidniessen/doctopus-plugin-sdk';\nimport type { SiteData } from '@davidniessen/doctopus-contracts';\nimport { createExpressDocs } from '@davidniessen/doctopus-node/express';\nimport { doctopusPlugin } from '@davidniessen/doctopus-node/fastify';\nimport { buildSite } from '@davidniessen/doctopus-cli';\nconst plugin = definePlugin({ name: 'installed-types', version: '1.0.0', pluginApi: '1', capabilities: ['source', 'theme', 'transform', 'snippets'], loadSpec: (source: Readonly<SpecSource>) => source.content, theme: (theme, context: BuildPluginContext): ThemePatch => ({ radius: context.signal.aborted ? theme.radius : 12 }), transform: (site: SiteData) => site, generateSnippets: ({operation}: SnippetInput): SnippetSample[] => [{id:'sdk', label:'SDK', language:'javascript', code:operation.id}] });\nconst pinnedSource: SpecSource = { id: 'pinned', path: 'source-0.yaml', content: '', references: 'snapshot.json' };\nvoid [plugin, pinnedSource, createExpressDocs, doctopusPlugin, buildSite];\n`,
 );
 await exec(process.execPath, [
   'node_modules/typescript/bin/tsc',
@@ -441,17 +444,19 @@ await exec(process.execPath, [
   'node',
   'types.mts',
 ]);
-const cli = fileURLToPath(import.meta.resolve('@davidniessen/cli')).replace(
-  /index\.js$/,
-  'main.js',
-);
+const cli = fileURLToPath(
+  import.meta.resolve('@davidniessen/doctopus-cli'),
+).replace(/index\.js$/, 'main.js');
 const version = JSON.parse(
-  await readFile('node_modules/@davidniessen/cli/package.json', 'utf8'),
+  await readFile(
+    'node_modules/@davidniessen/doctopus-cli/package.json',
+    'utf8',
+  ),
 ).version;
 assert.equal(toolVersion, version);
 assert.equal(
   (
-    await exec(join(root, 'node_modules/.bin/api-docs'), ['--version'])
+    await exec(join(root, 'node_modules/.bin/doctopus'), ['--version'])
   ).stdout.trim(),
   version,
 );
@@ -588,7 +593,7 @@ await writeFile(
 );
 await exec(process.execPath, [cli, 'build', 'frozen']);
 const frozenManifest = await verifyArtifact(
-  join(root, 'frozen/.api-docs/site'),
+  join(root, 'frozen/.doctopus/site'),
 );
 assert(
   !Object.keys(frozenManifest.files).some((file) =>
@@ -604,7 +609,7 @@ await writeFile(
 );
 await writeFile(
   'docs/plugin.mjs',
-  `import { definePlugin } from '@davidniessen/plugin-sdk';\nexport default definePlugin({ name: 'installed-consumer', version: '1.0.0', pluginApi: '1', capabilities: ['source', 'theme', 'transform', 'snippets'], loadSpec: (source) => source.content.replace('title: My API', 'title: Installed source API'), theme: () => ({ radius: 12, colors: { light: { surface: '#f4f8f6' } } }), transform: (site) => { if (site.config.theme.radius !== 12 || site.apis[0].title !== 'Installed source API') throw new Error('Source/theme hooks did not precede transform'); return { ...site, config: { ...site.config, name: 'Packaged consumer' }, apis: site.apis.map((api, i) => i ? api : { ...api, operations: api.operations.map((op, j) => j ? op : { ...op, lifecycle: { sunsetOn: '2028-01-01', message: 'Packaged lifecycle metadata' } }) }) }; }, generateSnippets({operation}) { return [{id:'sdk', label:'Installed SDK', language:'javascript', code:'console.log('+JSON.stringify(operation.id)+');'}]; } });\n`,
+  `import { definePlugin } from '@davidniessen/doctopus-plugin-sdk';\nexport default definePlugin({ name: 'installed-consumer', version: '1.0.0', pluginApi: '1', capabilities: ['source', 'theme', 'transform', 'snippets'], loadSpec: (source) => source.content.replace('title: My API', 'title: Installed source API'), theme: () => ({ radius: 12, colors: { light: { surface: '#f4f8f6' } } }), transform: (site) => { if (site.config.theme.radius !== 12 || site.apis[0].title !== 'Installed source API') throw new Error('Source/theme hooks did not precede transform'); return { ...site, config: { ...site.config, name: 'Packaged consumer' }, apis: site.apis.map((api, i) => i ? api : { ...api, operations: api.operations.map((op, j) => j ? op : { ...op, lifecycle: { sunsetOn: '2028-01-01', message: 'Packaged lifecycle metadata' } }) }) }; }, generateSnippets({operation}) { return [{id:'sdk', label:'Installed SDK', language:'javascript', code:'console.log('+JSON.stringify(operation.id)+');'}]; } });\n`,
 );
 await writeFile(
   'docs/installed-footer.mjs',
@@ -642,7 +647,7 @@ await exec(process.execPath, [
   '--trust-plugins',
   '--trust-content',
 ]);
-const directory = join(root, 'docs/.api-docs/site');
+const directory = join(root, 'docs/.doctopus/site');
 const manifest = await verifyArtifact(directory);
 assert.equal(manifest.compilerVersion, version);
 const installedSite = JSON.parse(
@@ -729,7 +734,7 @@ assert(
 );
 assert(
   (await readFile(join(directory, 'index.html'), 'utf8')).includes(
-    `content="api-docs ${version}"`,
+    `content="doctopus ${version}"`,
   ),
 );
 const lifecycle = JSON.parse(
@@ -871,7 +876,7 @@ try {
 }
 const fastify = Fastify();
 try {
-  await fastify.register(apiDocsPlugin, {
+  await fastify.register(doctopusPlugin, {
     directory,
     authenticate: async (request, reply) => {
       if (request.headers.authorization !== headers.authorization)

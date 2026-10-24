@@ -7,9 +7,9 @@ import {
   formatExample,
   hasExternalExamples,
   isJsonMediaType,
-} from '@davidniessen/contracts';
-import { loadSpec } from '@davidniessen/spec';
-import { prepareRequest } from '@davidniessen/explorer';
+} from '@davidniessen/doctopus-contracts';
+import { loadSpec } from '@davidniessen/doctopus-spec';
+import { prepareRequest } from '@davidniessen/doctopus-explorer';
 
 describe('authored example presentation', () => {
   it('resolves legacy reference aliases without adopting ignored siblings', () => {

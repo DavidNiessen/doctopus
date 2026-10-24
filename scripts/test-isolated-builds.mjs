@@ -43,7 +43,7 @@ const jobs = () =>
     '--quiet',
     '--no-trunc',
     '--filter',
-    'label=io.api-docs.isolated-job',
+    'label=io.doctopus.isolated-job',
   );
 const volumes = () =>
   docker(
@@ -51,11 +51,11 @@ const volumes = () =>
     'ls',
     '--quiet',
     '--filter',
-    'label=io.api-docs.isolated-output',
+    'label=io.doctopus.isolated-output',
   );
 const beforeJobs = await jobs(),
   beforeVolumes = await volumes();
-const root = await mkdtemp(join(tmpdir(), 'api-docs-isolated-jobs-'));
+const root = await mkdtemp(join(tmpdir(), 'doctopus-isolated-jobs-'));
 const project = join(root, 'project');
 await mkdir(project);
 const config =
@@ -92,14 +92,14 @@ try {
   receipts.push(isolated.receipt);
   const sentinel = join(root, 'host-only-' + randomUUID());
   await writeFile(sentinel, 'host-only fixture');
-  process.env.API_DOCS_ISOLATION_TEST_SECRET = 'host-only-marker';
+  process.env.DOCTOPUS_ISOLATION_TEST_SECRET = 'host-only-marker';
   const plugin = `
 import assert from 'node:assert/strict';
 import { access, writeFile } from 'node:fs/promises';
 import { networkInterfaces } from 'node:os';
 import { spawn } from 'node:child_process';
-import { definePlugin } from '@davidniessen/plugin-sdk';
-assert.equal(process.env.API_DOCS_ISOLATION_TEST_SECRET, undefined);
+import { definePlugin } from '@davidniessen/doctopus-plugin-sdk';
+assert.equal(process.env.DOCTOPUS_ISOLATION_TEST_SECRET, undefined);
 for (const name of ['HTTP_PROXY','HTTPS_PROXY','ALL_PROXY','http_proxy','https_proxy','all_proxy']) assert.equal(process.env[name] ?? '', '');
 await assert.rejects(access(${JSON.stringify(sentinel)}));
 await assert.rejects(writeFile('/work/project/host-write', 'blocked'));
@@ -229,6 +229,6 @@ export default definePlugin({ name: 'isolation-fixture', version: '0.1.0', plugi
   );
 } finally {
   child?.kill('SIGKILL');
-  delete process.env.API_DOCS_ISOLATION_TEST_SECRET;
+  delete process.env.DOCTOPUS_ISOLATION_TEST_SECRET;
   await rm(root, { recursive: true, force: true });
 }

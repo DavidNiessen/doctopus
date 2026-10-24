@@ -4,9 +4,9 @@ The PostgreSQL adapter exposes a typed `buildJobs` repository and the management
 
 ## Approved sources
 
-`approveSource(projectId, input, idempotencyKey, actor)` records a label, optional revision, version 2 source snapshot identity and an explicit build policy. Generate snapshot metadata with `inspectIsolatedSource` or `api-docs source-info`; prepare and retain the matching secret-free source directory on a trusted build host. Database approval does not read, download or verify a local directory. It stores no source paths, checkout credentials or source contents.
+`approveSource(projectId, input, idempotencyKey, actor)` records a label, optional revision, version 2 source snapshot identity and an explicit build policy. Generate snapshot metadata with `inspectIsolatedSource` or `doctopus source-info`; prepare and retain the matching secret-free source directory on a trusted build host. Database approval does not read, download or verify a local directory. It stores no source paths, checkout credentials or source contents.
 
-`readBuildPolicy` from `@davidniessen/contracts` validates an immutable builder image, a visible project-relative configuration path, plugin/content trust decisions and resource limits. Trust flags default to false. A mutable image tag, hidden/traversing config path, unknown option or invalid limit is rejected. Limits are the same data contract used by the isolated runner:
+`readBuildPolicy` from `@davidniessen/doctopus-contracts` validates an immutable builder image, a visible project-relative configuration path, plugin/content trust decisions and resource limits. Trust flags default to false. A mutable image tag, hidden/traversing config path, unknown option or invalid limit is rejected. Limits are the same data contract used by the isolated runner:
 
 | Resource       | Default   | Accepted range |
 | -------------- | --------- | -------------- |

@@ -2,7 +2,7 @@ import {
   isJsonMediaType,
   parseJsonValue,
   serializeJsonValue,
-} from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-contracts';
 
 export function responseLanguage(
   contentType: string,

@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import type { SiteData } from '@davidniessen/contracts';
+import type { SiteData } from '@davidniessen/doctopus-contracts';
 
 test('reader navigation sanitizes guide HTML and executable links from page data', async ({
   page,
@@ -10,11 +10,11 @@ test('reader navigation sanitizes guide HTML and executable links from page data
     const guide = data.guides.find((guide) => guide.slug === 'quickstart');
     if (!guide) throw new Error('Missing quickstart guide fixture');
     guide.html =
-      '<h2 id="heading-safe">Safe response content</h2><img src="/xss-test-missing" onerror="window.__apiDocsXss=1"><script>window.__apiDocsXss=2</script><svg onload="window.__apiDocsXss=3"></svg><a href="javascript:window.__apiDocsXss=4">Unsafe guide link</a><style>body{display:none}</style>';
+      '<h2 id="heading-safe">Safe response content</h2><img src="/xss-test-missing" onerror="window.__doctopusXss=1"><script>window.__doctopusXss=2</script><svg onload="window.__doctopusXss=3"></svg><a href="javascript:window.__doctopusXss=4">Unsafe guide link</a><style>body{display:none}</style>';
     data.config.links = [
       {
         label: 'Unsafe navigation link',
-        href: 'javascript:window.__apiDocsXss=5',
+        href: 'javascript:window.__doctopusXss=5',
       },
     ];
     await route.fulfill({ response, json: data });
@@ -37,7 +37,7 @@ test('reader navigation sanitizes guide HTML and executable links from page data
   });
   await expect(navigation).toHaveAttribute('href', '#');
   await navigation.click();
-  expect(await page.evaluate(() => Object.hasOwn(window, '__apiDocsXss'))).toBe(
-    false,
-  );
+  expect(
+    await page.evaluate(() => Object.hasOwn(window, '__doctopusXss')),
+  ).toBe(false);
 });

@@ -71,15 +71,15 @@ jobs:
       - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
         with:
           name: release-npm-${{ github.run_id }}-${{ github.run_attempt }}
-          path: .api-docs/release-assets/npm/
+          path: .doctopus/release-assets/npm/
       - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
         with:
           name: release-java-${{ github.run_id }}-${{ github.run_attempt }}
-          path: .api-docs/release-assets/java/
+          path: .doctopus/release-assets/java/
       - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
         with:
           name: release-container-${{ github.run_id }}-${{ github.run_attempt }}
-          path: .api-docs/release-assets/container/
+          path: .doctopus/release-assets/container/
       - name: Verify candidate bytes, hosted producer identity and exact source
         env:
           GH_TOKEN: ${{ github.token }}
@@ -94,8 +94,8 @@ jobs:
         with:
           name: release-verification-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
-            .api-docs/release-verification/
-            .api-docs/publication-preflight/
+            .doctopus/release-verification/
+            .doctopus/publication-preflight/
           include-hidden-files: true
           if-no-files-found: warn
           retention-days: 14

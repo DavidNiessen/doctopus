@@ -172,7 +172,7 @@ test('rejects hidden findings, exclusion filters, VEX waivers and weakened datab
   }
 });
 test('refuses altered vulnerability scanner executables and links before execution', async (t) => {
-  const root = await mkdtemp(join(tmpdir(), 'api-docs-security-integrity-'));
+  const root = await mkdtemp(join(tmpdir(), 'doctopus-security-integrity-'));
   t.after(() => rm(root, { recursive: true, force: true }));
   const path = join(root, 'grype');
   await writeFile(path, 'altered executable');

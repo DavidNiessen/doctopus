@@ -1,5 +1,5 @@
-import { checkExamples } from '@davidniessen/spec';
-import { renderMarkdown } from '@davidniessen/content';
+import { checkExamples } from '@davidniessen/doctopus-spec';
+import { renderMarkdown } from '@davidniessen/doctopus-content';
 import {
   guideHref,
   operationHref,
@@ -10,14 +10,14 @@ import {
   localePaths,
   guidesForLocale,
   localizePath,
-} from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-contracts';
 import type {
   Diagnostic,
   SiteData,
   Media,
   Schema,
   ApiDocument,
-} from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-contracts';
 const codes = new Set([
   'operation-description',
   'operation-responses',
@@ -120,7 +120,7 @@ export async function auditDocumentation(
     diagnostics.push({ code, severity, source, message });
   };
   const base = site.config.basePath;
-  const origin = site.config.siteUrl ?? 'https://api-docs.invalid';
+  const origin = site.config.siteUrl ?? 'https://doctopus.invalid';
   const routes = new Map<string, Set<string> | undefined>();
   for (const route of lifecycleRoutes(site))
     routes.set(normalize(withBase(base, route)), new Set(['main-content']));
@@ -291,13 +291,13 @@ export async function auditDocumentation(
     if (entry.replacementIssue)
       add(
         'lifecycle-replacement',
-        `${entry.source}/x-api-docs-lifecycle/replacement`,
+        `${entry.source}/x-doctopus-lifecycle/replacement`,
         `Replacement target is ${entry.replacementIssue}; use an unambiguous published operation or a migration URL.`,
       );
     if (entry.lifecycle.migrationUrl)
       linkGroups.push({
         href: withBase(base, entry.href),
-        source: `${entry.source}/x-api-docs-lifecycle/migrationUrl`,
+        source: `${entry.source}/x-doctopus-lifecycle/migrationUrl`,
         exactSource: true,
         links: [
           {

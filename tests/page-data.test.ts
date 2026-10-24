@@ -1,4 +1,4 @@
-import { renderDocument } from '@davidniessen/reader/render';
+import { renderDocument } from '@davidniessen/doctopus-reader/render';
 import { expect, it } from 'vitest';
 import {
   createPageData,
@@ -6,9 +6,9 @@ import {
   normalizePagePath,
   operationHref,
   localizePath,
-} from '@davidniessen/contracts';
-import type { SiteData } from '@davidniessen/contracts';
-import { compileProject } from '@davidniessen/compiler';
+} from '@davidniessen/doctopus-contracts';
+import type { SiteData } from '@davidniessen/doctopus-contracts';
+import { compileProject } from '@davidniessen/doctopus-compiler';
 import { resolve } from 'node:path';
 it('bounds navigation and sends only the active operation and reachable schemas', async () => {
   const site = await compileProject(resolve('examples/demo'));

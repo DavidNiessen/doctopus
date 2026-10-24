@@ -14,7 +14,7 @@ import { createStudioApi } from './api.js';
 import { createStudioRequestScope } from './request-scope.js';
 import { useProjectCapabilities } from './use-project-capabilities.js';
 import { createRoot } from 'react-dom/client';
-import type { Project, Publication } from '@davidniessen/domain';
+import type { Project, Publication } from '@davidniessen/doctopus-domain';
 import '../../shared/design-tokens.css';
 import './styles.css';
 import './island-layout.css';
@@ -30,18 +30,16 @@ const navigationIcons: Record<string, string> = {
 };
 function WorkspaceMark() {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.65"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="m12 2 3 7 7 3-7 3-3 7-3-7-7-3 7-3z" />
-    </svg>
+    <img
+      src="/admin/assets/doctopus-mascot.webp"
+      alt=""
+      width={40}
+      height={40}
+      decoding="async"
+    />
   );
 }
+
 function Studio() {
   const layout = useRef<HTMLDivElement>(null);
   const header = useRef<HTMLElement>(null);
@@ -336,9 +334,9 @@ function Studio() {
           <span>
             <WorkspaceMark />
           </span>
-          api-docs <small>Studio</small>
+          Doctopus <small>Studio</small>
         </a>
-        <span className="self-hosted">Self-hosted workspace</span>
+        <span className="self-hosted">Your docs. In good hands.</span>
         <div className="studio-header-actions">
           <AppearanceControl />
           {connected && (
@@ -1054,7 +1052,7 @@ function Studio() {
                 )}
               </section>
             )}
-            <footer>api-docs Studio · Self-hosted, open source, yours.</footer>
+            <footer>Doctopus Studio · Self-hosted, open source, yours.</footer>
           </main>
         </div>
       )}

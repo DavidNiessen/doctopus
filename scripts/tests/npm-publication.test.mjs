@@ -14,15 +14,15 @@ const bytes = Buffer.from(
   'test fixture archive bytes, not a published package',
 );
 const pkg = {
-  name: '@davidniessen/contracts',
+  name: '@davidniessen/doctopus-contracts',
   version: '0.2.0',
-  filename: 'api-docs-contracts-0.2.0.tgz',
+  filename: 'doctopus-contracts-0.2.0.tgz',
   bytes: bytes.length,
   sha256: createHash('sha256').update(bytes).digest('hex'),
   integrity: 'sha512-' + createHash('sha512').update(bytes).digest('base64'),
 };
 const tarball =
-  'https://registry.npmjs.org/@davidniessen/contracts/-/contracts-0.2.0.tgz';
+  'https://registry.npmjs.org/@davidniessen/doctopus-contracts/-/contracts-0.2.0.tgz';
 const metadata = () => ({
   name: pkg.name,
   version: pkg.version,
@@ -120,7 +120,7 @@ test('npm preflights every package before any write and refuses a conflicting la
 });
 
 test('npm uses the archive, disables scripts and retains token-free receipts and resumable results', async (t) => {
-  const root = await mkdtemp(join(tmpdir(), 'api-docs-npm-publish-test-'));
+  const root = await mkdtemp(join(tmpdir(), 'doctopus-npm-publish-test-'));
   t.after(() => rm(root, { recursive: true, force: true }));
   let published = false,
     calls = 0,
@@ -178,7 +178,7 @@ test('npm uses the archive, disables scripts and retains token-free receipts and
 });
 
 test('npm failures retain partial receipts, remove temporary credentials and redact process diagnostics', async (t) => {
-  const root = await mkdtemp(join(tmpdir(), 'api-docs-npm-publish-failure-'));
+  const root = await mkdtemp(join(tmpdir(), 'doctopus-npm-publish-failure-'));
   t.after(() => rm(root, { recursive: true, force: true }));
   const receiptPath = join(root, 'receipt.json');
   let privateRoot;

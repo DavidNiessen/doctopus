@@ -28,7 +28,7 @@ import {
 } from './helpers/release-fixture.mjs';
 
 const context = {
-  repository: 'DavidNiessen/api-docs',
+  repository: 'DavidNiessen/doctopus',
   commit: 'a'.repeat(40),
   ref: 'refs/tags/v0.2.0',
   version: '0.2.0',
@@ -38,7 +38,7 @@ const context = {
 const hash = (bytes, algorithm = 'sha256', encoding = 'hex') =>
   createHash(algorithm).update(bytes).digest(encoding);
 async function fixture(t) {
-  const root = await mkdtemp(join(tmpdir(), 'api-docs-release-assets-'));
+  const root = await mkdtemp(join(tmpdir(), 'doctopus-release-assets-'));
   t.after(() => rm(root, { recursive: true, force: true }));
   return root;
 }
@@ -266,12 +266,12 @@ test('stages baseline Java binaries, documentation, POMs and SBOM only after bot
       passed: true,
       offlineCompilationPassed: true,
     })),
-    parentPom: await add('api-docs-parent-0.2.0.pom'),
+    parentPom: await add('doctopus-parent-0.2.0.pom'),
     artifacts: [],
     distributions: [],
     javaSbom: { ...(await add('java-bom.cdx.json')), testScopeExcluded: true },
   };
-  for (const artifact of ['api-docs-core', 'api-docs-spring-boot-starter']) {
+  for (const artifact of ['doctopus-core', 'doctopus-spring-boot-starter']) {
     const stem = `${artifact}-0.2.0`;
     report.artifacts.push({
       artifact,

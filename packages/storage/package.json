@@ -1,5 +1,5 @@
 {
-  "name": "@davidniessen/storage",
+  "name": "@davidniessen/doctopus-storage",
   "version": "0.2.0-candidate.7",
   "type": "module",
   "license": "Apache-2.0",
@@ -14,7 +14,7 @@
     }
   },
   "dependencies": {
-    "@davidniessen/domain": "0.2.0-candidate.7",
+    "@davidniessen/doctopus-domain": "0.2.0-candidate.7",
     "pg": "8.23.1"
   },
   "publishConfig": {

@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { mkdtemp, mkdir, writeFile, rename, rm } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
-import { artifactIdentity } from '@davidniessen/compiler';
-import type { ArtifactManifest } from '@davidniessen/contracts';
+import { artifactIdentity } from '@davidniessen/doctopus-compiler';
+import type { ArtifactManifest } from '@davidniessen/doctopus-contracts';
 import { PublicationManifestCache } from '../apps/server/src/artifacts.js';
 async function artifact(root: string, value = 'one') {
   const metadata: Omit<ArtifactManifest, 'artifactDigest'> = {
@@ -25,7 +25,7 @@ async function artifact(root: string, value = 'one') {
 }
 describe('immutable publication metadata cache', () => {
   it('coalesces concurrent loads, retains immutable metadata and enforces file allowlists', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'api-docs-cache-'));
+    const root = await mkdtemp(join(tmpdir(), 'doctopus-cache-'));
     const id = await artifact(root);
     const cache = new PublicationManifestCache(root);
     const results = await Promise.all(
@@ -39,7 +39,7 @@ describe('immutable publication metadata cache', () => {
     expect(cache.stats()).toMatchObject({ entries: 1, pending: 0 });
   });
   it('evicts old entries and does not cache a manifest with a forged identity', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'api-docs-cache-'));
+    const root = await mkdtemp(join(tmpdir(), 'doctopus-cache-'));
     const first = await artifact(root),
       second = await artifact(root, 'two');
     const cache = new PublicationManifestCache(root, 1024 * 1024, 1);

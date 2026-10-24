@@ -33,8 +33,8 @@ const values = {
   db_password: password,
   owner_password: owner,
   runtime_password: runtime,
-  database_url: `postgresql://apidocs_runtime:${runtime}@db:5432/apidocs`,
-  migration_url: `postgresql://apidocs_owner:${owner}@db:5432/apidocs`,
+  database_url: `postgresql://doctopus_runtime:${runtime}@db:5432/doctopus`,
+  migration_url: `postgresql://doctopus_owner:${owner}@db:5432/doctopus`,
   root_token: randomBytes(48).toString('base64url'),
 };
 for (const [name, value] of Object.entries(values)) {

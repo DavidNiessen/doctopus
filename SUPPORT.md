@@ -1,6 +1,6 @@
 # Support and release operations
 
-The current distribution is [0.2.0-candidate.7](https://github.com/DavidNiessen/api-docs/releases/tag/v0.2.0-candidate.7), a prerelease with [verified installation and deployment evidence](docs/release-acceptance.md). It has no production support commitment or response-time guarantee. Independent security, isolation, accessibility, license reviews and external pilots remain deferred; a passing automated pipeline does not approve a stable launch.
+The current distribution is [0.2.0-candidate.7](https://github.com/DavidNiessen/doctopus/releases/tag/v0.2.0-candidate.7), a prerelease with [verified installation and deployment evidence](docs/release-acceptance.md). It has no production support commitment or response-time guarantee. Independent security, isolation, accessibility, license reviews and external pilots remain deferred; a passing automated pipeline does not approve a stable launch.
 
 ## Supported configurations
 
@@ -14,7 +14,7 @@ The current distribution is [0.2.0-candidate.7](https://github.com/DavidNiessen/
 | Other topologies       | Kubernetes is a starting template. Provider-specific ingress, multi-replica failover, PostgreSQL major upgrades and fully air-gapped installations require operator acceptance.                                           |
 | Browsers and languages | Automated Chromium/Firefox/WebKit journeys; [core reader messages and authored guide locales](docs/internationalization.md). Real-device, independent accessibility and linguistic review are separate.                   |
 
-Report failures using the exact distribution version, immutable image digest where relevant, deployment mode, toolchain and a minimal synthetic spec/config. Avoid sending private documentation, credentials, live responses, database dumps or customer data. The [bug form](https://github.com/DavidNiessen/api-docs/issues/new?template=bug.yml) requests reproduction and expected behavior. Feature proposals use the [feature form](https://github.com/DavidNiessen/api-docs/issues/new?template=feature.yml).
+Report failures using the exact distribution version, immutable image digest where relevant, deployment mode, toolchain and a minimal synthetic spec/config. Avoid sending private documentation, credentials, live responses, database dumps or customer data. The [bug form](https://github.com/DavidNiessen/doctopus/issues/new?template=bug.yml) requests reproduction and expected behavior. Feature proposals use the [feature form](https://github.com/DavidNiessen/doctopus/issues/new?template=feature.yml).
 
 ## Triage and ownership
 

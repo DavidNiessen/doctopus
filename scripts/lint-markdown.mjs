@@ -6,6 +6,7 @@ for await (const file of glob(['**/*.md', '.github/**/*.md'], {
     '**/node_modules/**',
     '**/dist/**',
     '**/target/**',
+    '**/.doctopus/**',
     '**/.api-docs/**',
     '**/coverage/**',
     '**/test-results/**',

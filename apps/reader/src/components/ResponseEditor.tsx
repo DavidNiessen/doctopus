@@ -53,10 +53,10 @@ export default function ResponseEditor({
   selectedTheme.current = { palette, accent, mode };
   useEffect(() => {
     monaco.editor.defineTheme(
-      'api-docs-response',
+      'doctopus-response',
       responseEditorTheme(palette, accent, mode),
     );
-    monaco.editor.setTheme('api-docs-response');
+    monaco.editor.setTheme('doctopus-response');
   }, [palette, accent, mode]);
   const [fullscreen, setFullscreen] = useState(false);
   const fullscreenDialog = useRef<HTMLDialogElement>(null);
@@ -92,12 +92,12 @@ export default function ResponseEditor({
       );
       const selected = selectedTheme.current;
       monaco.editor.defineTheme(
-        'api-docs-response',
+        'doctopus-response',
         responseEditorTheme(selected.palette, selected.accent, selected.mode),
       );
       editor = monaco.editor.create(host.current, {
         model,
-        theme: 'api-docs-response',
+        theme: 'doctopus-response',
         readOnly: true,
         domReadOnly: true,
         ariaLabel: t('response.body'),

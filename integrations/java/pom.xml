@@ -1,10 +1,10 @@
 <project child.project.url.inherit.append.path="false" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion><groupId>dev.niessen</groupId><artifactId>api-docs-parent</artifactId><version>0.2.0-candidate.7</version><packaging>pom</packaging>
-  <name>api-docs Java integration</name><description>Verified static API documentation for Java and Spring Boot</description><url>https://github.com/DavidNiessen/api-docs</url>
+  <modelVersion>4.0.0</modelVersion><groupId>dev.niessen</groupId><artifactId>doctopus-parent</artifactId><version>0.2.0-candidate.7</version><packaging>pom</packaging>
+  <name>doctopus Java integration</name><description>Verified static API documentation for Java and Spring Boot</description><url>https://github.com/DavidNiessen/doctopus</url>
   <licenses><license><name>Apache License, Version 2.0</name><url>https://www.apache.org/licenses/LICENSE-2.0</url></license></licenses>
-  <scm child.scm.connection.inherit.append.path="false" child.scm.url.inherit.append.path="false"><connection>scm:git:https://github.com/DavidNiessen/api-docs.git</connection><url>https://github.com/DavidNiessen/api-docs</url></scm>
+  <scm child.scm.connection.inherit.append.path="false" child.scm.url.inherit.append.path="false"><connection>scm:git:https://github.com/DavidNiessen/doctopus.git</connection><url>https://github.com/DavidNiessen/doctopus</url></scm>
   <developers><developer><id>DavidNiessen</id><name>DavidNiessen</name><url>https://github.com/DavidNiessen</url></developer></developers>
-  <distributionManagement><repository><id>github</id><url>https://maven.pkg.github.com/davidniessen/api-docs</url></repository></distributionManagement>
+  <distributionManagement><repository><id>github</id><url>https://maven.pkg.github.com/davidniessen/doctopus</url></repository></distributionManagement>
   <modules><module>core</module><module>spring-boot-starter</module></modules>
   <properties><maven.compiler.release>17</maven.compiler.release><project.build.sourceEncoding>UTF-8</project.build.sourceEncoding><spring-boot.version>3.5.16</spring-boot.version></properties>
   <dependencyManagement><dependencies><dependency><groupId>org.springframework.boot</groupId><artifactId>spring-boot-dependencies</artifactId><version>${spring-boot.version}</version><type>pom</type><scope>import</scope></dependency></dependencies></dependencyManagement>
@@ -17,7 +17,7 @@
     <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-clean-plugin</artifactId><version>3.5.0</version></plugin>
     <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-install-plugin</artifactId><version>3.1.4</version></plugin>
     <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-compiler-plugin</artifactId><version>3.14.1</version></plugin>
-    <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId><version>3.5.4</version><configuration><systemPropertyVariables><apiDocs.fixture>${maven.multiModuleProjectDirectory}/../../.api-docs/java-fixture/.api-docs/site</apiDocs.fixture></systemPropertyVariables></configuration></plugin>
+    <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId><version>3.5.4</version><configuration><systemPropertyVariables><doctopus.fixture>${maven.multiModuleProjectDirectory}/../../.doctopus/java-fixture/.doctopus/site</doctopus.fixture></systemPropertyVariables></configuration></plugin>
     <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-resources-plugin</artifactId><version>3.3.1</version>
       <executions><execution><id>javadoc-legal-resources</id><phase>generate-resources</phase><goals><goal>copy-resources</goal></goals>
         <configuration><outputDirectory>${project.build.directory}/javadoc-input/resources/legal</outputDirectory><resources><resource><directory>${maven.multiModuleProjectDirectory}/../..</directory><filtering>false</filtering><includes><include>LICENSE</include><include>NOTICE</include></includes></resource></resources></configuration>

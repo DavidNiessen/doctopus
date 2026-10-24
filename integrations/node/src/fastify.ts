@@ -11,7 +11,7 @@ export interface FastifyDocsOptions {
   authenticate?: onRequestHookHandler;
   rateLimit?: DocumentationRateLimitOptions;
 }
-export const apiDocsPlugin: FastifyPluginAsync<FastifyDocsOptions> = async (
+export const doctopusPlugin: FastifyPluginAsync<FastifyDocsOptions> = async (
   app,
   options,
 ) => {

@@ -4,8 +4,8 @@ import { setImmediate as yieldLoop } from 'node:timers/promises';
 import { mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
-import { readBuildPolicy, toolVersion } from '@davidniessen/contracts';
-import type { BuildLease, BuildResult } from '@davidniessen/domain';
+import { readBuildPolicy, toolVersion } from '@davidniessen/doctopus-contracts';
+import type { BuildLease, BuildResult } from '@davidniessen/doctopus-domain';
 import {
   readWorkerConfig,
   loadWorkerConfig,
@@ -233,7 +233,7 @@ it('requires HTTPS origins and explicit loopback development independently in th
   ).toThrow();
 });
 it('resolves local data without importing source code and rejects control/storage paths inside prepared input', async () => {
-  const root = await mkdtemp(join(tmpdir(), 'api-docs-worker-config-'));
+  const root = await mkdtemp(join(tmpdir(), 'doctopus-worker-config-'));
   try {
     const source = prepared();
     source.directory = join(root, 'source');

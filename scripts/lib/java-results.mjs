@@ -47,9 +47,12 @@ export async function readJavaResults(javaRoot) {
     }
   }
   assert(
-    suites.some((suite) => suite.suite === 'io.apidocs.core.ManifestTest') &&
+    suites.some(
+      (suite) => suite.suite === 'dev.niessen.doctopus.core.ManifestTest',
+    ) &&
       suites.some(
-        (suite) => suite.suite === 'io.apidocs.spring.ApiDocsIntegrationTest',
+        (suite) =>
+          suite.suite === 'dev.niessen.doctopus.spring.DoctopusIntegrationTest',
       ),
     'Required manifest and host tests must execute',
   );

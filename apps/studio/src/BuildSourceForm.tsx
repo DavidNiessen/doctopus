@@ -2,8 +2,11 @@ import {
   defaultIsolatedBuildLimits,
   readBuildPolicy,
   readSourceSnapshotInfo,
-} from '@davidniessen/contracts';
-import type { BuildPolicy, SourceSnapshotInfo } from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-contracts';
+import type {
+  BuildPolicy,
+  SourceSnapshotInfo,
+} from '@davidniessen/doctopus-contracts';
 const limits = [
   ['timeoutMs', 'Build deadline (ms)', 1000, 900000],
   ['memoryMiB', 'Memory (MiB)', 512, 4096],

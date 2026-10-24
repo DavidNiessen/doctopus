@@ -1,9 +1,9 @@
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { join, extname } from 'node:path';
-import { verifyArtifact } from '@davidniessen/compiler';
+import { verifyArtifact } from '@davidniessen/doctopus-compiler';
 
-const root = new URL('../.api-docs/pages-demo/', import.meta.url).pathname;
+const root = new URL('../.doctopus/pages-demo/', import.meta.url).pathname;
 const manifest = await verifyArtifact(root);
 const site = JSON.parse(await readFile(join(root, 'site.json'), 'utf8'));
 if (site.config.explorer?.mode !== 'mock')
@@ -15,6 +15,8 @@ const types = {
   '.css': 'text/css',
   '.json': 'application/json',
   '.svg': 'image/svg+xml',
+  '.webp': 'image/webp',
+  '.png': 'image/png',
   '.txt': 'text/plain',
   '.xml': 'application/xml',
   '.woff2': 'font/woff2',

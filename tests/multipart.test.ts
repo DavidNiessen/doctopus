@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { createServer } from 'node:http';
 import { once } from 'node:events';
 import type { AddressInfo } from 'node:net';
-import type { Media, Operation } from '@davidniessen/contracts';
+import type { Media, Operation } from '@davidniessen/doctopus-contracts';
 import {
   createMultipartParts,
   generateSnippet,
@@ -11,8 +11,11 @@ import {
   prepareRequest,
   redactRequest,
   toFetchRequest,
-} from '@davidniessen/explorer';
-import type { MultipartFiles, PreparedRequest } from '@davidniessen/explorer';
+} from '@davidniessen/doctopus-explorer';
+import type {
+  MultipartFiles,
+  PreparedRequest,
+} from '@davidniessen/doctopus-explorer';
 
 const type = 'multipart/form-data';
 const media: Media = {
@@ -175,7 +178,7 @@ describe('binary-safe multipart requests', () => {
       );
       expect(headers.get('__proto__')).toBe('own-header-fixture');
       expect(received?.type).toMatch(
-        /^multipart\/form-data; boundary=api-docs-[a-f0-9]{48}$/,
+        /^multipart\/form-data; boundary=doctopus-[a-f0-9]{48}$/,
       );
       const text = received!.body.toString('latin1');
       expect(text).toContain(
@@ -325,7 +328,7 @@ describe('binary-safe multipart requests', () => {
     for (const schema of [
       { anyOf: [{ type: 'object' }] },
       { type: 'array' },
-      { 'x-api-docs-boolean-schema': false },
+      { 'x-doctopus-boolean-schema': false },
     ])
       expect(() => parts('{}', {}, { schema })).toThrow(/direct object/);
     expect(() =>

@@ -20,7 +20,7 @@ The conformance command substitutes the specified plugin for the fixture's confi
 ## Public contract
 
 ```js
-import { definePlugin } from '@davidniessen/plugin-sdk';
+import { definePlugin } from '@davidniessen/doctopus-plugin-sdk';
 export default definePlugin({
   name: '@example/release-label',
   version: '1.0.0',

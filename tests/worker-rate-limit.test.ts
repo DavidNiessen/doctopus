@@ -3,11 +3,14 @@ import { randomUUID } from 'node:crypto';
 import { mkdtemp, rm } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
-import type { Repository, BuildJobRepository } from '@davidniessen/domain';
+import type {
+  Repository,
+  BuildJobRepository,
+} from '@davidniessen/doctopus-domain';
 import { createServer } from '../apps/server/src/index.js';
 
 it('separates authenticated worker traffic from management and unauthenticated request budgets', async () => {
-  const root = await mkdtemp(join(tmpdir(), 'api-docs-worker-rates-'));
+  const root = await mkdtemp(join(tmpdir(), 'doctopus-worker-rates-'));
   const credential = 'a'.repeat(32);
   const repository = {
     initialize: async () => {},
@@ -51,7 +54,7 @@ it('separates authenticated worker traffic from management and unauthenticated r
 });
 
 it('does not let ordinary operator routes consume the worker allowance or adopt its larger budget', async () => {
-  const root = await mkdtemp(join(tmpdir(), 'api-docs-management-rates-'));
+  const root = await mkdtemp(join(tmpdir(), 'doctopus-management-rates-'));
   const credential = 'b'.repeat(32);
   const repository = {
     initialize: async () => {},

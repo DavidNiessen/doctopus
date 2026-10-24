@@ -26,4 +26,4 @@ The issue body then includes `Documentation page: https://docs.example.com/devel
 
 Use the default context-free link for other trackers or private paths that should not leave the site. Canonical context is limited to generated reader paths and a final 4,096-character URL; invalid/excessive context falls back to the configured destination. Labels can use your site's language. All normal keyboard access, theme and mobile behavior applies.
 
-The public `feedbackHref(config, pagePath)` helper from `@davidniessen/contracts` shares the prerender/client behavior. Configuration validation is provided by `parseConfig` in `@davidniessen/spec`. This link is an alternative to a feedback service, not a server-side submission or moderation API.
+The public `feedbackHref(config, pagePath)` helper from `@davidniessen/doctopus-contracts` shares the prerender/client behavior. Configuration validation is provided by `parseConfig` in `@davidniessen/doctopus-spec`. This link is an alternative to a feedback service, not a server-side submission or moderation API.

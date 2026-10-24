@@ -1,5 +1,5 @@
-import { createSearchIndex } from '@davidniessen/search';
-import type { SiteData } from '@davidniessen/contracts';
+import { createSearchIndex } from '@davidniessen/doctopus-search';
+import type { SiteData } from '@davidniessen/doctopus-contracts';
 /** Stream one corpus at a time while retaining legacy default search paths. */
 export function* searchAssets(site: SiteData): Generator<[string, string]> {
   for (const locale of [

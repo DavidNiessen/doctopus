@@ -69,8 +69,8 @@ test('the sidebar resizes by keyboard and dragging without losing form drafts or
   page,
 }, testInfo) => {
   await page.addInitScript(() => {
-    if (!localStorage.getItem('api-docs-studio-navigation-width'))
-      localStorage.setItem('api-docs-studio-navigation-width', '288');
+    if (!localStorage.getItem('doctopus-studio-navigation-width'))
+      localStorage.setItem('doctopus-studio-navigation-width', '288');
   });
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto('/admin/');

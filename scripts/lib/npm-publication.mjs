@@ -144,7 +144,7 @@ export async function loadNpmPublication(root, context, plan) {
   ])
     assert.equal(plan[key], context[key]);
   assert(['next', 'latest'].includes(plan.npm.tag));
-  const directory = join(root, '.api-docs/release-assets/npm');
+  const directory = join(root, '.doctopus/release-assets/npm');
   await verifyReleaseAssets(directory, context, 'npm');
   const report = JSON.parse(
     await readRegularFile(join(directory, 'manifest.json')),
@@ -207,7 +207,7 @@ export async function publishNpmArchives(
       await inspectNpmVersion(pkg, { request, registry: destination, env }),
     );
   const privateRoot = await mkdtemp(
-    join(tmpdir(), 'api-docs-npm-publication-'),
+    join(tmpdir(), 'doctopus-npm-publication-'),
   );
   const receipt = { schemaVersion: 1, complete: false, packages: [] };
   const retain = async () => {
@@ -297,7 +297,7 @@ export async function publishNpmArchives(
 }
 
 export async function writeNpmPublicationReceiptDirectory(root) {
-  const directory = join(root, '.api-docs/publication');
+  const directory = join(root, '.doctopus/publication');
   await mkdir(directory, { recursive: true });
   return join(directory, 'npm-result.json');
 }

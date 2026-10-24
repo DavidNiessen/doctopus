@@ -81,7 +81,7 @@ test('modal is accessible in both themes, traps focus and fits mobile screens', 
         ),
       ).toBe(true);
     }
-    await page.screenshot({ path: `.api-docs/playground-modal-${theme}.png` });
+    await page.screenshot({ path: `.doctopus/playground-modal-${theme}.png` });
     await page.setViewportSize({ width: 390, height: 844 });
     const bounds = await dialog.boundingBox();
     expect(bounds?.width).toBeLessThanOrEqual(390);
@@ -98,7 +98,7 @@ test('modal is accessible in both themes, traps focus and fits mobile screens', 
       dialog.getByRole('button', { name: 'Send request' }),
     ).toBeInViewport();
     await page.screenshot({
-      path: `.api-docs/playground-modal-mobile-${theme}.png`,
+      path: `.doctopus/playground-modal-mobile-${theme}.png`,
     });
     await page.keyboard.press('Escape');
     await page.setViewportSize({ width: 1280, height: 900 });

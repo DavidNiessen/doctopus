@@ -2,11 +2,11 @@
 
 The CLI inventories deprecated operations, announced retirement dates, replacement operations and migration guides across API versions. The reader exposes the same declarations in a static deprecation center and on operation pages.
 
-Standard `deprecated: true` operations appear even without extra metadata. Add the reserved `x-api-docs-lifecycle` extension when dates or migration details are available:
+Standard `deprecated: true` operations appear even without extra metadata. Add the reserved `x-doctopus-lifecycle` extension when dates or migration details are available:
 
 ```yaml
 deprecated: true
-x-api-docs-lifecycle:
+x-doctopus-lifecycle:
   deprecatedOn: '2026-01-01'
   sunsetOn: '2027-06-01'
   message: Version 1 is being retired.

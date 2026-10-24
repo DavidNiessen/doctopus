@@ -8,11 +8,11 @@ Use the pinned Node version from `.node-version`, a built checkout and the exact
 
 ```sh
 node scripts/install-inventory-tool.mjs
-node scripts/container-inventory.mjs "$(cat /tmp/api-docs-server.id)" > .api-docs/container-inventory-evidence.json
-node scripts/check-container-inventory.mjs "$(cat /tmp/api-docs-server.id)"
+node scripts/container-inventory.mjs "$(cat /tmp/doctopus-server.id)" > .doctopus/container-inventory-evidence.json
+node scripts/check-container-inventory.mjs "$(cat /tmp/doctopus-server.id)"
 node scripts/install-security-tool.mjs
-node scripts/container-security.mjs "$(cat /tmp/api-docs-server.id)" > .api-docs/container-security-evidence.json
-node scripts/check-container-security.mjs "$(cat /tmp/api-docs-server.id)"
+node scripts/container-security.mjs "$(cat /tmp/doctopus-server.id)" > .doctopus/container-security-evidence.json
+node scripts/check-container-security.mjs "$(cat /tmp/doctopus-server.id)"
 ```
 
 Grype 0.121.0 is pinned by its upstream archive and executable SHA-256 hashes. The common installer also retains the existing pinned Syft behavior: modified executables, symlinks and changed downloads fail before execution. No downloaded installation script runs. Downloads use verified HTTPS and inherited proxy/CA settings.
@@ -25,9 +25,9 @@ The database must be valid, verified by hash, no older than 48 hours and obtaine
 
 Critical, high and unknown-severity matches block acceptance, including findings with unavailable or declined fixes. Medium, low and negligible matches remain in the assessment and need normal security triage. The gate rejects excluded packages, fix-availability filters, VEX waivers and suppressed findings. Grype's built-in upstream-kernel-header rules can appear in configuration; any actually suppressed result is refused. No project waiver or blanket ignore list is provided.
 
-Each unique `.api-docs/container-security-candidates/` directory retains `server.grype.json` and `report.json`. An interrupted or invalid assessment retains `.incomplete`; a complete but policy-failing assessment writes its findings and returns a nonzero exit. Receipts bind the tool/source/scanner, immutable server configuration ID, inventory checksum, raw finding checksum, database identity, timestamp and severity/fix-state counts. The checker recomputes the policy from raw findings and rejects stale, changed, incomplete or mismatched evidence. The source fields describe the checkout running the assessment; they do not establish build provenance. Candidate receipts remain unsigned and unapproved for publication.
+Each unique `.doctopus/container-security-candidates/` directory retains `server.grype.json` and `report.json`. An interrupted or invalid assessment retains `.incomplete`; a complete but policy-failing assessment writes its findings and returns a nonzero exit. Receipts bind the tool/source/scanner, immutable server configuration ID, inventory checksum, raw finding checksum, database identity, timestamp and severity/fix-state counts. The checker recomputes the policy from raw findings and rejects stale, changed, incomplete or mismatched evidence. The source fields describe the checkout running the assessment; they do not establish build provenance. Candidate receipts remain unsigned and unapproved for publication.
 
-The vulnerability database cache is under `.api-docs/tools/grype-db`; allow several GiB plus extraction space. Temporary scan input is removed after the command. Protect scanner configuration and cache paths from untrusted writers. Do not include database caches, credentials or live API responses in public artifacts. Air-gapped operators can perform this connected-host assessment before mirroring reviewed application images; offline startup does not establish a current advisory verdict.
+The vulnerability database cache is under `.doctopus/tools/grype-db`; allow several GiB plus extraction space. Temporary scan input is removed after the command. Protect scanner configuration and cache paths from untrusted writers. Do not include database caches, credentials or live API responses in public artifacts. Air-gapped operators can perform this connected-host assessment before mirroring reviewed application images; offline startup does not establish a current advisory verdict.
 
 The receipt checker opens the raw findings as a bounded regular file, checks its descriptor and computes the checksum and policy assessment from the same byte snapshot. It refuses symbolic links and special files on the supported Linux scanner host. See the [triage record](security-triage.md) for findings and subsequent dependency changes that need a fresh image assessment.
 

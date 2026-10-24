@@ -6,8 +6,8 @@ import fastifyStatic from '@fastify/static';
 import { randomBytes } from 'node:crypto';
 import { mkdir } from 'node:fs/promises';
 import { resolve, extname } from 'node:path';
-import { verifyArtifact } from '@davidniessen/compiler';
-import { confinedPath } from '@davidniessen/spec';
+import { verifyArtifact } from '@davidniessen/doctopus-compiler';
+import { confinedPath } from '@davidniessen/doctopus-spec';
 import {
   can,
   ConflictError,
@@ -16,7 +16,7 @@ import {
   BuildLeaseLostError,
   BuildCapacityError,
   BuildNotFoundError,
-} from '@davidniessen/domain';
+} from '@davidniessen/doctopus-domain';
 import type {
   Principal,
   Project,
@@ -25,7 +25,7 @@ import type {
   Role,
   RelayAuditWriter,
   BuildJobRepository,
-} from '@davidniessen/domain';
+} from '@davidniessen/doctopus-domain';
 import { equalSecret, registerOidc, tokenHash } from './oidc.js';
 import type { OidcOptions } from './oidc.js';
 import {
@@ -665,7 +665,7 @@ export async function createServer(options: ServerOptions) {
       reply
         .type('text/html')
         .send(
-          '<!doctype html><html lang="en"><head><meta charset="utf-8"><title>api-docs administration</title></head><body><h1>api-docs administration</h1><p>Use the documented management API to configure projects and publications.</p><a href="/auth/login">Sign in with your identity provider</a></body></html>',
+          '<!doctype html><html lang="en"><head><meta charset="utf-8"><title>doctopus administration</title></head><body><h1>doctopus administration</h1><p>Use the documented management API to configure projects and publications.</p><a href="/auth/login">Sign in with your identity provider</a></body></html>',
         ),
     );
   return app;

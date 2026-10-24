@@ -3,17 +3,17 @@ import { createHash, randomBytes, randomUUID } from 'node:crypto';
 import { cp, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
-import { PostgresRepository } from '@davidniessen/storage';
-import { createServer } from '@davidniessen/server';
-import { buildSite, inspectIsolatedSource } from '@davidniessen/cli';
-import { readBuildPolicy, toolVersion } from '@davidniessen/contracts';
+import { PostgresRepository } from '@davidniessen/doctopus-storage';
+import { createServer } from '@davidniessen/doctopus-server';
+import { buildSite, inspectIsolatedSource } from '@davidniessen/doctopus-cli';
+import { readBuildPolicy, toolVersion } from '@davidniessen/doctopus-contracts';
 import type {
   BuildJob,
   BuildLease,
   BuildSource,
   Project,
   Role,
-} from '@davidniessen/domain';
+} from '@davidniessen/doctopus-domain';
 
 const database = process.env.TEST_DATABASE_URL;
 if (!database)
@@ -101,7 +101,7 @@ function completion(lease: BuildLease) {
   };
 }
 beforeAll(async () => {
-  root = await mkdtemp(join(tmpdir(), 'api-docs-build-api-'));
+  root = await mkdtemp(join(tmpdir(), 'doctopus-build-api-'));
   artifactRoot = join(root, 'artifacts');
   await repository.initialize();
   project = await repository.createProject({
@@ -126,7 +126,8 @@ beforeAll(async () => {
   const source = join(root, 'source');
   await cp(resolve('examples/demo'), source, {
     recursive: true,
-    filter: (file) => !file.includes('.api-docs'),
+    filter: (file) =>
+      !file.includes('.doctopus') && !file.includes('.api-docs'),
   });
   const config = join(source, 'docs.config.yaml');
   await writeFile(

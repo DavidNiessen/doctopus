@@ -10,22 +10,22 @@ import {
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { compileProject } from '@davidniessen/compiler';
-import { buildSite } from '@davidniessen/cli';
+import { compileProject } from '@davidniessen/doctopus-compiler';
+import { buildSite } from '@davidniessen/doctopus-cli';
 import {
   runPluginFiles,
   checkPluginConformance,
   definePlugin,
   applyPlugins,
-} from '@davidniessen/plugin-sdk';
-import { themePresets } from '@davidniessen/contracts';
-import type { SiteData } from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-plugin-sdk';
+import { themePresets } from '@davidniessen/doctopus-contracts';
+import type { SiteData } from '@davidniessen/doctopus-contracts';
 let site: SiteData;
 beforeAll(async () => {
   site = await compileProject(resolve('examples/demo'));
 });
 async function fixture(code: string, run: (root: string) => Promise<void>) {
-  const root = await mkdtemp(join(tmpdir(), 'api-docs-plugin-'));
+  const root = await mkdtemp(join(tmpdir(), 'doctopus-plugin-'));
   try {
     await writeFile(join(root, 'plugin.mjs'), code);
     await run(root);

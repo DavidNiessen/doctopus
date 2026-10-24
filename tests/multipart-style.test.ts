@@ -1,11 +1,11 @@
 import { expect, it } from 'vitest';
-import type { Media, Schema } from '@davidniessen/contracts';
+import type { Media, Schema } from '@davidniessen/doctopus-contracts';
 import {
   createMultipartParts,
   toFetchRequest,
   redactRequest,
   generateSnippet,
-} from '@davidniessen/explorer';
+} from '@davidniessen/doctopus-explorer';
 
 const field = (encoding: Schema): Media => ({
   schema: { type: 'object', required: ['value'], properties: { value: {} } },

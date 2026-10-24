@@ -1,10 +1,10 @@
-import { definePlugin } from '@davidniessen/plugin-sdk';
+import { definePlugin } from '@davidniessen/doctopus-plugin-sdk';
 import {
   exampleChoices,
   formatExample,
   isJsonMediaType,
-} from '@davidniessen/contracts';
-import { prepareRequest, redactRequest } from '@davidniessen/explorer';
+} from '@davidniessen/doctopus-contracts';
+import { prepareRequest, redactRequest } from '@davidniessen/doctopus-explorer';
 import { goSnippet } from './go-code.mjs';
 
 export default definePlugin({

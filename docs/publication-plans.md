@@ -17,8 +17,8 @@ The manual **Review or publish verified distributions** workflow defaults to `co
 | npm scope             | `@davidniessen`                                      |
 | npm registry          | `https://npm.pkg.github.com`                         |
 | Maven group           | `dev.niessen`                                        |
-| Maven registry        | `https://maven.pkg.github.com/davidniessen/api-docs` |
-| Container repository  | `ghcr.io/davidniessen/api-docs`                      |
+| Maven registry        | `https://maven.pkg.github.com/davidniessen/doctopus` |
+| Container repository  | `ghcr.io/davidniessen/doctopus`                      |
 | Protected environment | `release`                                            |
 
 Namespace decisions refer to the selected GitHub repository owner and do not require an npm organization or a Maven Central domain claim. The owner has explicitly deferred the five independent security, isolation, accessibility, license and pilot reviews for prereleases. Publication is enabled under that decision; the reviews are recorded as `deferred`, not `approved`. See [ADR 0002](adr/0002-deferred-prerelease-reviews.md).
@@ -33,7 +33,7 @@ Dispatch `.github/workflows/release-publish.yml` from the candidate's canonical 
 
 Only the candidate's named npm/Java/container bundles are downloaded. Verification checks complete file sets, sizes, SHA-256 hashes and source/run bindings, then checks GitHub attestations for every subject against the exact producer workflow, source tag/commit and GitHub-hosted runner identity. A signature on an unrelated workflow or artifact cannot substitute.
 
-The earlier [candidate 40043580095](https://github.com/DavidNiessen/api-docs/actions/runs/40043580095) and read-only [plan 40045907895](https://github.com/DavidNiessen/api-docs/actions/runs/40045907895) passed for `v0.2.0-candidate.1` / `c380ae159983025a519bbe706ecec049b755e8d8`. The GitHub Packages [candidate 40093764410](https://github.com/DavidNiessen/api-docs/actions/runs/40093764410) then passed all 22 jobs for `v0.2.0-candidate.2` / `700f6e47dd5c0299df12ef6edad383aa7fa508da`. Its [read-only plan 40095165927](https://github.com/DavidNiessen/api-docs/actions/runs/40095165927) independently reverified all 39 subjects with six source-policy blockers and every publisher skipped. Both tags remain immutable. Later .7 acceptance above includes its own matching candidate, explicit review deferral and actual registry consumption.
+The earlier [candidate 40043580095](https://github.com/DavidNiessen/doctopus/actions/runs/40043580095) and read-only [plan 40045907895](https://github.com/DavidNiessen/doctopus/actions/runs/40045907895) passed for `v0.2.0-candidate.1` / `c380ae159983025a519bbe706ecec049b755e8d8`. The GitHub Packages [candidate 40093764410](https://github.com/DavidNiessen/doctopus/actions/runs/40093764410) then passed all 22 jobs for `v0.2.0-candidate.2` / `700f6e47dd5c0299df12ef6edad383aa7fa508da`. Its [read-only plan 40095165927](https://github.com/DavidNiessen/doctopus/actions/runs/40095165927) independently reverified all 39 subjects with six source-policy blockers and every publisher skipped. Both tags remain immutable. Later .7 acceptance above includes its own matching candidate, explicit review deferral and actual registry consumption.
 
 ## Repository and environment protection
 

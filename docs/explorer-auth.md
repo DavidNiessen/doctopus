@@ -54,7 +54,7 @@ Use HTTPS for the documentation and provider. Loopback HTTP is supported when th
 
 ## Public-client PKCE protocol helpers
 
-`@davidniessen/explorer` exports `createPkceTransaction`, `calculatePkceChallenge`, `exchangePkceCode`, `resolveOAuthEndpoint` and their types. These are the protocol helpers used by the reader. A host using the helpers directly supplies its own popup/callback handling.
+`@davidniessen/doctopus-explorer` exports `createPkceTransaction`, `calculatePkceChallenge`, `exchangePkceCode`, `resolveOAuthEndpoint` and their types. These are the protocol helpers used by the reader. A host using the helpers directly supplies its own popup/callback handling.
 
 Create a transaction with the registered public `clientId`, exact `issuer`, authorization/token endpoint URLs, registered `redirectUri`, and required scopes. The authorization URL retains provider query parameters and sets the OAuth response type, state, client, redirect, scopes and S256 challenge. Verifiers and state use independent 32-byte Web Crypto random values. Keep the returned transaction in memory and never log, serialize or persist it.
 

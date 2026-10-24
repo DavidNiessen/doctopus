@@ -3,8 +3,8 @@ import { mkdtemp, writeFile, rm } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
 import { spawnSync } from 'node:child_process';
-import { checkExamples, loadSpec } from '@davidniessen/spec';
-import type { Schema } from '@davidniessen/contracts';
+import { checkExamples, loadSpec } from '@davidniessen/doctopus-spec';
+import type { Schema } from '@davidniessen/doctopus-contracts';
 
 async function fixture(
   schema: Schema | boolean,
@@ -12,7 +12,7 @@ async function fixture(
   run: (root: string) => Promise<void>,
   options: { version?: string; components?: unknown; mediaType?: string } = {},
 ) {
-  const root = await mkdtemp(join(tmpdir(), 'api-docs-examples-'));
+  const root = await mkdtemp(join(tmpdir(), 'doctopus-examples-'));
   try {
     const document = {
       openapi: options.version ?? '3.1.0',

@@ -14,8 +14,8 @@ import {
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { setTimeout } from 'node:timers/promises';
-import { verifyArtifact } from '@davidniessen/compiler';
-import { toolVersion } from '@davidniessen/contracts';
+import { verifyArtifact } from '@davidniessen/doctopus-compiler';
+import { toolVersion } from '@davidniessen/doctopus-contracts';
 import { assertOwnedCompose } from './lib/compose-fixtures.mjs';
 import { verifyServerRecovery } from './lib/server-recovery-fixture.mjs';
 import { verifyServerProxy } from './lib/server-proxy-fixture.mjs';
@@ -35,8 +35,8 @@ assert.match(
   /^(?:sha256:[a-f0-9]{64}|[a-z0-9][a-z0-9./:_-]*@sha256:[a-f0-9]{64})$/,
   'Set SERVER_TEST_IMAGE to the approved immutable server image.',
 );
-const project = `api-docs-runtime-${randomUUID().replaceAll('-', '').slice(0, 16)}`;
-const root = await mkdtemp(join(tmpdir(), 'api-docs-runtime-'));
+const project = `doctopus-runtime-${randomUUID().replaceAll('-', '').slice(0, 16)}`;
+const root = await mkdtemp(join(tmpdir(), 'doctopus-runtime-'));
 const source = join(root, 'source'),
   store = join(root, 'artifacts'),
   secrets = join(root, 'secrets');
@@ -129,7 +129,7 @@ async function waitFor(check, label) {
 // Executed inside the selected image; keep its imports local to the function.
 async function readContainerRuntime() {
   const { readFileSync, existsSync } = await import('node:fs');
-  const { toolVersion } = await import('@davidniessen/contracts');
+  const { toolVersion } = await import('@davidniessen/doctopus-contracts');
   const lines = readFileSync('/proc/self/status', 'utf8').split(
     String.fromCharCode(10),
   );
@@ -280,7 +280,7 @@ try {
   );
   await docker(['rm', '--volumes', builder]);
   builder = undefined;
-  const directory = join(source, '.api-docs/site');
+  const directory = join(source, '.doctopus/site');
   const manifest = await verifyArtifact(directory);
   assert.equal(manifest.compilerVersion, toolVersion);
   const artifactId = manifest.artifactDigest;
@@ -409,13 +409,13 @@ try {
         '--username',
         'postgres',
         '--dbname',
-        'apidocs',
+        'doctopus',
         '--tuples-only',
         '--no-align',
         '--set',
         'ON_ERROR_STOP=1',
       ],
-      "SELECT rolcanlogin AND NOT rolsuper AND NOT rolcreatedb AND NOT rolcreaterole, has_schema_privilege('apidocs_runtime','public','CREATE'), has_table_privilege('apidocs_runtime','docs_audit','UPDATE'), has_table_privilege('apidocs_runtime','docs_audit','DELETE') FROM pg_roles WHERE rolname='apidocs_runtime';",
+      "SELECT rolcanlogin AND NOT rolsuper AND NOT rolcreatedb AND NOT rolcreaterole, has_schema_privilege('doctopus_runtime','public','CREATE'), has_table_privilege('doctopus_runtime','docs_audit','UPDATE'), has_table_privilege('doctopus_runtime','docs_audit','DELETE') FROM pg_roles WHERE rolname='doctopus_runtime';",
     ),
     't|f|f|f',
   );

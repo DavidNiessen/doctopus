@@ -12,6 +12,7 @@ export default defineConfig([
     'playwright-pages-report/',
     'playwright-studio-report/',
     'test-results/',
+    '**/.doctopus/**',
     '**/.api-docs/**',
   ]),
   ...tseslint.configs.recommended,

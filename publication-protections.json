@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "repository": "DavidNiessen/api-docs",
+  "repository": "DavidNiessen/doctopus",
   "branch": {
     "id": 25759767,
     "name": "Protect master",
-    "source": "DavidNiessen/api-docs",
+    "source": "DavidNiessen/doctopus",
     "source_type": "Repository",
     "updated_at": "2026-10-24T11:06:45.406Z",
     "target": "branch",
@@ -46,7 +46,7 @@
   "tags": {
     "id": 25759785,
     "name": "Protect release tags",
-    "source": "DavidNiessen/api-docs",
+    "source": "DavidNiessen/doctopus",
     "source_type": "Repository",
     "updated_at": "2026-10-23T22:55:21.206Z",
     "target": "tag",

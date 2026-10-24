@@ -6,7 +6,7 @@ if (
   !socket?.startsWith('/') ||
   !/^[a-f0-9]{64}$/.test(container ?? '') ||
   !Number.isSafeInteger(Number(deadline)) ||
-  !/^api-docs-build-[a-f0-9-]{36}$/.test(volume ?? '')
+  !/^doctopus-build-[a-f0-9-]{36}$/.test(volume ?? '')
 )
   process.exit(1);
 const environment = { ...process.env };

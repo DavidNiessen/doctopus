@@ -83,7 +83,7 @@ test('the center is accessible in both themes and narrow layouts and retains no-
       () => document.documentElement.scrollWidth <= innerWidth,
     ),
   ).toBe(true);
-  await page.screenshot({ path: '.api-docs/lifecycle-center.png' });
+  await page.screenshot({ path: '.doctopus/lifecycle-center.png' });
   const context = await browser.newContext({ javaScriptEnabled: false });
   try {
     const plain = await context.newPage();

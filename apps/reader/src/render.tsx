@@ -5,8 +5,8 @@ import {
   pageMetadata,
   toolVersion,
   localeRoute,
-} from '@davidniessen/contracts';
-import type { SiteData } from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-contracts';
+import type { SiteData } from '@davidniessen/doctopus-contracts';
 export function renderDocument(
   site: SiteData,
   path: string,
@@ -53,9 +53,9 @@ export function renderDocument(
     : '';
   const favicon = site.config.favicon
     ? `<link rel="icon" href="${site.config.basePath}/media/${escape(site.config.favicon)}">`
-    : '';
+    : `<link rel="icon" type="image/svg+xml" href="${site.config.basePath}/assets/doctopus-icon.svg">`;
   const stylesheet = site.config.theme.stylesheet
     ? `<link rel="stylesheet" href="${site.config.basePath}/media/${escape(site.config.theme.stylesheet)}">`
     : '';
-  return `<!doctype html><html lang="${escape(localeRoute(site.config, path).locale)}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light dark"><meta name="description" content="${escape(metadata.description)}"><meta name="robots" content="${options.status === 404 ? 'noindex,nofollow' : metadata.robots}"><meta property="og:type" content="website"><meta property="og:title" content="${escape(title)}"><meta property="og:description" content="${escape(metadata.description)}"><meta name="twitter:card" content="${metadata.image ? 'summary_large_image' : 'summary'}">${canonical}${alternates}${image}${favicon}<meta name="generator" content="api-docs ${toolVersion}"><title>${escape(title)}</title><link rel="stylesheet" href="${site.config.basePath}/assets/reader.css">${stylesheet}</head><body><div id="root">${markup}</div><script type="application/json" id="docs-data">${encoded}</script><script type="module" src="${site.config.basePath}/assets/reader.js"></script></body></html>`;
+  return `<!doctype html><html lang="${escape(localeRoute(site.config, path).locale)}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light dark"><meta name="description" content="${escape(metadata.description)}"><meta name="robots" content="${options.status === 404 ? 'noindex,nofollow' : metadata.robots}"><meta property="og:type" content="website"><meta property="og:title" content="${escape(title)}"><meta property="og:description" content="${escape(metadata.description)}"><meta name="twitter:card" content="${metadata.image ? 'summary_large_image' : 'summary'}">${canonical}${alternates}${image}${favicon}<meta name="generator" content="doctopus ${toolVersion}"><title>${escape(title)}</title><link rel="stylesheet" href="${site.config.basePath}/assets/reader.css">${stylesheet}</head><body><div id="root">${markup}</div><script type="application/json" id="docs-data">${encoded}</script><script type="module" src="${site.config.basePath}/assets/reader.js"></script></body></html>`;
 }

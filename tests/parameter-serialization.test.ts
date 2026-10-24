@@ -2,12 +2,12 @@ import { describe, expect, it } from 'vitest';
 import { createServer } from 'node:http';
 import { once } from 'node:events';
 import type { AddressInfo } from 'node:net';
-import type { Operation, Parameter } from '@davidniessen/contracts';
+import type { Operation, Parameter } from '@davidniessen/doctopus-contracts';
 import {
   prepareRequest,
   redactRequest,
   canSerializeEmptyParameter,
-} from '@davidniessen/explorer';
+} from '@davidniessen/doctopus-explorer';
 
 const operation: Operation = {
   id: 'serialize',

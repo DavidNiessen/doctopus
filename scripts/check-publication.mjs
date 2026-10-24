@@ -86,9 +86,9 @@ assert.deepEqual(
   await releaseSource(root, process.env, { workflow: 'release-publish.yml' }),
   source,
 );
-await mkdir('.api-docs/publication', { recursive: true });
+await mkdir('.doctopus/publication', { recursive: true });
 await writeFile(
-  '.api-docs/publication/plan.json',
+  '.doctopus/publication/plan.json',
   JSON.stringify(
     {
       ...plan,

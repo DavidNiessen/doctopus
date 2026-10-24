@@ -1,6 +1,6 @@
 import { expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
-import { readBuildPolicy } from '@davidniessen/contracts';
+import { readBuildPolicy } from '@davidniessen/doctopus-contracts';
 import {
   readCapabilities,
   readJob,

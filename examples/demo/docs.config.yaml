@@ -6,8 +6,8 @@ specs:
     path: openapi.json
     version: v1
 theme:
-  accent: '#148567'
+  preset: violet
   radius: 10
 links:
   - label: GitHub
-    href: https://github.com/DavidNiessen/api-docs
+    href: https://github.com/DavidNiessen/doctopus

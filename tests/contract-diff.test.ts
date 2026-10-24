@@ -3,8 +3,12 @@ import { mkdtemp, writeFile, rm } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
 import { spawnSync } from 'node:child_process';
-import { diffApi, loadSpec } from '@davidniessen/spec';
-import type { ApiDocument, Operation, Schema } from '@davidniessen/contracts';
+import { diffApi, loadSpec } from '@davidniessen/doctopus-spec';
+import type {
+  ApiDocument,
+  Operation,
+  Schema,
+} from '@davidniessen/doctopus-contracts';
 
 function api(
   schema: Schema = { type: 'string' },
@@ -353,7 +357,7 @@ describe('conservative API contract classification', () => {
       severities({ format: 'email' }, { format: 'uri' }, 'response'),
     ).toEqual(['review']);
     expect(
-      severities({}, { 'x-api-docs-boolean-schema': false }, 'request'),
+      severities({}, { 'x-doctopus-boolean-schema': false }, 'request'),
     ).toEqual(['breaking']);
   });
   it('recognizes stricter AND/OR security, scopes, scheme changes and anonymous alternatives', () => {
@@ -489,7 +493,7 @@ describe('conservative API contract classification', () => {
     expect(diffApi(old, next)).toEqual(diffApi(old, next));
   });
   it('loads real documents and enforces CLI breaking/review/allow-review exit codes and JSON shape', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'api-docs-diff-'));
+    const root = await mkdtemp(join(tmpdir(), 'doctopus-diff-'));
     try {
       const document = (pattern: string, required = false) => ({
         openapi: '3.1.0',

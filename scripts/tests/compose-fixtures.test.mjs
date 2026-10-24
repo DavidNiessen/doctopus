@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { assertOwnedCompose } from '../lib/compose-fixtures.mjs';
 
-const project = 'api-docs-runtime-' + 'a'.repeat(16);
+const project = 'doctopus-runtime-' + 'a'.repeat(16);
 const image = 'sha256:' + 'b'.repeat(64);
 const configuration = {
   name: project,
@@ -26,7 +26,7 @@ test('accepts a private, loopback-only fixture with its own project resources an
 test('refuses external resources, another project, exposed listeners and different service images', () => {
   for (const change of [
     (value) => {
-      value.name = 'api-docs';
+      value.name = 'doctopus';
     },
     (value) => {
       value.volumes.database.external = true;
@@ -47,7 +47,7 @@ test('refuses external resources, another project, exposed listeners and differe
       value.services.docs.ports[0].host_ip = '0.0.0.0';
     },
     (value) => {
-      value.services.migrate.image = 'api-docs:local';
+      value.services.migrate.image = 'doctopus:local';
     },
     (value) => {
       value.services.other = {};
@@ -60,12 +60,12 @@ test('refuses external resources, another project, exposed listeners and differe
 });
 test('refuses project names without the fixture nonce format before cleanup can select a deployment', () => {
   for (const name of [
-    'api-docs',
-    'api-docs-runtime',
-    'api-docs-restore-test',
-    'api-docs-offline-test',
-    'api-docs-upgrade-test',
-    'api-docs-rollback-test',
+    'doctopus',
+    'doctopus-runtime',
+    'doctopus-restore-test',
+    'doctopus-offline-test',
+    'doctopus-upgrade-test',
+    'doctopus-rollback-test',
   ])
     assert.throws(() =>
       assertOwnedCompose({ ...configuration, name }, name, image),
@@ -74,7 +74,7 @@ test('refuses project names without the fixture nonce format before cleanup can 
 
 test('upgrade and rollback projects require the same owned resources and private listeners', () => {
   for (const kind of ['upgrade', 'rollback']) {
-    const name = `api-docs-${kind}-${'d'.repeat(16)}`;
+    const name = `doctopus-${kind}-${'d'.repeat(16)}`;
     const value = JSON.parse(
       JSON.stringify(configuration).replaceAll(project, name),
     );
@@ -85,7 +85,7 @@ test('upgrade and rollback projects require the same owned resources and private
 });
 
 test('offline fixtures accept only their selected immutable imported database image', () => {
-  const offlineProject = 'api-docs-offline-' + 'd'.repeat(16);
+  const offlineProject = 'doctopus-offline-' + 'd'.repeat(16);
   const databaseImage = 'sha256:' + 'e'.repeat(64);
   const offline = JSON.parse(
     JSON.stringify(configuration).replaceAll(project, offlineProject),

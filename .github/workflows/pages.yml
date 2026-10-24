@@ -84,7 +84,7 @@ jobs:
           name: hosted-demo-browser-${{ github.event.workflow_run.head_sha }}-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
             playwright-pages-report/
-            .api-docs/pages-screenshots/
+            .doctopus/pages-screenshots/
             test-results/
           include-hidden-files: true
           if-no-files-found: warn

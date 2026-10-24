@@ -11,7 +11,7 @@ try {
     if (values.length) query.set(name, values[0]!);
   }
   window.opener.postMessage(
-    { type: 'api-docs:oauth-callback', query: query.toString() },
+    { type: 'doctopus:oauth-callback', query: query.toString() },
     location.origin,
   );
   if (output)

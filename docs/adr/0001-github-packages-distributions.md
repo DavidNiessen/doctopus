@@ -6,11 +6,11 @@ Date: 2026-10-24.
 
 ## Context
 
-The repository owner selected GitHub Packages for JavaScript and Java distributions and does not want separate npm or Maven Central accounts. The project needs dependency-manager installation, exact accepted artifacts, source-bound provenance, protected publishing and independent installed-consumer verification. The product name remains provisional.
+The repository owner selected GitHub Packages for JavaScript and Java distributions and does not want separate npm or Maven Central accounts. The project needs dependency-manager installation, exact accepted artifacts, source-bound provenance, protected publishing and independent installed-consumer verification. The project was subsequently named Doctopus; accepted prerelease artifacts retain their original coordinates.
 
 ## Decision
 
-Use npm scope `@davidniessen` at `https://npm.pkg.github.com`, Maven group `dev.niessen` at `https://maven.pkg.github.com/davidniessen/api-docs`, and `ghcr.io/davidniessen/api-docs` for containers. Source policy binds destinations to the source repository owner/name. Renaming or transferring the project requires matching reviewed coordinates and a new candidate.
+Use npm scope `@davidniessen` at `https://npm.pkg.github.com`, Maven group `dev.niessen` at `https://maven.pkg.github.com/davidniessen/doctopus`, and `ghcr.io/davidniessen/doctopus` for containers. Source policy binds destinations to the source repository owner/name. Renaming or transferring the project requires matching reviewed coordinates and a new candidate.
 
 Publish from the protected `release` environment with short-lived repository Actions tokens. npm and Maven publishers receive package-write permission; their separate consumers receive read permission. Only the OCI publisher and fresh security-report producer need OIDC in the publishing workflow. A production OpenPGP key and external registry credentials are unnecessary.
 

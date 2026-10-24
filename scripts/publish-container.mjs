@@ -14,7 +14,7 @@ const source = await releaseSource(root, process.env, {
   workflow: 'release-publish.yml',
 });
 const plan = JSON.parse(
-  await readRegularFile(join(root, '.api-docs/publication/plan.json')),
+  await readRegularFile(join(root, '.doctopus/publication/plan.json')),
 );
 assert.equal(plan.publicationRunId, source.runId);
 assert.equal(plan.publicationRunAttempt, source.runAttempt);
@@ -23,10 +23,10 @@ assert.equal(plan.environmentProtection.tagPolicy, 'v*');
 const context = { ...source, runId: plan.runId, runAttempt: plan.runAttempt };
 const candidate = await loadContainerPublication(root, context, plan);
 const result = await publishContainerArchive(candidate, {
-  receiptPath: join(root, '.api-docs/publication/container-result.json'),
+  receiptPath: join(root, '.doctopus/publication/container-result.json'),
 });
 await writeFile(
-  join(root, '.api-docs/publication/promotion-predicate.json'),
+  join(root, '.doctopus/publication/promotion-predicate.json'),
   JSON.stringify(result.predicate, null, 2) + '\n',
   { flag: 'wx' },
 );

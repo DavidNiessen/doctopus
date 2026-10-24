@@ -1,6 +1,6 @@
 import { relative } from 'node:path';
 import SwaggerParser from '@apidevtools/swagger-parser';
-import type { ApiDocument } from '@davidniessen/contracts';
+import type { ApiDocument } from '@davidniessen/doctopus-contracts';
 import {
   confinedPath,
   parseSource,
@@ -22,7 +22,7 @@ export {
   text,
   array,
 } from './source.js';
-export { resolveSchema, exampleFor } from '@davidniessen/contracts';
+export { resolveSchema, exampleFor } from '@davidniessen/doctopus-contracts';
 export { diffApi } from './diff.js';
 export type { ContractChange } from './diff.js';
 export { checkExamples } from './examples.js';

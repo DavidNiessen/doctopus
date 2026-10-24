@@ -1,5 +1,5 @@
 {
-  "name": "@davidniessen/spec",
+  "name": "@davidniessen/doctopus-spec",
   "version": "0.2.0-candidate.7",
   "type": "module",
   "license": "Apache-2.0",
@@ -13,7 +13,7 @@
     }
   },
   "dependencies": {
-    "@davidniessen/contracts": "0.2.0-candidate.7",
+    "@davidniessen/doctopus-contracts": "0.2.0-candidate.7",
     "@apidevtools/swagger-parser": "13.1.0",
     "ajv": "8.20.0",
     "ajv-formats": "3.0.1",

@@ -3,7 +3,7 @@ import { execFile, execFileSync } from 'node:child_process';
 import { promisify } from 'node:util';
 import { mkdir, mkdtemp, rm, unlink, writeFile } from 'node:fs/promises';
 import { join, relative, resolve } from 'node:path';
-import { toolVersion } from '@davidniessen/contracts';
+import { toolVersion } from '@davidniessen/doctopus-contracts';
 import {
   scanner,
   sha256,
@@ -70,12 +70,12 @@ assert.deepEqual(
   'Select the shipped server target',
 );
 const executable = resolve(
-  '.api-docs/tools',
+  '.doctopus/tools',
   `syft-${scanner.version}`,
   'syft',
 );
 await verifyScanner(executable);
-const parent = resolve('.api-docs/container-candidates');
+const parent = resolve('.doctopus/container-candidates');
 await mkdir(parent, { recursive: true });
 const directory = await mkdtemp(join(parent, image.slice(7, 19) + '-'));
 await writeFile(

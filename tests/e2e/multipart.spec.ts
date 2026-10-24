@@ -102,7 +102,7 @@ test('multipart uploads send real binary files and structured parts while previe
   const response = await result;
   expect(response.status()).toBe(200);
   expect(response.request().headers()['content-type']).toMatch(
-    /^multipart\/form-data; boundary=api-docs-[a-f0-9]{48}$/,
+    /^multipart\/form-data; boundary=doctopus-[a-f0-9]{48}$/,
   );
   const received = await response.json();
   expect(received.partHeaders).toHaveLength(received.parts.length);
@@ -252,9 +252,9 @@ test('invalid and oversized multipart inputs cannot send and valid upload contro
       () => document.documentElement.scrollWidth <= innerWidth,
     ),
   ).toBe(true);
-  await page.screenshot({ path: '.api-docs/multipart-editor.png' });
+  await page.screenshot({ path: '.doctopus/multipart-editor.png' });
   await playground
     .locator('.multipart-editor')
-    .screenshot({ path: '.api-docs/multipart-controls.png' });
+    .screenshot({ path: '.doctopus/multipart-controls.png' });
   expect(uploads).toHaveLength(0);
 });

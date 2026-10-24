@@ -19,22 +19,28 @@ import {
   confinedPath,
   readTextFile,
   readBoundedFile,
-} from '@davidniessen/spec';
-import { loadGuides, renderMarkdown } from '@davidniessen/content';
-import { runPluginFiles, runSourcePluginFiles } from '@davidniessen/plugin-sdk';
+} from '@davidniessen/doctopus-spec';
+import { loadGuides, renderMarkdown } from '@davidniessen/doctopus-content';
+import {
+  runPluginFiles,
+  runSourcePluginFiles,
+} from '@davidniessen/doctopus-plugin-sdk';
 import type {
   SpecSource,
   SourcePluginExecution,
-} from '@davidniessen/plugin-sdk';
+} from '@davidniessen/doctopus-plugin-sdk';
 import { loadReaderExtensions } from './reader-extensions.js';
 export { loadReaderExtensions } from './reader-extensions.js';
 import { loadPublicAssets } from './assets.js';
 export { loadPublicAssets } from './assets.js';
 export { auditDocumentation } from './doctor.js';
-import type { SiteData, ArtifactManifest } from '@davidniessen/contracts';
+import type {
+  SiteData,
+  ArtifactManifest,
+} from '@davidniessen/doctopus-contracts';
 import { loadTranslatedGuides } from './translated-guides.js';
-import { validateGuideTranslations } from '@davidniessen/contracts';
-import { toolVersion } from '@davidniessen/contracts';
+import { validateGuideTranslations } from '@davidniessen/doctopus-contracts';
+import { toolVersion } from '@davidniessen/doctopus-contracts';
 
 export async function compileProject(
   root: string,
@@ -314,9 +320,9 @@ export async function safeOutput(
   const base = await realpath(root);
   const target = resolve(base, output);
   const local = relative(base, target);
-  if (!local.startsWith('.api-docs' + sep) || local.split(sep).includes('..'))
+  if (!local.startsWith('.doctopus' + sep) || local.split(sep).includes('..'))
     throw new Error(
-      'Build output must be inside the project .api-docs directory to protect source files',
+      'Build output must be inside the project .doctopus directory to protect source files',
     );
   let current = base;
   for (const part of local.split(sep)) {

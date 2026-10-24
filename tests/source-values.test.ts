@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { mkdtemp, writeFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { loadSpec, parseSource } from '@davidniessen/spec';
+import { loadSpec, parseSource } from '@davidniessen/doctopus-spec';
 
 describe('JSON-compatible source values', () => {
   it.each([
@@ -74,7 +74,7 @@ describe('JSON-compatible source values', () => {
     ).toThrow(/expanded JSON exceeds 64 MiB/);
   }, 30_000);
   it('rejects invalid external reference values before JSON serialization can erase them', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'api-docs-source-values-'));
+    const root = await mkdtemp(join(tmpdir(), 'doctopus-source-values-'));
     try {
       await writeFile(
         join(root, 'openapi.yaml'),

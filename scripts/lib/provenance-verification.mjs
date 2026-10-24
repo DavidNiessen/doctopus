@@ -52,11 +52,11 @@ export async function verifyProducerProvenance(
   context,
   { run = execute } = {},
 ) {
-  const evidence = join(root, '.api-docs/release-verification');
+  const evidence = join(root, '.doctopus/release-verification');
   await mkdir(evidence, { recursive: true });
   const subjects = [];
   for (const kind of ['npm', 'java', 'container']) {
-    const directory = join(root, '.api-docs/release-assets', kind);
+    const directory = join(root, '.doctopus/release-assets', kind);
     const manifest = await verifyReleaseAssets(directory, context, kind);
     for (const name of [
       ...manifest.files.map((entry) => entry.name),

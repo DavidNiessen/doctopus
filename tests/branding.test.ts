@@ -9,9 +9,12 @@ import {
 } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
-import { parseConfig } from '@davidniessen/spec';
-import { buildSite, createStaticServer } from '@davidniessen/cli';
-import { loadPublicAssets, verifyArtifact } from '@davidniessen/compiler';
+import { parseConfig } from '@davidniessen/doctopus-spec';
+import { buildSite, createStaticServer } from '@davidniessen/doctopus-cli';
+import {
+  loadPublicAssets,
+  verifyArtifact,
+} from '@davidniessen/doctopus-compiler';
 const png = Buffer.from(
   'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jX8cAAAAASUVORK5CYII=',
   'base64',
@@ -39,10 +42,11 @@ describe('branding, assets and indexing', () => {
       expect(() => parseConfig({ ...minimal, ...invalid })).toThrow();
   });
   it('builds branding assets, canonical/social metadata and a base-aware sitemap', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'api-docs-branding-'));
+    const root = await mkdtemp(join(tmpdir(), 'doctopus-branding-'));
     await cp(resolve('examples/demo'), root, {
       recursive: true,
-      filter: (path) => !path.includes('.api-docs'),
+      filter: (path) =>
+        !path.includes('.doctopus') && !path.includes('.api-docs'),
     });
     await mkdir(join(root, 'public'));
     await writeFile(join(root, 'public', 'brand.png'), png);
@@ -121,7 +125,7 @@ describe('branding, assets and indexing', () => {
     ).toContain('content="noindex,nofollow"');
   });
   it('rejects executable assets, image spoofing, missing references and symlinks', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'api-docs-asset-boundary-'));
+    const root = await mkdtemp(join(tmpdir(), 'doctopus-asset-boundary-'));
     await mkdir(join(root, 'public'));
     await writeFile(
       join(root, 'public', 'active.svg'),

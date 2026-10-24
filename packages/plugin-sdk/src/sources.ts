@@ -1,4 +1,4 @@
-import type { Diagnostic } from '@davidniessen/contracts';
+import type { Diagnostic } from '@davidniessen/doctopus-contracts';
 import { definePlugin } from './index.js';
 import type { BuildPlugin, BuildPluginContext } from './index.js';
 

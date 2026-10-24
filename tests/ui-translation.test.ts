@@ -3,9 +3,9 @@ import {
   createUiTranslation,
   defaultUiMessages,
   validUiMessage,
-} from '@davidniessen/contracts';
-import { parseConfig } from '@davidniessen/spec';
-import { renderDocument } from '@davidniessen/reader/render';
+} from '@davidniessen/doctopus-contracts';
+import { parseConfig } from '@davidniessen/doctopus-spec';
+import { renderDocument } from '@davidniessen/doctopus-reader/render';
 const input = {
   name: 'Translated fixture',
   specs: [{ id: 'api', path: 'openapi.yaml' }],
@@ -119,7 +119,7 @@ it('server-renders translated reader labels with literal text escaping and no sh
         de: {
           'navigation.docs': 'Dokumentation',
           'search.label': 'Suchen <img src=x onerror=alert(1)>',
-          'footer.builtWith': 'Erstellt mit api-docs',
+          'footer.builtWith': 'Erstellt mit doctopus',
         },
       },
     },

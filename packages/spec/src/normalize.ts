@@ -3,7 +3,7 @@ import {
   slugify,
   parseOperationLifecycle,
   resolveHeaderObject,
-} from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-contracts';
 import { Ajv2020 } from 'ajv/dist/2020.js';
 import { validateSchemaBoundaries } from './schema-boundaries.js';
 const schemaValidator = new Ajv2020({ strict: false, validateFormats: false });
@@ -15,7 +15,7 @@ import type {
   Parameter,
   Schema,
   SecurityScheme,
-} from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-contracts';
 import {
   record,
   text,
@@ -49,7 +49,7 @@ function normalizedHeader(
   return {
     ...header,
     ...(typeof header.schema === 'boolean'
-      ? { schema: { 'x-api-docs-boolean-schema': header.schema } }
+      ? { schema: { 'x-doctopus-boolean-schema': header.schema } }
       : {}),
     ...(header.examples === undefined
       ? {}
@@ -103,7 +103,7 @@ function content(
         {
           schema:
             typeof media.schema === 'boolean'
-              ? { 'x-api-docs-boolean-schema': media.schema }
+              ? { 'x-doctopus-boolean-schema': media.schema }
               : record(media.schema),
           ...(media.encoding === undefined
             ? {}
@@ -140,7 +140,7 @@ function schemaRegistry(
       ([name, value]) => [
         name,
         typeof value === 'boolean'
-          ? { 'x-api-docs-boolean-schema': value }
+          ? { 'x-doctopus-boolean-schema': value }
           : record(value),
       ],
     ),
@@ -169,7 +169,7 @@ function schemaRegistry(
       ) {
         result[ref] =
           typeof target === 'boolean'
-            ? { 'x-api-docs-boolean-schema': target }
+            ? { 'x-doctopus-boolean-schema': target }
             : record(target);
         queue.push(target);
       }
@@ -209,14 +209,14 @@ export function normalizeSpec(
       if (!item[method]) continue;
       const operation = record(item[method]);
       let lifecycle: Operation['lifecycle'];
-      if (operation['x-api-docs-lifecycle'] !== undefined) {
+      if (operation['x-doctopus-lifecycle'] !== undefined) {
         try {
           lifecycle = parseOperationLifecycle(
-            operation['x-api-docs-lifecycle'],
+            operation['x-doctopus-lifecycle'],
           );
         } catch (error) {
           throw new Error(
-            `${source}/${method}/x-api-docs-lifecycle: ${error instanceof Error ? error.message : 'Invalid lifecycle metadata'}`,
+            `${source}/${method}/x-doctopus-lifecycle: ${error instanceof Error ? error.message : 'Invalid lifecycle metadata'}`,
             { cause: error },
           );
         }
@@ -268,7 +268,7 @@ export function normalizeSpec(
             description: text(parameter.description),
             schema:
               typeof schema === 'boolean'
-                ? { 'x-api-docs-boolean-schema': schema }
+                ? { 'x-doctopus-boolean-schema': schema }
                 : record(schema),
             ...(parameter.content === undefined
               ? {}

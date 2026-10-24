@@ -9,11 +9,11 @@ import { promisify } from 'node:util';
 import Fastify from 'fastify';
 import type { FastifyInstance } from 'fastify';
 import { generateKeyPair, exportJWK, SignJWT } from 'jose';
-import { PostgresRepository } from '@davidniessen/storage';
-import { createServer } from '@davidniessen/server';
-import { buildSite } from '@davidniessen/cli';
-import { verifyArtifact } from '@davidniessen/compiler';
-import type { Project, Publication } from '@davidniessen/domain';
+import { PostgresRepository } from '@davidniessen/doctopus-storage';
+import { createServer } from '@davidniessen/doctopus-server';
+import { buildSite } from '@davidniessen/doctopus-cli';
+import { verifyArtifact } from '@davidniessen/doctopus-compiler';
+import type { Project, Publication } from '@davidniessen/doctopus-domain';
 const database = process.env.TEST_DATABASE_URL;
 if (!database)
   throw new Error(
@@ -35,7 +35,7 @@ let provider: FastifyInstance;
 let issuer = '';
 let nonce = '';
 beforeAll(async () => {
-  const root = await mkdtemp(join(tmpdir(), 'api-docs-server-'));
+  const root = await mkdtemp(join(tmpdir(), 'doctopus-server-'));
   fixtureRoot = root;
   const source = join(root, 'source');
   const store = join(root, 'artifacts');
@@ -43,7 +43,8 @@ beforeAll(async () => {
   testSource = source;
   await cp(resolve('examples/demo'), source, {
     recursive: true,
-    filter: (path) => !path.includes('.api-docs'),
+    filter: (path) =>
+      !path.includes('.doctopus') && !path.includes('.api-docs'),
   });
   const config = join(source, 'docs.config.yaml');
   await writeFile(

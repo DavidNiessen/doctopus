@@ -22,11 +22,11 @@ export async function packNpmCandidates() {
     ).stdout.trim().length > 0;
   const destination = join(
     repository,
-    '.api-docs/npm-candidates',
+    '.doctopus/npm-candidates',
     `${commit.slice(0, 12)}-${Date.now()}`,
   );
   await mkdir(destination, { recursive: true });
-  const staging = await mkdtemp(join(tmpdir(), 'api-docs-npm-stage-'));
+  const staging = await mkdtemp(join(tmpdir(), 'doctopus-npm-stage-'));
   const directories = (await readWorkspacePackages(repository))
     .filter((pkg) => pkg.path && pkg.metadata.private !== true)
     .map((pkg) => pkg.path);
@@ -70,7 +70,7 @@ export async function packNpmCandidates() {
         await cp(join(repository, file), join(stage, file));
       await writeFile(
         join(stage, 'README.md'),
-        `# ${metadata.name}\n\nSelf-hosted API documentation platform component, version ${metadata.version}.\n\nSee the [project documentation](https://github.com/DavidNiessen/api-docs#readme), [integration guide](https://github.com/DavidNiessen/api-docs/blob/master/docs/integrations.md) and [release and distribution instructions](https://github.com/DavidNiessen/api-docs/blob/master/docs/releases.md) for support status and verification.\n\nLicensed under Apache-2.0; see LICENSE and NOTICE.\n`,
+        `# ${metadata.name}\n\nSelf-hosted API documentation platform component, version ${metadata.version}.\n\nSee the [project documentation](https://github.com/DavidNiessen/doctopus#readme), [integration guide](https://github.com/DavidNiessen/doctopus/blob/master/docs/integrations.md) and [release and distribution instructions](https://github.com/DavidNiessen/doctopus/blob/master/docs/releases.md) for support status and verification.\n\nLicensed under Apache-2.0; see LICENSE and NOTICE.\n`,
       );
       const packageMetadata = { ...metadata };
       delete packageMetadata.scripts;
@@ -83,10 +83,10 @@ export async function packNpmCandidates() {
             files: ['dist', 'src', 'LICENSE', 'NOTICE', 'README.md'],
             repository: {
               type: 'git',
-              url: 'git+https://github.com/DavidNiessen/api-docs.git',
+              url: 'git+https://github.com/DavidNiessen/doctopus.git',
               directory,
             },
-            bugs: { url: 'https://github.com/DavidNiessen/api-docs/issues' },
+            bugs: { url: 'https://github.com/DavidNiessen/doctopus/issues' },
           },
           null,
           2,
@@ -132,7 +132,7 @@ export async function packNpmCandidates() {
         ),
         `${metadata.name}: forbidden package content`,
       );
-      if (metadata.name === '@davidniessen/reader')
+      if (metadata.name === '@davidniessen/doctopus-reader')
         assert(
           files.has('dist/client/assets/reader.js') &&
             files.has('dist/client/assets/reader.css') &&

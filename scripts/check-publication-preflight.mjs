@@ -16,7 +16,7 @@ const source = await releaseSource(root, process.env, {
   workflow: 'release-publish.yml',
 });
 const plan = JSON.parse(
-  await readRegularFile(join(root, '.api-docs/publication/plan.json')),
+  await readRegularFile(join(root, '.doctopus/publication/plan.json')),
 );
 const context = { ...source, runId: plan.runId, runAttempt: plan.runAttempt };
 const candidate = await loadContainerPublication(root, context, plan);
@@ -32,11 +32,11 @@ const expected = {
   inventoryContext: await inventoryContext(candidate.image, source.version),
 };
 const verification = await verifyPublicationPreflight(
-  join(root, '.api-docs/publication-preflight'),
+  join(root, '.doctopus/publication-preflight'),
   expected,
 );
 await writeFile(
-  join(root, '.api-docs/publication/preflight-verification.json'),
+  join(root, '.doctopus/publication/preflight-verification.json'),
   JSON.stringify(verification, null, 2) + '\n',
   { flag: 'wx' },
 );

@@ -22,33 +22,33 @@ runs:
     - name: Verify the plan and prepare metadata
       shell: bash
       env:
-        API_DOCS_CANDIDATE_VERSION: ${{ inputs.version }}
-        API_DOCS_RELEASE_DATE: ${{ inputs.date }}
-        API_DOCS_INITIAL_RELEASE: ${{ inputs.initial }}
-        API_DOCS_RELEASE_BASELINE: ${{ inputs.baseline }}
-        API_DOCS_APPLY_RELEASE: ${{ inputs.apply }}
+        DOCTOPUS_CANDIDATE_VERSION: ${{ inputs.version }}
+        DOCTOPUS_RELEASE_DATE: ${{ inputs.date }}
+        DOCTOPUS_INITIAL_RELEASE: ${{ inputs.initial }}
+        DOCTOPUS_RELEASE_BASELINE: ${{ inputs.baseline }}
+        DOCTOPUS_APPLY_RELEASE: ${{ inputs.apply }}
       run: |
         set -euo pipefail
-        for value in "$API_DOCS_INITIAL_RELEASE" "$API_DOCS_APPLY_RELEASE"; do
+        for value in "$DOCTOPUS_INITIAL_RELEASE" "$DOCTOPUS_APPLY_RELEASE"; do
           if [[ "$value" != true && "$value" != false ]]; then
             echo '::error::Release boolean inputs must be true or false.'
             exit 1
           fi
         done
-        if [[ "$API_DOCS_INITIAL_RELEASE" == true && -n "$API_DOCS_RELEASE_BASELINE" ]]; then
+        if [[ "$DOCTOPUS_INITIAL_RELEASE" == true && -n "$DOCTOPUS_RELEASE_BASELINE" ]]; then
           echo '::error::Choose an initial release or an explicit baseline.'
           exit 1
         fi
-        args=(--version "$API_DOCS_CANDIDATE_VERSION" --date "$API_DOCS_RELEASE_DATE")
-        if [[ "$API_DOCS_INITIAL_RELEASE" == true ]]; then
+        args=(--version "$DOCTOPUS_CANDIDATE_VERSION" --date "$DOCTOPUS_RELEASE_DATE")
+        if [[ "$DOCTOPUS_INITIAL_RELEASE" == true ]]; then
           args+=(--initial)
-        elif [[ -n "$API_DOCS_RELEASE_BASELINE" ]]; then
-          args+=(--since "$API_DOCS_RELEASE_BASELINE")
+        elif [[ -n "$DOCTOPUS_RELEASE_BASELINE" ]]; then
+          args+=(--since "$DOCTOPUS_RELEASE_BASELINE")
         fi
-        mkdir -p .api-docs/release
-        node scripts/release-plan.mjs "${args[@]}" > .api-docs/release/plan.json
-        node scripts/release-prepare.mjs --plan .api-docs/release/plan.json > .api-docs/release/preview.json
-        if [[ "$API_DOCS_APPLY_RELEASE" == true ]]; then
-          node scripts/release-prepare.mjs --plan .api-docs/release/plan.json --apply > .api-docs/release/applied.json
+        mkdir -p .doctopus/release
+        node scripts/release-plan.mjs "${args[@]}" > .doctopus/release/plan.json
+        node scripts/release-prepare.mjs --plan .doctopus/release/plan.json > .doctopus/release/preview.json
+        if [[ "$DOCTOPUS_APPLY_RELEASE" == true ]]; then
+          node scripts/release-prepare.mjs --plan .doctopus/release/plan.json --apply > .doctopus/release/applied.json
           npm run check:versions -- --release
         fi

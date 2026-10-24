@@ -4,9 +4,9 @@ import {
   objectFieldSchema,
   serializeJsonValue,
   setJsonProperty,
-} from '@davidniessen/contracts';
-import type { Schema } from '@davidniessen/contracts';
-import { redactJsonBody } from '@davidniessen/explorer';
+} from '@davidniessen/doctopus-contracts';
+import type { Schema } from '@davidniessen/doctopus-contracts';
+import { redactJsonBody } from '@davidniessen/doctopus-explorer';
 import { bodyFieldModel } from '../apps/reader/src/body-fields.js';
 
 const person: Schema = {

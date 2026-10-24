@@ -1,5 +1,5 @@
 {
-  "name": "@davidniessen/compiler",
+  "name": "@davidniessen/doctopus-compiler",
   "version": "0.2.0-candidate.7",
   "type": "module",
   "license": "Apache-2.0",
@@ -13,11 +13,11 @@
     }
   },
   "dependencies": {
-    "@davidniessen/contracts": "0.2.0-candidate.7",
-    "@davidniessen/spec": "0.2.0-candidate.7",
-    "@davidniessen/content": "0.2.0-candidate.7",
-    "@davidniessen/plugin-sdk": "0.2.0-candidate.7",
-    "@davidniessen/search": "0.2.0-candidate.7"
+    "@davidniessen/doctopus-contracts": "0.2.0-candidate.7",
+    "@davidniessen/doctopus-spec": "0.2.0-candidate.7",
+    "@davidniessen/doctopus-content": "0.2.0-candidate.7",
+    "@davidniessen/doctopus-plugin-sdk": "0.2.0-candidate.7",
+    "@davidniessen/doctopus-search": "0.2.0-candidate.7"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"

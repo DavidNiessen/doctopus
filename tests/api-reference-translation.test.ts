@@ -2,10 +2,13 @@ import { createElement } from 'react';
 import type { ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { expect, it } from 'vitest';
-import { createUiTranslation, validUiMessage } from '@davidniessen/contracts';
-import type { ApiDocument, Operation } from '@davidniessen/contracts';
-import { parseConfig } from '@davidniessen/spec';
-import { renderDocument } from '@davidniessen/reader/render';
+import {
+  createUiTranslation,
+  validUiMessage,
+} from '@davidniessen/doctopus-contracts';
+import type { ApiDocument, Operation } from '@davidniessen/doctopus-contracts';
+import { parseConfig } from '@davidniessen/doctopus-spec';
+import { renderDocument } from '@davidniessen/doctopus-reader/render';
 import { UiContext } from '../apps/reader/src/ui-translation.js';
 import { ParameterInput } from '../apps/reader/src/components/ParameterInput.js';
 import { MediaExamples } from '../apps/reader/src/components/MediaExamples.js';

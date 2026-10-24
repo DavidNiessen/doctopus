@@ -1,6 +1,6 @@
 import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import type { ApiDocument, Diagnostic } from '@davidniessen/contracts';
+import type { ApiDocument, Diagnostic } from '@davidniessen/doctopus-contracts';
 /** Validate authored data in a bounded worker; never dereference network examples. */
 export async function checkExamples(
   api: ApiDocument,

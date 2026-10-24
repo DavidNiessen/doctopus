@@ -70,7 +70,7 @@ export function exampleFor(
   seen = new Set<Schema>(),
 ): unknown {
   if (depth > 5 || seen.has(schema)) return null;
-  if (schema['x-api-docs-boolean-schema'] === false) return null;
+  if (schema['x-doctopus-boolean-schema'] === false) return null;
   if (schema.const !== undefined) return schema.const;
   if (schema.example !== undefined) return schema.example;
   if (Array.isArray(schema.examples) && schema.examples.length)

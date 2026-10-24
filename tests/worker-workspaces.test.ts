@@ -20,8 +20,8 @@ import {
 import type { WorkspaceEnvironment } from '../apps/worker/src/workspaces.js';
 
 async function fixture() {
-  const root = await mkdtemp(join(tmpdir(), 'api-docs-worker-workspaces-'));
-  const parent = join(root, '.api-docs/worker-jobs');
+  const root = await mkdtemp(join(tmpdir(), 'doctopus-worker-workspaces-'));
+  const parent = join(root, '.doctopus/worker-jobs');
   await mkdir(parent, { recursive: true });
   let now = 1000000;
   const host: WorkspaceEnvironment = {

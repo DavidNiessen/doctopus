@@ -1,12 +1,15 @@
 import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
-import { requestAllowedOrigin, OutboundRequestError } from '@davidniessen/spec';
-import { toolVersion } from '@davidniessen/contracts';
+import {
+  requestAllowedOrigin,
+  OutboundRequestError,
+} from '@davidniessen/doctopus-spec';
+import { toolVersion } from '@davidniessen/doctopus-contracts';
 import type {
   Project,
   RelayAuditWriter,
   Role,
   RelayAudit,
-} from '@davidniessen/domain';
+} from '@davidniessen/doctopus-domain';
 import type { RelayPolicy } from './relay-policy.js';
 import { relayDestination } from './relay-policy.js';
 import { z } from 'zod';
@@ -291,7 +294,7 @@ export async function registerRelay(
             allowHttp: destination.rule.allowHttp,
             allowPrivateNetwork: destination.rule.allowPrivateNetwork,
             method: request.body.method,
-            headers: { ...headers, 'user-agent': 'api-docs/' + toolVersion },
+            headers: { ...headers, 'user-agent': 'doctopus/' + toolVersion },
             ...(body !== undefined ? { body } : {}),
             maxRequestBytes: policy.maxRequestBytes,
             maxBytes: policy.maxResponseBytes,

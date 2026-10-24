@@ -1,14 +1,14 @@
 {
-  "name": "@davidniessen/worker",
+  "name": "@davidniessen/doctopus-worker",
   "version": "0.2.0-candidate.7",
   "type": "module",
   "license": "Apache-2.0",
   "private": true,
   "dependencies": {
-    "@davidniessen/cli": "0.2.0-candidate.7",
-    "@davidniessen/compiler": "0.2.0-candidate.7",
-    "@davidniessen/contracts": "0.2.0-candidate.7",
-    "@davidniessen/domain": "0.2.0-candidate.7",
-    "@davidniessen/spec": "0.2.0-candidate.7"
+    "@davidniessen/doctopus-cli": "0.2.0-candidate.7",
+    "@davidniessen/doctopus-compiler": "0.2.0-candidate.7",
+    "@davidniessen/doctopus-contracts": "0.2.0-candidate.7",
+    "@davidniessen/doctopus-domain": "0.2.0-candidate.7",
+    "@davidniessen/doctopus-spec": "0.2.0-candidate.7"
   }
 }

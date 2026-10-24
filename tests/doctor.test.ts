@@ -3,15 +3,18 @@ import { mkdtemp, mkdir, writeFile, rm } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { stringify } from 'yaml';
-import { compileProject, auditDocumentation } from '@davidniessen/compiler';
-import { parseConfig } from '@davidniessen/spec';
-import { createPageData } from '@davidniessen/contracts';
+import {
+  compileProject,
+  auditDocumentation,
+} from '@davidniessen/doctopus-compiler';
+import { parseConfig } from '@davidniessen/doctopus-spec';
+import { createPageData } from '@davidniessen/doctopus-contracts';
 
 async function project(
   run: (root: string) => Promise<void>,
   intro = '# Intro\n\n## Setup\n\n[Next](next.md#heading-next)\n\n![Pixel](/media/pixel.png)\n',
 ) {
-  const root = await mkdtemp(join(tmpdir(), 'api-docs-doctor-'));
+  const root = await mkdtemp(join(tmpdir(), 'doctopus-doctor-'));
   try {
     await mkdir(join(root, 'guides'));
     await mkdir(join(root, 'public'));

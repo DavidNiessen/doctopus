@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { isAllowedOutboundHeader } from '@davidniessen/spec';
+import { isAllowedOutboundHeader } from '@davidniessen/doctopus-spec';
 
 const methods = [
   'GET',

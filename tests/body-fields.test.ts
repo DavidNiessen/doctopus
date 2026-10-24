@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import type { Schema } from '@davidniessen/contracts';
+import type { Schema } from '@davidniessen/doctopus-contracts';
 import {
   bodyFieldModel as createModel,
   bodyFieldLabel,

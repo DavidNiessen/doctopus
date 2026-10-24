@@ -3,8 +3,8 @@ import { mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { stringify } from 'yaml';
-import { loadSpec } from '@davidniessen/spec';
-import type { Schema } from '@davidniessen/contracts';
+import { loadSpec } from '@davidniessen/doctopus-spec';
+import type { Schema } from '@davidniessen/doctopus-contracts';
 import { validateSchemaBoundaries } from '../packages/spec/src/schema-boundaries.js';
 
 async function load(
@@ -12,7 +12,7 @@ async function load(
   mutate?: (document: Record<string, unknown>) => void,
   yaml = false,
 ) {
-  const root = await mkdtemp(join(tmpdir(), 'api-docs-schema-boundaries-'));
+  const root = await mkdtemp(join(tmpdir(), 'doctopus-schema-boundaries-'));
   try {
     const document: Record<string, unknown> = {
       openapi: '3.1.0',

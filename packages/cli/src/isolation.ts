@@ -14,20 +14,24 @@ import { dirname, join, isAbsolute, relative } from 'node:path';
 import { tmpdir } from 'node:os';
 import { randomUUID } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
-import { safeOutput, verifyArtifact } from '@davidniessen/compiler';
+import { safeOutput, verifyArtifact } from '@davidniessen/doctopus-compiler';
 import type {
   ArtifactManifest,
   IsolatedBuildLimits,
   SourceSnapshotInfo,
-} from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-contracts';
 import {
   toolVersion,
   isImmutableBuilderImage,
   isVisibleBuildConfig,
   readIsolatedBuildLimits,
-} from '@davidniessen/contracts';
-import { confinedPath, readTextFile, parseConfig } from '@davidniessen/spec';
-import { validateSiteData } from '@davidniessen/plugin-sdk';
+} from '@davidniessen/doctopus-contracts';
+import {
+  confinedPath,
+  readTextFile,
+  parseConfig,
+} from '@davidniessen/doctopus-spec';
+import { validateSiteData } from '@davidniessen/doctopus-plugin-sdk';
 import { snapshotProject } from './isolation-snapshot.js';
 import { extractIsolatedArchive } from './isolation-archive.js';
 import { activateDirectory } from './activate.js';
@@ -95,7 +99,7 @@ export async function inspectIsolatedSource(
     throw new Error('Use an AbortSignal for source inspection cancellation');
   options.signal?.throwIfAborted();
   const root = await realpath(project);
-  const temporary = await mkdtemp(join(tmpdir(), 'api-docs-source-info-'));
+  const temporary = await mkdtemp(join(tmpdir(), 'doctopus-source-info-'));
   try {
     return await snapshotProject(
       root,
@@ -202,7 +206,7 @@ export async function buildIsolatedSite(
       });
     });
   }
-  const directory = await safeOutput(root, options.output ?? '.api-docs/site');
+  const directory = await safeOutput(root, options.output ?? '.doctopus/site');
   const workspace = relative(root, dirname(directory));
   const lockPath = join(dirname(directory), '.build.lock');
   const lock = await open(lockPath, 'wx').catch(() => {
@@ -259,7 +263,7 @@ export async function buildIsolatedSite(
     if (!/^sha256:[a-f0-9]{64}$/.test(image))
       throw new Error('Unable to resolve immutable local builder image');
     phase = 'output allocation';
-    volume = 'api-docs-build-' + randomUUID();
+    volume = 'doctopus-build-' + randomUUID();
     await docker([
       'volume',
       'create',
@@ -267,7 +271,7 @@ export async function buildIsolatedSite(
       '--opt=type=tmpfs',
       '--opt=device=tmpfs',
       `--opt=o=size=${limits.outputMiB}m,nr_inodes=60000,nosuid,nodev,noexec,mode=0700,uid=1000,gid=1000`,
-      '--label=io.api-docs.isolated-output=true',
+      '--label=io.doctopus.isolated-output=true',
       volume,
     ]);
     const csv = (value: string) => '"' + value.replaceAll('"', '""') + '"';
@@ -291,7 +295,7 @@ export async function buildIsolatedSite(
       `--pids-limit=${limits.pids}`,
       '--ulimit=core=0:0',
       '--ulimit=nofile=512:512',
-      `--label=io.api-docs.isolated-job=${randomUUID()}`,
+      `--label=io.doctopus.isolated-job=${randomUUID()}`,
       '--mount',
       [
         'type=bind',
@@ -302,7 +306,7 @@ export async function buildIsolatedSite(
       '--tmpfs',
       '/tmp:rw,nosuid,nodev,noexec,size=64m,mode=0700,uid=1000,gid=1000',
       '--mount',
-      `type=volume,src=${volume},dst=/work/project/.api-docs,volume-nocopy`,
+      `type=volume,src=${volume},dst=/work/project/.doctopus,volume-nocopy`,
       '--workdir=/work/project',
       '--env=NODE_OPTIONS=',
       '--env=NODE_PATH=',
@@ -392,7 +396,7 @@ export async function buildIsolatedSite(
       [
         `--host=unix://${socket}`,
         'cp',
-        `${container}:/work/project/.api-docs/site/.`,
+        `${container}:/work/project/.doctopus/site/.`,
         '-',
       ],
       { env: environment, stdio: ['ignore', 'pipe', 'ignore'] },

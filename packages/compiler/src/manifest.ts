@@ -1,8 +1,8 @@
 import { createHash } from 'node:crypto';
 import { constants } from 'node:fs';
 import { open } from 'node:fs/promises';
-import type { ArtifactManifest } from '@davidniessen/contracts';
-import { record } from '@davidniessen/spec';
+import type { ArtifactManifest } from '@davidniessen/doctopus-contracts';
+import { record } from '@davidniessen/doctopus-spec';
 export const digest = (source: string | Buffer): string =>
   createHash('sha256').update(source).digest('hex');
 /** Static membership for decoded local paths from an already verified manifest. */

@@ -23,7 +23,7 @@ afterEach(async () => {
   );
 });
 function worker(scenario: string) {
-  const root = mkdtempSync(join(tmpdir(), 'api-docs-process-'));
+  const root = mkdtempSync(join(tmpdir(), 'doctopus-process-'));
   roots.push(root);
   const child = spawn(
     process.execPath,

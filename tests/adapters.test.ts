@@ -12,11 +12,11 @@ import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import express from 'express';
 import Fastify from 'fastify';
-import { createExpressDocs } from '@davidniessen/node/express';
-import { apiDocsPlugin } from '@davidniessen/node/fastify';
-import { buildSite } from '@davidniessen/cli';
-import { artifactIdentity } from '@davidniessen/compiler';
-import type { ArtifactManifest } from '@davidniessen/contracts';
+import { createExpressDocs } from '@davidniessen/doctopus-node/express';
+import { doctopusPlugin } from '@davidniessen/doctopus-node/fastify';
+import { buildSite } from '@davidniessen/doctopus-cli';
+import { artifactIdentity } from '@davidniessen/doctopus-compiler';
+import type { ArtifactManifest } from '@davidniessen/doctopus-contracts';
 describe.each(['', '/docs'])('framework adapters at %j', (prefix) => {
   let directory: string;
   let project: string;
@@ -31,10 +31,11 @@ describe.each(['', '/docs'])('framework adapters at %j', (prefix) => {
     '/outside-link.txt',
   ];
   beforeAll(async () => {
-    const root = (project = await mkdtemp(join(tmpdir(), 'api-docs-adapter-')));
+    const root = (project = await mkdtemp(join(tmpdir(), 'doctopus-adapter-')));
     await cp(resolve('examples/demo'), root, {
       recursive: true,
-      filter: (path) => !path.includes('.api-docs'),
+      filter: (path) =>
+        !path.includes('.doctopus') && !path.includes('.api-docs'),
     });
     const config = join(root, 'docs.config.yaml');
     await writeFile(
@@ -116,7 +117,7 @@ describe.each(['', '/docs'])('framework adapters at %j', (prefix) => {
     let authentications = 0;
     const app = Fastify();
     app.get('/host-owned', async () => 'host-owned');
-    await app.register(apiDocsPlugin, {
+    await app.register(doctopusPlugin, {
       directory,
       rateLimit: { maxRequests: 2, maxClients: 1 },
       authenticate: async (request, reply) => {
@@ -148,7 +149,7 @@ describe.each(['', '/docs'])('framework adapters at %j', (prefix) => {
 
   it('groups neighboring IPv6 clients into one documentation quota', async () => {
     const app = Fastify();
-    await app.register(apiDocsPlugin, {
+    await app.register(doctopusPlugin, {
       directory,
       rateLimit: { maxRequests: 1 },
     });
@@ -176,7 +177,7 @@ describe.each(['', '/docs'])('framework adapters at %j', (prefix) => {
 
   it('keeps distinct IPv4 clients separate and normalizes mapped IPv4 identities', async () => {
     const app = Fastify();
-    await app.register(apiDocsPlugin, {
+    await app.register(doctopusPlugin, {
       directory,
       rateLimit: { maxRequests: 1 },
     });
@@ -211,7 +212,7 @@ describe.each(['', '/docs'])('framework adapters at %j', (prefix) => {
   });
 
   it('mounts Fastify docs at a subpath and applies authentication to every asset', async () => {
-    await server.register(apiDocsPlugin, {
+    await server.register(doctopusPlugin, {
       directory,
       authenticate: async (request, reply) => {
         if (request.headers.authorization !== 'Bearer fixture')
@@ -364,7 +365,7 @@ describe.each(['', '/docs'])('framework adapters at %j', (prefix) => {
         /configuration must be listed/,
       );
       await expect(
-        probe.register(apiDocsPlugin, { directory }).ready(),
+        probe.register(doctopusPlugin, { directory }).ready(),
       ).rejects.toThrow(/configuration must be listed/);
     } finally {
       await probe.close();
@@ -381,7 +382,7 @@ describe.each(['', '/docs'])('framework adapters at %j', (prefix) => {
     const probe = Fastify();
     let listener: ReturnType<ReturnType<typeof express>['listen']> | undefined;
     try {
-      await probe.register(apiDocsPlugin, { directory });
+      await probe.register(doctopusPlugin, { directory });
       const fastifyResult = await probe.inject(prefix + '/404.html');
       expect(fastifyResult.statusCode).toBe(404);
       expect(fastifyResult.body).toBe('Not found');

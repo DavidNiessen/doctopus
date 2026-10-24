@@ -22,11 +22,11 @@ const metadataSnapshot = `SELECT json_build_object(
 
 /** Upgrade actual schema-1 containers, then recover their backup with the old image. */
 export async function verifyServerUpgrade(source) {
-  assert.match(source.project, /^api-docs-runtime-[a-f0-9]{16}$/);
+  assert.match(source.project, /^doctopus-runtime-[a-f0-9]{16}$/);
   assert.match(source.image, /^sha256:[a-f0-9]{64}$/);
   assert.match(source.baselineImage ?? '', /^sha256:[a-f0-9]{64}$/);
   assert.notEqual(source.image, source.baselineImage);
-  const root = await mkdtemp(join(tmpdir(), 'api-docs-upgrade-'));
+  const root = await mkdtemp(join(tmpdir(), 'doctopus-upgrade-'));
   const backup = join(root, 'backup');
   const environment = { ...source.environment };
   const docker = (args, input) => source.docker(args, input, { environment });
@@ -61,7 +61,7 @@ export async function verifyServerUpgrade(source) {
       );
   };
   async function prepare(kind, image, artifactBind) {
-    const project = `api-docs-${kind}-${randomUUID().replaceAll('-', '').slice(0, 16)}`;
+    const project = `doctopus-${kind}-${randomUUID().replaceAll('-', '').slice(0, 16)}`;
     const secrets = join(root, kind + '-secrets');
     const override = join(root, kind + '.json');
     const env = {
@@ -142,7 +142,7 @@ export async function verifyServerUpgrade(source) {
         'db',
         'psql',
         '--username=postgres',
-        '--dbname=apidocs',
+        '--dbname=doctopus',
         '-v',
         'ON_ERROR_STOP=1',
         '-Atc',
@@ -312,7 +312,7 @@ export async function verifyServerUpgrade(source) {
     assert.equal(await metadataDigest(original), before);
     source.step('upgrade failed migration remains atomic');
     await original.sql(
-      'SET ROLE apidocs_owner; CREATE TABLE docs_build_jobs(marker text)',
+      'SET ROLE doctopus_owner; CREATE TABLE docs_build_jobs(marker text)',
     );
     await assert.rejects(
       original.compose('run', '--rm', '-T', '--no-deps', 'migrate'),
@@ -325,7 +325,7 @@ export async function verifyServerUpgrade(source) {
       '1|t',
     );
     assert.equal(await metadataDigest(original), before);
-    await original.sql('SET ROLE apidocs_owner; DROP TABLE docs_build_jobs');
+    await original.sql('SET ROLE doctopus_owner; DROP TABLE docs_build_jobs');
     source.step('upgrade matching migration and runtime');
     await original.compose('run', '--rm', '-T', '--no-deps', 'migrate');
     assert.equal(
@@ -337,7 +337,7 @@ export async function verifyServerUpgrade(source) {
     assert.equal(await metadataDigest(original), before);
     assert.equal(
       await original.sql(
-        "SELECT has_table_privilege('apidocs_runtime','docs_build_jobs','INSERT'), has_table_privilege('apidocs_runtime','docs_audit','DELETE'), has_table_privilege('apidocs_runtime','docs_schema_migrations','UPDATE')",
+        "SELECT has_table_privilege('doctopus_runtime','docs_build_jobs','INSERT'), has_table_privilege('doctopus_runtime','docs_audit','DELETE'), has_table_privilege('doctopus_runtime','docs_schema_migrations','UPDATE')",
       ),
       't|f|f',
     );

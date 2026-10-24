@@ -1,13 +1,13 @@
 import {
   readBuildPolicy,
   readSourceSnapshotInfo,
-} from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-contracts';
 import type {
   BuildJob,
   BuildSource,
   BuildPage,
   ProjectBuildCapabilities,
-} from '@davidniessen/domain';
+} from '@davidniessen/doctopus-domain';
 export type SourceRow = Pick<
   BuildSource,
   | 'id'

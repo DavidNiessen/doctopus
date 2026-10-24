@@ -1,4 +1,4 @@
-import type { PostgresRepositoryOptions } from '@davidniessen/storage';
+import type { PostgresRepositoryOptions } from '@davidniessen/doctopus-storage';
 
 /** Operator values only; credential strings never enter error messages. */
 export function databaseOptions(

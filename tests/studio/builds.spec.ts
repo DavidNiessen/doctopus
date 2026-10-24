@@ -9,8 +9,8 @@ import {
   buildSite,
   inspectIsolatedSource,
   stageArtifact,
-} from '@davidniessen/cli';
-import { readBuildPolicy, toolVersion } from '@davidniessen/contracts';
+} from '@davidniessen/doctopus-cli';
+import { readBuildPolicy, toolVersion } from '@davidniessen/doctopus-contracts';
 import type {
   BuildJob,
   BuildLease,
@@ -18,7 +18,7 @@ import type {
   Project,
   BuildPage,
   Role,
-} from '@davidniessen/domain';
+} from '@davidniessen/doctopus-domain';
 
 const headers = () => ({
   authorization: 'Bearer ' + process.env.TEST_ROOT_TOKEN!,
@@ -115,11 +115,12 @@ test('operator approves and queues reviewed input, then explicitly publishes the
 }) => {
   test.setTimeout(90000);
   const item = await project(request);
-  const root = await mkdtemp(join(tmpdir(), 'api-docs-studio-build-'));
+  const root = await mkdtemp(join(tmpdir(), 'doctopus-studio-build-'));
   temporary.push(root);
   await cp(resolve('examples/demo'), root, {
     recursive: true,
-    filter: (file) => !file.includes('.api-docs'),
+    filter: (file) =>
+      !file.includes('.doctopus') && !file.includes('.api-docs'),
   });
   const config = join(root, 'docs.config.yaml');
   await writeFile(
@@ -159,9 +160,9 @@ test('operator approves and queues reviewed input, then explicitly publishes the
   const built = await buildSite(root);
   const artifactId = await stageArtifact(
     built.directory,
-    resolve('.api-docs/studio-test/artifacts'),
+    resolve('.doctopus/studio-test/artifacts'),
   );
-  temporary.push(resolve('.api-docs/studio-test/artifacts', artifactId));
+  temporary.push(resolve('.doctopus/studio-test/artifacts', artifactId));
   const completed = await request.post(
     `/api/projects/${item.id}/builds/${lease.job.id}/complete`,
     {
@@ -435,7 +436,7 @@ test('bounded history and source pages remain accessible without overflowing a m
     .toBe(true);
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   await page.screenshot({
-    path: '.api-docs/studio-builds-mobile.png',
+    path: '.doctopus/studio-builds-mobile.png',
     fullPage: false,
   });
 });

@@ -4,7 +4,7 @@ import type { RefObject } from 'react';
 const initial = 240;
 const minimum = 200;
 const maximum = 360;
-const storageKey = 'api-docs-studio-navigation-width';
+const storageKey = 'doctopus-studio-navigation-width';
 
 /** Resize the CSS track without rerendering the workspace or its forms. */
 export function NavigationResize({

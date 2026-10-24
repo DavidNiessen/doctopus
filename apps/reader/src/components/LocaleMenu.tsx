@@ -1,5 +1,12 @@
-import { localizePath, localeName, withBase } from '@davidniessen/contracts';
-import type { ProjectConfig, UiTranslation } from '@davidniessen/contracts';
+import {
+  localizePath,
+  localeName,
+  withBase,
+} from '@davidniessen/doctopus-contracts';
+import type {
+  ProjectConfig,
+  UiTranslation,
+} from '@davidniessen/doctopus-contracts';
 import { useUi } from '../ui-translation.js';
 import { Icon } from './Icon.js';
 
