@@ -63,9 +63,15 @@ app.get('/api/hello', (_request, response) =>
 const docs = await createExpressDocs({
   url: '/openapi.yaml',
   title: 'Harbor API',
+  description: 'API reference for Harbor services.',
   theme: 'ocean',
 });
 app.use(docs.mountPath, docs.router);
+const defaults = await createExpressDocs({
+  url: '/openapi.yaml',
+  mountPath: '/reference',
+});
+app.use(defaults.mountPath, defaults.router);
 const expressServer = app.listen(4191, '127.0.0.1');
 await new Promise((resolve) => expressServer.once('listening', resolve));
 const fastify = Fastify();
@@ -74,6 +80,7 @@ fastify.get('/api/hello', async () => ({ message: 'Hello from Fastify' }));
 await fastify.register(doctopusPlugin, {
   url: '/openapi.json',
   title: 'Harbor API',
+  description: 'API reference for Harbor services.',
   theme: 'violet',
   layout: 'classic',
   appearance: 'dark',

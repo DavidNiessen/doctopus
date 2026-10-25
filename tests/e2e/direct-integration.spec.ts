@@ -16,8 +16,18 @@ for (const [adapter, port, source] of [
       if (/page-data\.json|search-manifest\.json/.test(request.url()))
         pageData.push(request.url());
     });
-    await page.goto(`http://127.0.0.1:${port}/docs/`);
+    await page.goto(
+      `http://127.0.0.1:${port}/docs/${adapter === 'Express' ? 'index.html' : ''}`,
+    );
     await expect(page.locator('.brand')).toContainText('Harbor API');
+    await expect(page.locator('meta[name="description"]')).toHaveAttribute(
+      'content',
+      'API reference for Harbor services.',
+    );
+    if (adapter === 'Express')
+      await expect(
+        page.getByRole('heading', { name: 'Say hello', exact: true }),
+      ).toBeVisible();
     if (adapter === 'Fastify') {
       await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
       await expect(
@@ -83,4 +93,17 @@ test('direct specification failures support retry and delayed loading uses skele
   await expect(page.getByRole('alert')).toContainText('specification URL');
   await page.getByRole('button', { name: 'Try again', exact: true }).click();
   await expect(page.locator('.brand')).toContainText('Harbor API');
+});
+
+test('minimal integration uses the specification title and accepts an index.html landing page', async ({
+  page,
+}) => {
+  await page.goto('http://127.0.0.1:4191/reference/index.html');
+  await expect(page.locator('.brand')).toContainText('Source API');
+  await expect(
+    page.getByRole('heading', { name: 'Say hello', exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole('heading', { name: 'Page not found', exact: true }),
+  ).toHaveCount(0);
 });

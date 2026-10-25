@@ -176,7 +176,9 @@ function DirectReference({ config }: { config: DirectDocumentationConfig }) {
       <App
         site={site}
         initialPath={normalizePagePath(
-          location.pathname.slice(config.basePath.length) || '/',
+          location.pathname.slice(config.basePath.length) === '/index.html'
+            ? '/'
+            : location.pathname.slice(config.basePath.length) || '/',
         )}
         direct={config}
       />

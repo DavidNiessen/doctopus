@@ -1023,8 +1023,8 @@ export function App({
               ) : direct && contentPath === '/' && !activeOperation ? (
                 <article className="article">
                   <p className="eyebrow">{t('navigation.api')}</p>
-                  <h1>{activeApi?.title ?? config.name}</h1>
-                  <p>{activeApi?.description}</p>
+                  <h1>{config.name}</h1>
+                  <p>{config.description}</p>
                   <p className="subtle">{t('classic.empty')}</p>
                 </article>
               ) : preferences.layout === 'classic' &&
