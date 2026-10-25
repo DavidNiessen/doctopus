@@ -384,8 +384,8 @@ kbd {
   font-size: var(--ui-text-xs);
   margin-top: auto;
   padding: 25px 0 18px;
-  position: sticky;
-  bottom: 0;
+  flex-shrink: 0;
+  min-height: 44px;
   background: var(--bg);
 }
 .sidebar-bottom strong {
