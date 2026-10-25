@@ -19,7 +19,7 @@
   --info-text: light-dark(#244b85, #9dc2ff);
   font-family: var(--ui-font);
   color: var(--text);
-  background: var(--subtle);
+  background: var(--bg);
   font-synthesis: none;
   -webkit-font-smoothing: antialiased;
   color-scheme: light dark;
@@ -469,7 +469,7 @@ td button {
   font-weight: 600;
 }
 code {
-  font-family: ui-monospace, monospace;
+  font-family: var(--ui-mono);
   font-size: 0.9em;
 }
 .success,

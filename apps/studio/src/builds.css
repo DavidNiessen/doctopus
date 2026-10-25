@@ -46,9 +46,7 @@
   border: 1px solid var(--ui-field-border);
   border-radius: 7px;
   padding: 12px;
-  font:
-    0.875rem/1.7 ui-monospace,
-    monospace;
+  font: 0.8125rem/1.7 var(--ui-mono);
   resize: vertical;
 }
 .builds-workspace textarea:focus-visible {
@@ -65,9 +63,7 @@
   border-radius: 8px;
   max-height: 320px;
   overflow: auto;
-  font:
-    0.875rem/1.7 ui-monospace,
-    monospace;
+  font: 0.8125rem/1.7 var(--ui-mono);
 }
 .build-source {
   padding: 16px 0;
@@ -136,7 +132,8 @@
   line-height: 1.7;
 }
 .pending-build-action {
-  border-left: 3px solid var(--warning-text);
+  border-color: var(--warning-text);
+  background: var(--warning-surface);
 }
 @media (max-width: 600px) {
   .builds-workspace .build-controls {
