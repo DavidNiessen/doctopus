@@ -42,4 +42,8 @@ class ReactiveConsumerTest {
         "org.springframework.web.servlet.DispatcherServlet", false);
   }
 
+  @Test void installedReactiveStarterServesBundledDirectDocumentation() throws Exception {
+    HostProbe.exerciseDirect(Application.class, WebApplicationType.REACTIVE, "org.springframework.web.servlet.DispatcherServlet");
+  }
+
 }

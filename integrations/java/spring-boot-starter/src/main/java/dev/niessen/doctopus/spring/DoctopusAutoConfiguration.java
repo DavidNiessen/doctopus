@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.core.env.Environment;
 import org.springframework.beans.factory.ObjectProvider;
 
-/** Mounts a verified publication using the available web stack and existing host security. */
+/** Mounts the bundled API reference or a verified publication using the active web stack and host security. */
 @AutoConfiguration
 @ConditionalOnProperty(prefix = "doctopus", name = "enabled", havingValue = "true", matchIfMissing = true)
 @EnableConfigurationProperties(DoctopusProperties.class)
@@ -19,20 +19,29 @@ public class DoctopusAutoConfiguration {
   /** Create the auto-configuration discovered by Spring Boot. */
   public DoctopusAutoConfiguration() {}
   @Bean
-  Publication doctopusPublication(DoctopusProperties properties, Environment environment,
+  DoctopusSite doctopusSite(DoctopusProperties properties, Environment environment,
       ObjectProvider<DoctopusHostContext> hostContext) throws IOException {
-    if (properties.getDirectory() == null) {
-      throw new IllegalArgumentException("Set doctopus.directory to a prebuilt publication directory, or disable doctopus.enabled");
-    }
     String mount = properties.mountPrefix();
-    var publication = new Publication(Path.of(properties.getDirectory()), properties.getArtifactDigest());
     String context = hostContext.getIfAvailable(() -> new DoctopusHostContext(
         environment.getProperty("server.servlet.context-path",
             environment.getProperty("spring.webflux.base-path", "")))).prefix();
     String expected = properties.getPublicBasePath() == null ? context + mount : properties.getPublicBasePath();
-    if (!publication.basePath().equals(expected)) {
-      throw new IllegalArgumentException("Publication basePath must match the public context and docs path: " + expected);
+    if (properties.getDirectory() == null) {
+      if (properties.getArtifactDigest() != null)
+        throw new IllegalArgumentException("An artifact digest requires a prebuilt directory");
+      var options = properties.directOptions();
+      options.putIfAbsent("url", context + "/v3/api-docs");
+      var direct = new dev.niessen.doctopus.core.DirectDocumentation(options, expected);
+      return new DoctopusSite(null, direct, expected);
     }
-    return publication;
+    if (!properties.directOptions().isEmpty())
+      throw new IllegalArgumentException("Choose a prebuilt directory or direct specification settings, not both");
+    var publication = new Publication(Path.of(properties.getDirectory()), properties.getArtifactDigest());
+    if (!publication.basePath().equals(expected))
+      throw new IllegalArgumentException("Publication basePath must match the public context and docs path: " + expected);
+    return new DoctopusSite(publication, null, expected);
   }
+  @Bean
+  @ConditionalOnProperty(prefix = "doctopus", name = "directory")
+  Publication doctopusPublication(DoctopusSite site) { return site.publication(); }
 }

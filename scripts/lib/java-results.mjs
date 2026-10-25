@@ -56,5 +56,12 @@ export async function readJavaResults(javaRoot) {
       ),
     'Required manifest and host tests must execute',
   );
+  assert(
+    [
+      'dev.niessen.doctopus.core.DirectDocumentationTest',
+      'dev.niessen.doctopus.spring.DirectIntegrationTest',
+    ].every((required) => suites.some((suite) => suite.suite === required)),
+    'Required bundled direct-mode tests must execute',
+  );
   return suites;
 }

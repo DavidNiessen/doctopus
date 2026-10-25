@@ -69,6 +69,7 @@ test('installed consumers require both fresh nonzero JUnit suites without failur
     'installedStarterWorksWithOnlyMvcBehindHostSecurityAndContextPath',
     'installedMvcStarterSupportsRootMountWithAContextPrefix',
     'installedMvcStarterSupportsRootMountWithoutAContextPrefix',
+    'installedMvcStarterServesBundledDirectDocumentation',
   ];
   const summary = (tests, failures = 0, errors = 0, skipped = 0, cases = []) =>
     `<testsuite tests="${tests}" failures="${failures}" errors="${errors}" skipped="${skipped}">${cases.map((name) => `<testcase name="${name}"/>`).join('')}</testsuite>`;
@@ -76,12 +77,12 @@ test('installed consumers require both fresh nonzero JUnit suites without failur
     await assert.rejects(currentConsumerResults(directory, 'MvcConsumerTest'));
     await writeFile(publication, summary(1, 0, 0, 0, publicationCases));
     await assert.rejects(currentConsumerResults(directory, 'MvcConsumerTest'));
-    await writeFile(host, summary(3, 0, 0, 0, hostCases));
+    await writeFile(host, summary(4, 0, 0, 0, hostCases));
     const passed = await currentConsumerResults(directory, 'MvcConsumerTest');
     assert.equal(passed.length, 2);
     assert.equal(
       passed.reduce((sum, entry) => sum + entry.tests, 0),
-      4,
+      5,
     );
     for (const invalid of [
       summary(0),
@@ -97,7 +98,7 @@ test('installed consumers require both fresh nonzero JUnit suites without failur
         currentConsumerResults(directory, 'MvcConsumerTest'),
       );
     }
-    await writeFile(host, summary(3, 0, 0, 0, hostCases));
+    await writeFile(host, summary(4, 0, 0, 0, hostCases));
     await assert.rejects(
       currentConsumerResults(directory, 'ReactiveConsumerTest'),
     );

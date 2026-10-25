@@ -14,6 +14,15 @@ function metadata() {
       },
     ],
     properties: [
+      'url',
+      'title',
+      'description',
+      'theme',
+      'layout',
+      'appearance',
+      'logo',
+      'logo-dark',
+      'favicon',
       'artifact-digest',
       'directory',
       'enabled',
@@ -78,7 +87,7 @@ const options = {
 
 test('Spring metadata includes every documented property and real defaults', () => {
   const result = validateSpringMetadata(metadata());
-  assert.equal(result.length, 5);
+  assert.equal(result.length, 14);
   assert.equal(
     result.find((entry) => entry.name === 'doctopus.enabled').defaultValue,
     true,

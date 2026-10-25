@@ -383,6 +383,7 @@ export async function currentConsumerResults(directory, hostSuite) {
         'installedStarterWorksWithOnlyMvcBehindHostSecurityAndContextPath',
         'installedMvcStarterSupportsRootMountWithAContextPrefix',
         'installedMvcStarterSupportsRootMountWithoutAContextPrefix',
+        'installedMvcStarterServesBundledDirectDocumentation',
       ],
     ],
     [
@@ -391,6 +392,7 @@ export async function currentConsumerResults(directory, hostSuite) {
         'installedStarterWorksWithOnlyWebFluxBehindHostSecurityAndContextPath',
         'installedReactiveStarterSupportsRootMountWithAContextPrefix',
         'installedReactiveStarterSupportsRootMountWithoutAContextPrefix',
+        'installedReactiveStarterServesBundledDirectDocumentation',
       ],
     ],
   ]);
