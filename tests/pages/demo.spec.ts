@@ -31,6 +31,12 @@ test('static demo renders guides and direct endpoint links without backend or SP
 }) => {
   await page.goto('./');
   await expect(page.locator('.brand')).toContainText('Doctopus');
+  const stylesheet = page.locator('link[rel="stylesheet"]').first();
+  const css = await request.get(
+    new URL((await stylesheet.getAttribute('href'))!, baseURL).href,
+  );
+  expect(css.status()).toBe(200);
+  expect(css.headers()['content-type']).toContain('text/css');
   const mascot = page.locator('.brand img');
   await expect(mascot).toHaveAttribute(
     'src',
