@@ -594,13 +594,17 @@ export function App({
               <>
                 <img
                   className="brand-logo logo-light"
-                  src={direct?.logo ?? href('/media/' + config.logo)}
+                  src={safeNavigationHref(
+                    direct?.logo ?? href('/media/' + config.logo),
+                  )}
                   alt=""
                 />
                 {(direct?.logoDark || config.logoDark) && (
                   <img
                     className="brand-logo logo-dark"
-                    src={direct?.logoDark ?? href('/media/' + config.logoDark)}
+                    src={safeNavigationHref(
+                      direct?.logoDark ?? href('/media/' + config.logoDark),
+                    )}
                     alt=""
                   />
                 )}

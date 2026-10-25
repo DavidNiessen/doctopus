@@ -1,4 +1,6 @@
 import assert from 'node:assert/strict';
+import { createRequire } from 'node:module';
+import { readWorkspacePackages } from './lib/workspaces.mjs';
 import { readFile, readdir, writeFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -51,14 +53,48 @@ assert(
   packages.has('react') && packages.has('react-dom'),
   'Expected React browser bundle source maps',
 );
+// Generated CommonJS proxy source maps can omit a usable physical package path.
+// Resolve their declared owner instead of depending on npm's hoisted layout.
+async function dependencyDirectory(name) {
+  try {
+    return dirname(fileURLToPath(import.meta.resolve(name)));
+  } catch (error) {
+    if (error.code !== 'ERR_MODULE_NOT_FOUND') throw error;
+    const repository = fileURLToPath(new URL('../', import.meta.url));
+    for (const pkg of await readWorkspacePackages(repository)) {
+      if (
+        !['dependencies', 'devDependencies', 'optionalDependencies'].some(
+          (section) => Object.hasOwn(pkg.metadata[section] ?? {}, name),
+        )
+      )
+        continue;
+      try {
+        return dirname(
+          createRequire(join(repository, pkg.path, 'package.json')).resolve(
+            name,
+          ),
+        );
+      } catch (failure) {
+        if (
+          !['MODULE_NOT_FOUND', 'ERR_PACKAGE_PATH_NOT_EXPORTED'].includes(
+            failure.code,
+          )
+        )
+          throw failure;
+      }
+    }
+    throw new Error(`${name}: cannot resolve bundled dependency metadata`, {
+      cause: error,
+    });
+  }
+}
 const components = [];
 const sections = [
   'Third-party notices for the bundled browser code.\nProject code is licensed under Apache-2.0. Dependencies retain their own licenses.\n',
 ];
 for (const name of [...packages.keys()].sort()) {
   // Some ESM packages intentionally do not export package.json.
-  let directory =
-    packages.get(name) ?? dirname(fileURLToPath(import.meta.resolve(name)));
+  let directory = packages.get(name) ?? (await dependencyDirectory(name));
   let file;
   for (;;) {
     const candidate = join(directory, 'package.json');
@@ -79,7 +115,7 @@ for (const name of [...packages.keys()].sort()) {
     type: 'library',
     name,
     version: metadata.version,
-    purl: `pkg:npm/${name.replace('@', '%40')}@${metadata.version}`,
+    purl: `pkg:npm/${name.replaceAll('@', '%40')}@${metadata.version}`,
     ...(typeof metadata.license === 'string'
       ? { licenses: [{ expression: metadata.license }] }
       : {}),

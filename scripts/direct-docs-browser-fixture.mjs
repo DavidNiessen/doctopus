@@ -53,7 +53,13 @@ const spec = {
     },
   },
 };
+const logo =
+  '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><rect width="24" height="24" fill="#8b5cf6"/></svg>';
+const logoQuery = '?caption=%22%3E%3Csvg%20onload%3Dalert(1)%3E';
 const app = express();
+app.get(['/brand/logo.svg', '/brand/dark.svg'], (_request, response) =>
+  response.type('image/svg+xml').send(logo),
+);
 app.get('/openapi.yaml', (_request, response) =>
   response.type('application/yaml').send(stringify(spec)),
 );
@@ -64,6 +70,8 @@ const docs = await createExpressDocs({
   url: '/openapi.yaml',
   title: 'Harbor API',
   description: 'API reference for Harbor services.',
+  logo: '/brand/logo.svg' + logoQuery,
+  logoDark: '/brand/dark.svg' + logoQuery,
   theme: 'ocean',
 });
 app.use(docs.mountPath, docs.router);
@@ -75,12 +83,18 @@ app.use(defaults.mountPath, defaults.router);
 const expressServer = app.listen(4191, '127.0.0.1');
 await new Promise((resolve) => expressServer.once('listening', resolve));
 const fastify = Fastify();
+for (const path of ['/brand/logo.svg', '/brand/dark.svg'])
+  fastify.get(path, async (_request, reply) =>
+    reply.type('image/svg+xml').send(logo),
+  );
 fastify.get('/openapi.json', async () => spec);
 fastify.get('/api/hello', async () => ({ message: 'Hello from Fastify' }));
 await fastify.register(doctopusPlugin, {
   url: '/openapi.json',
   title: 'Harbor API',
   description: 'API reference for Harbor services.',
+  logo: '/brand/logo.svg' + logoQuery,
+  logoDark: '/brand/dark.svg' + logoQuery,
   theme: 'violet',
   layout: 'classic',
   appearance: 'dark',

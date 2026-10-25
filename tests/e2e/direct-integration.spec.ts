@@ -11,6 +11,10 @@ for (const [adapter, port, source] of [
     const pageData: string[] = [];
     let specLoads = 0;
     page.on('pageerror', (error) => failures.push(error.message));
+    page.on('dialog', async (dialog) => {
+      failures.push('Unexpected script dialog');
+      await dialog.dismiss();
+    });
     page.on('request', (request) => {
       if (new URL(request.url()).pathname === source) specLoads++;
       if (/page-data\.json|search-manifest\.json/.test(request.url()))
@@ -24,6 +28,17 @@ for (const [adapter, port, source] of [
       'content',
       'API reference for Harbor services.',
     );
+    const logo = page.locator('.brand img.logo-light');
+    await expect(logo).toHaveAttribute(
+      'src',
+      `http://127.0.0.1:${port}/brand/logo.svg?caption=%22%3E%3Csvg%20onload%3Dalert(1)%3E`,
+    );
+    await expect
+      .poll(() =>
+        logo.evaluate((image: HTMLImageElement) => image.naturalWidth),
+      )
+      .toBe(24);
+    await expect(page.locator('.brand img[onload]')).toHaveCount(0);
     if (adapter === 'Express')
       await expect(
         page.getByRole('heading', { name: 'Say hello', exact: true }),
