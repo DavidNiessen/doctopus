@@ -1,4 +1,7 @@
-import { openRequestSettings } from '../helpers/request-forms.js';
+import {
+  openSchemaControls,
+  openRequestSettings,
+} from '../helpers/request-forms.js';
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 const route =
@@ -18,7 +21,7 @@ test('array items support edits, additions and removal with precise requests and
     .getByRole('button', { name: 'JSON', exact: true })
     .click();
   await playground.getByLabel('Request body', { exact: true }).fill(raw);
-  await playground.getByRole('button', { name: 'Fields', exact: true }).click();
+  await openSchemaControls(playground);
   await expect(
     playground.getByLabel('Body tokens[0]', { exact: true }),
   ).toHaveAttribute('type', 'password');
@@ -108,9 +111,7 @@ test('array items support edits, additions and removal with precise requests and
         .getByRole('button', { name: 'JSON', exact: true })
         .click();
       await playground.getByLabel('Request body', { exact: true }).fill(sent);
-      await playground
-        .getByRole('button', { name: 'Fields', exact: true })
-        .click();
+      await openSchemaControls(playground);
     }
     await playground
       .getByLabel('Body members[0].name', { exact: true })
@@ -147,7 +148,7 @@ test('array reindexing discards incomplete drafts and mode changes restore valid
     .getByRole('button', { name: 'JSON', exact: true })
     .click();
   await playground.getByLabel('Request body', { exact: true }).fill(raw);
-  await playground.getByRole('button', { name: 'Fields', exact: true }).click();
+  await openSchemaControls(playground);
   await playground.getByLabel('Body members[1].id', { exact: true }).fill('-');
   await expect(send).toBeDisabled();
   await playground
@@ -231,7 +232,7 @@ test('root array bodies use referenced item fields and preserve exact batch requ
     .fill(
       '[{"name":"Ada","id":9007199254740993,"responseOnly":"retained","unknown":1e400},{"name":"Grace","id":2}]',
     );
-  await playground.getByRole('button', { name: 'Fields', exact: true }).click();
+  await openSchemaControls(playground);
   await expect(
     playground.getByLabel('Include body [0].responseOnly', { exact: true }),
   ).toHaveCount(0);
@@ -287,9 +288,7 @@ test('root array bodies use referenced item fields and preserve exact batch requ
         .getByRole('button', { name: 'JSON', exact: true })
         .click();
       await playground.getByLabel('Request body', { exact: true }).fill(sent);
-      await playground
-        .getByRole('button', { name: 'Fields', exact: true })
-        .click();
+      await openSchemaControls(playground);
     }
     expect(
       (
@@ -303,10 +302,10 @@ test('root array bodies use referenced item fields and preserve exact batch requ
   const body = playground.getByLabel('Request body', { exact: true });
   await body.fill('42');
   await expect(
-    playground.getByRole('button', { name: 'Fields', exact: true }),
+    playground.getByRole('button', { name: 'Form', exact: true }),
   ).toBeDisabled();
   await body.fill('[]');
-  await playground.getByRole('button', { name: 'Fields', exact: true }).click();
+  await openSchemaControls(playground);
   await playground
     .getByRole('button', { name: 'Add item to body $', exact: true })
     .click();

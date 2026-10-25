@@ -1,4 +1,7 @@
-import { openRequestSettings } from '../helpers/request-forms.js';
+import {
+  changePublishedServer,
+  openRequestSettings,
+} from '../helpers/request-forms.js';
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
@@ -156,10 +159,7 @@ test('multipart uploads send real binary files and structured parts while previe
       mimeType: 'application/octet-stream',
       buffer: bytes,
     });
-  await openRequestSettings(playground);
-  await playground
-    .getByLabel('API server', { exact: true })
-    .fill('http://127.0.0.1:4010/v1/');
+  await changePublishedServer(page, playground, 'http://127.0.0.1:4010/v1/');
   await expect(partHeader).toHaveValue('');
   await expect(
     playground.getByLabel('Upload documents', { exact: true }),

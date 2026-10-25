@@ -131,9 +131,7 @@ export function Explorer({
   const relay = useRelay(relayEndpoint, !previewOnly && !mockOnly);
   const [origin, setOrigin] = useState('');
   useEffect(() => setOrigin(location.origin), []);
-  const [server, setServer] = useState(
-    operation.servers[0] ?? 'https://api.example.com',
-  );
+  const [server] = useState(operation.servers[0] ?? 'https://api.example.com');
   const [parameterDrafts, setParameterDrafts] = useState(createParameterDrafts);
   const additionalParameters = parameterDrafts.rows;
   const previewAdditionalParameters = useMemo(
@@ -941,142 +939,126 @@ export function Explorer({
                 )}
               </>
             )}
-            <details className="request-form-section request-settings">
-              <summary>Request settings</summary>
-              <div className="request-settings-fields">
-                {operation.requestBody && (
-                  <>
-                    <label hidden={mediaTypes.length === 1}>
-                      Content type
+            {(responseTypes.length > 1 ||
+              (operation.requestBody &&
+                (mediaTypes.length > 1 ||
+                  (requestChoices.length > 0 &&
+                    (requestChoices.length > 1 ||
+                      requestChoices[0]!.id.startsWith('named:') ||
+                      !requestExample))))) && (
+              <details className="request-form-section request-settings">
+                <summary>Request settings</summary>
+                <div className="request-settings-fields">
+                  {operation.requestBody && (
+                    <>
+                      <label hidden={mediaTypes.length === 1}>
+                        Content type
+                        <select
+                          value={contentType}
+                          onChange={(event) => {
+                            setContentType(event.target.value);
+                            const media =
+                              operation.requestBody?.content[
+                                event.target.value
+                              ];
+                            const choices = media
+                              ? exampleChoices(media, api.schemas)
+                              : [];
+                            setRequestExample(choices[0]?.id ?? '');
+                            setBodyFormat(
+                              bodyInputFormat(
+                                event.target.value,
+                                choices[0]?.value,
+                              ),
+                            );
+                            setBodyRevision((current) => current + 1);
+                            setBodyFormError('');
+                            setFiles({});
+                            setPartHeaders({});
+                            setBody(
+                              choices.length
+                                ? exampleBody(
+                                    choices[0]!.value,
+                                    event.target.value,
+                                    media,
+                                    api,
+                                  )
+                                : '',
+                            );
+                          }}
+                        >
+                          {mediaTypes.map((type) => (
+                            <option key={type}>{type}</option>
+                          ))}
+                        </select>
+                      </label>
+                      {requestChoices.length > 0 &&
+                        (requestChoices.length > 1 ||
+                          requestChoices[0]!.id.startsWith('named:') ||
+                          !requestExample) && (
+                          <label>
+                            Request example
+                            <select
+                              value={requestExample}
+                              onChange={(event) => {
+                                const choice = requestChoices.find(
+                                  (item) => item.id === event.target.value,
+                                );
+                                if (choice) {
+                                  setRequestExample(choice.id);
+                                  setBodyFormat(
+                                    bodyInputFormat(contentType, choice.value),
+                                  );
+                                  setBodyRevision((current) => current + 1);
+                                  setBodyFormError('');
+                                  setFiles({});
+                                  setPartHeaders({});
+                                  setBody(
+                                    exampleBody(
+                                      choice.value,
+                                      contentType,
+                                      requestMedia,
+                                      api,
+                                    ),
+                                  );
+                                }
+                              }}
+                            >
+                              {!requestExample && (
+                                <option value="">Custom request</option>
+                              )}
+                              {requestChoices.map((choice) => (
+                                <option key={choice.id} value={choice.id}>
+                                  {choice.label}
+                                </option>
+                              ))}
+                            </select>
+                          </label>
+                        )}
+                      {requestMedia && hasExternalExamples(requestMedia) && (
+                        <p className="example-note">
+                          External examples are not loaded. Local values are
+                          shown here.
+                        </p>
+                      )}
+                    </>
+                  )}
+                  {responseTypes.length > 1 && (
+                    <label>
+                      Requested response format
                       <select
-                        value={contentType}
-                        onChange={(event) => {
-                          setContentType(event.target.value);
-                          const media =
-                            operation.requestBody?.content[event.target.value];
-                          const choices = media
-                            ? exampleChoices(media, api.schemas)
-                            : [];
-                          setRequestExample(choices[0]?.id ?? '');
-                          setBodyFormat(
-                            bodyInputFormat(
-                              event.target.value,
-                              choices[0]?.value,
-                            ),
-                          );
-                          setBodyRevision((current) => current + 1);
-                          setBodyFormError('');
-                          setFiles({});
-                          setPartHeaders({});
-                          setBody(
-                            choices.length
-                              ? exampleBody(
-                                  choices[0]!.value,
-                                  event.target.value,
-                                  media,
-                                  api,
-                                )
-                              : '',
-                          );
-                        }}
+                        value={accept}
+                        onChange={(event) => setAccept(event.target.value)}
                       >
-                        {mediaTypes.map((type) => (
+                        {responseTypes.map((type) => (
                           <option key={type}>{type}</option>
                         ))}
                       </select>
                     </label>
-                    {requestChoices.length > 0 &&
-                      (requestChoices.length > 1 ||
-                        requestChoices[0]!.id.startsWith('named:') ||
-                        !requestExample) && (
-                        <label>
-                          Request example
-                          <select
-                            value={requestExample}
-                            onChange={(event) => {
-                              const choice = requestChoices.find(
-                                (item) => item.id === event.target.value,
-                              );
-                              if (choice) {
-                                setRequestExample(choice.id);
-                                setBodyFormat(
-                                  bodyInputFormat(contentType, choice.value),
-                                );
-                                setBodyRevision((current) => current + 1);
-                                setBodyFormError('');
-                                setFiles({});
-                                setPartHeaders({});
-                                setBody(
-                                  exampleBody(
-                                    choice.value,
-                                    contentType,
-                                    requestMedia,
-                                    api,
-                                  ),
-                                );
-                              }
-                            }}
-                          >
-                            {!requestExample && (
-                              <option value="">Custom request</option>
-                            )}
-                            {requestChoices.map((choice) => (
-                              <option key={choice.id} value={choice.id}>
-                                {choice.label}
-                              </option>
-                            ))}
-                          </select>
-                        </label>
-                      )}
-                    {requestMedia && hasExternalExamples(requestMedia) && (
-                      <p className="example-note">
-                        External examples are not loaded. Local values are shown
-                        here.
-                      </p>
-                    )}
-                  </>
-                )}
-                {responseTypes.length > 1 && (
-                  <label>
-                    Requested response format
-                    <select
-                      value={accept}
-                      onChange={(event) => setAccept(event.target.value)}
-                    >
-                      {responseTypes.map((type) => (
-                        <option key={type}>{type}</option>
-                      ))}
-                    </select>
-                  </label>
-                )}
-                <label>
-                  {t('playground.server')}
-                  <input
-                    aria-label={t('playground.serverLabel')}
-                    value={server}
-                    onChange={(event) => {
-                      setServer(event.target.value);
-                      auth.clearLocal();
-                      setParameterDrafts(createParameterDrafts());
-                      controller.current?.abort();
-                      controller.current = null;
-                      setBusy(false);
-                      setResponse(undefined);
-                      setError('');
-                      if (isMultipartMediaType(contentType)) {
-                        setFiles({});
-                        setPartHeaders({});
-                        setBodyRevision((current) => current + 1);
-                      }
-                    }}
-                    spellCheck={false}
-                  />
-                </label>
-                {!operation.servers.length && (
-                  <p className="subtle">{t('playground.noServer')}</p>
-                )}
-              </div>
-            </details>
+                  )}
+                </div>
+              </details>
+            )}
           </div>
           <details className="playground-request-example">
             <summary>Request example</summary>

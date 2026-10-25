@@ -73,12 +73,13 @@
   grid-column: 1 / -1;
   grid-row: 1;
 }
-.classic-closed-try {
+.classic-header-try {
   grid-column: 2;
   grid-row: 1;
   z-index: 1;
-  align-self: center;
+  align-self: start;
   justify-self: end;
+  margin-top: 10px;
   margin-right: 44px;
   min-width: 88px;
   min-height: 36px;
@@ -180,18 +181,6 @@
   font-size: var(--ui-text-body);
   line-height: 1.8;
 }
-.classic-endpoint-actions {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-.classic-endpoint-actions > button {
-  padding: 9px 16px;
-  border-radius: 6px;
-  font-size: var(--ui-text-md);
-}
 .classic-reference-error {
   border: 1px solid var(--ui-border, var(--border));
   padding: 16px;
@@ -200,22 +189,23 @@
 @media (max-width: 600px) {
   .endpoint-disclosure > summary {
     grid-template-columns: 4.5rem minmax(0, 1fr);
-    padding: 12px 44px 68px 16px;
+    grid-template-rows: 44px auto auto;
+    padding: 12px 44px 12px 16px;
     gap: 10px;
   }
-  .endpoint-disclosure[open] > summary {
-    padding-bottom: 12px;
+  .endpoint-disclosure > summary > code {
+    grid-column: 1 / -1;
+    grid-row: 2;
   }
   .endpoint-summary,
   .classic-deprecated {
     grid-column: 1 / -1;
   }
   .endpoint-disclosure > summary > svg {
-    top: 24px;
+    top: 34px;
   }
-  .classic-closed-try {
-    align-self: end;
+  .classic-header-try {
     min-height: 44px;
-    margin-bottom: 12px;
+    margin-top: 12px;
   }
 }

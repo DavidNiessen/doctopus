@@ -150,6 +150,15 @@ export function App({
   }, [site.config.explorer?.credentialReuse, credentialSession]);
   const [path, setPath] = useState(initialPath);
   const [loading, setLoading] = useState(false);
+  const [slowLoading, setSlowLoading] = useState(false);
+  useEffect(() => {
+    if (!loading) {
+      setSlowLoading(false);
+      return;
+    }
+    const timer = setTimeout(() => setSlowLoading(true), 250);
+    return () => clearTimeout(timer);
+  }, [loading]);
   const [extensionsReady, setExtensionsReady] = useState(false);
   useEffect(() => {
     if (site.readerExtensions?.length) setExtensionsReady(true);
@@ -226,7 +235,7 @@ export function App({
   const lifecyclePage = site.lifecycle?.page;
   const navigationMode =
     preferences.layout === 'classic' && selectedNavigationMode === 'all'
-      ? activeOperation || lifecyclePage
+      ? activeOperation || lifecyclePage || (contentPath === '/' && firstApi)
         ? 'api'
         : 'docs'
       : selectedNavigationMode;
@@ -235,6 +244,40 @@ export function App({
       previous === 'all' ? 'all' : activeOperation ? 'api' : 'docs',
     );
   }, [contentPath, !!activeOperation]);
+  useEffect(() => {
+    if (
+      preferencesReady &&
+      contentPath === '/' &&
+      preferences.layout === 'modern'
+    )
+      setNavigationMode('all');
+    if (
+      !preferencesReady ||
+      preferences.layout !== 'classic' ||
+      contentPath !== '/' ||
+      !activeApi ||
+      !firstApi
+    )
+      return;
+    const controller = new AbortController();
+    void loadPage(
+      new URL(
+        docHref(operationHref(activeApi, firstApi)),
+        window.location.origin,
+      ),
+      false,
+      controller.signal,
+      true,
+    );
+    return () => controller.abort();
+  }, [
+    preferencesReady,
+    preferences.layout,
+    contentPath,
+    activeApi?.id,
+    activeApi?.version,
+    firstApi?.slug,
+  ]);
   useEffect(() => {
     const pop = () => {
       void loadPage(new URL(window.location.href), false);
@@ -436,7 +479,12 @@ export function App({
     else setSearchResults(search(searchIndex, query, filter));
   }, [query, searchIndex, searchKind, searchVersion, workerFailed]);
   useEffect(() => () => searchWorker.current?.terminate(), []);
-  async function loadPage(url: URL, push: boolean) {
+  async function loadPage(
+    url: URL,
+    push: boolean,
+    signal?: AbortSignal,
+    replace = false,
+  ) {
     const id = ++navigationId.current;
     const nextPath = normalizePagePath(
       url.pathname.slice(config.basePath.length) || '/',
@@ -447,7 +495,7 @@ export function App({
         href(
           `${nextPath.endsWith('/') ? nextPath : `${nextPath}/`}page-data.json`,
         ),
-        { credentials: 'same-origin' },
+        { credentials: 'same-origin', ...(signal ? { signal } : {}) },
       );
       if (!response.ok) throw new Error('Page data unavailable');
       const next = (await response.json()) as SiteData;
@@ -460,13 +508,16 @@ export function App({
         throw new Error('Invalid page data');
       if (id !== navigationId.current) return;
       if (push) history.pushState({}, '', url.pathname + url.search + url.hash);
+      else if (replace)
+        history.replaceState({}, '', url.pathname + url.search + url.hash);
       setSite(next);
       setPath(nextPath);
       setMobileNav(false);
       dialog.current?.close();
       window.scrollTo({ top: 0, behavior: 'instant' });
     } catch {
-      if (id === navigationId.current) window.location.assign(url.href);
+      if (id === navigationId.current && !signal?.aborted)
+        window.location.assign(url.href);
     } finally {
       if (id === navigationId.current) setLoading(false);
     }
@@ -523,11 +574,6 @@ export function App({
       onClick={navigate}
       onKeyDown={guideTabKey}
     >
-      {loading && (
-        <div className="page-loading" role="status">
-          {t('navigation.loading')}
-        </div>
-      )}
       <a href="#main-content" className="skip-link">
         {t('navigation.skip')}
       </a>
@@ -916,6 +962,7 @@ export function App({
         </div>
         <main
           id="main-content"
+          aria-busy={loading}
           className={
             lifecyclePage
               ? 'main-area lifecycle-layout'
@@ -927,182 +974,77 @@ export function App({
           }
           tabIndex={-1}
         >
-          {locale !== contentLocale && (
-            <aside className="locale-fallback" role="note">
-              <Icon name="info" size={16} />
-              <p>
-                {t('locale.fallback', {
-                  language: localeName(contentLocale),
-                  locale: localeName(locale),
-                })}
-              </p>
-            </aside>
-          )}
-          {lifecyclePage ? (
-            <DeprecationCenter
-              key={path}
-              page={lifecyclePage}
-              basePath={config.basePath + prefix}
-            />
-          ) : preferences.layout === 'classic' &&
-            activeOperation &&
-            activeApi ? (
-            <Suspense fallback={<p role="status">Loading API reference…</p>}>
-              <ClassicApiReference
-                key={`${activeApi.id}:${activeApi.version}`}
-                api={activeApi}
-                activeOperation={activeOperation}
-                apis={site.apis}
-                basePath={config.basePath}
-                operationBase={docHref(
-                  operationHref(activeApi, activeOperation),
-                ).slice(0, -activeOperation.slug.length - 1)}
-                onChooseApi={(api) => {
-                  setSelectedApi(`${api.id}:${api.version}`);
-                  if (api.operations[0])
-                    void loadPage(
-                      new URL(
-                        docHref(operationHref(api, api.operations[0])),
-                        location.origin,
-                      ),
-                      true,
-                    );
-                }}
-                renderDetails={(api, operation, prefix) => (
-                  <OperationDetails
-                    key={operation.slug}
-                    api={api}
-                    operation={operation}
-                    idPrefix={prefix}
-                    headingLevel={3}
-                  />
-                )}
-                mockOnly={site.config.explorer?.mode === 'mock'}
-                relayEndpoint={site.config.explorer?.relay}
-                credentialSession={
-                  site.config.explorer?.credentialReuse === false
-                    ? undefined
-                    : credentialSession
-                }
-                oauthClients={
-                  site.config.explorer?.oauthClients?.[activeApi.id]
-                }
-              />
-            </Suspense>
-          ) : activeOperation && activeApi ? (
-            <ResponseSelectionProvider
-              key={`${activeApi.id}:${activeApi.version}:${activeOperation.slug}`}
-              operation={activeOperation}
+          {loading && slowLoading ? (
+            <div
+              className="page-skeleton"
+              role="status"
+              aria-label={t('navigation.loading')}
             >
-              <article lang={contentLocale} className="article api-article">
-                <div className="breadcrumb">
-                  {t('navigation.api')}
-                  <Icon name="chevron" size={12} />
-                  {activeOperation.tags[0] ?? activeApi.title}
-                </div>
-                <div className="eyebrow">
-                  {activeOperation.tags[0] ?? 'API Reference'}
-                </div>
-                <h1>{activeOperation.summary}</h1>
-                <p className="page-description">
-                  {activeOperation.description ||
-                    `Use this endpoint to ${activeOperation.summary.toLowerCase()}.`}
-                </p>
-                {activeOperation.kind &&
-                  activeOperation.kind !== 'endpoint' && (
-                    <div className="callout">
-                      <Icon name="info" />
-                      <span>
-                        {activeOperation.kind === 'webhook'
-                          ? 'Webhook'
-                          : 'Callback'}
-                        : your application receives this request from the API
-                        provider.
-                        {activeOperation.callback && (
-                          <>
-                            {' '}
-                            Triggered by{' '}
-                            <code>
-                              {activeOperation.callback.operationId}
-                            </code>{' '}
-                            using{' '}
-                            <code>{activeOperation.callback.expression}</code>.
-                          </>
-                        )}
-                      </span>
-                    </div>
-                  )}
-                {site.lifecycle?.current ? (
-                  <OperationLifecycle
-                    entry={site.lifecycle.current}
-                    basePath={config.basePath + prefix}
-                  />
-                ) : (
-                  activeOperation.deprecated && (
-                    <div className="callout warning">
-                      <Icon name="info" />
-                      This endpoint is deprecated. Check the migration guide
-                      before integrating.
-                    </div>
-                  )
-                )}
-                <div className="endpoint-address">
-                  <span className={`method-badge ${activeOperation.method}`}>
-                    {activeOperation.method}
-                  </span>
-                  <code>{activeOperation.path}</code>
-                  <span className="endpoint-version">{activeApi.version}</span>
-                  <CopyButton
-                    text={activeOperation.path}
-                    label={t('api.copyPath')}
-                  />
-                  {(!activeOperation.kind ||
-                    activeOperation.kind === 'endpoint') && (
-                    <button
-                      type="button"
-                      className="try-now"
-                      aria-label={t('playground.tryEndpoint')}
-                      aria-haspopup="dialog"
-                      onClick={(event) =>
-                        playground.current?.open(event.currentTarget)
-                      }
-                    >
-                      {t('playground.try')} <Icon name="arrow" size={14} />
-                    </button>
-                  )}
-                </div>
-                <OperationDetails
-                  key={`${activeApi.id}:${activeApi.version}:${activeOperation.slug}`}
-                  api={activeApi}
-                  operation={activeOperation}
+              <h1 className="sr-only">{t('navigation.loading')}</h1>
+              <div aria-hidden="true">
+                <div className="skeleton-title" />
+                <div className="skeleton-description" />
+                <div className="skeleton-endpoint" />
+                <div className="skeleton-section" />
+                <div className="skeleton-line" />
+                <div className="skeleton-line" />
+                <div className="skeleton-line" />
+              </div>
+            </div>
+          ) : (
+            <>
+              {locale !== contentLocale && (
+                <aside className="locale-fallback" role="note">
+                  <Icon name="info" size={16} />
+                  <p>
+                    {t('locale.fallback', {
+                      language: localeName(contentLocale),
+                      locale: localeName(locale),
+                    })}
+                  </p>
+                </aside>
+              )}
+              {lifecyclePage ? (
+                <DeprecationCenter
+                  key={path}
+                  page={lifecyclePage}
+                  basePath={config.basePath + prefix}
                 />
-                <PageFooter
-                  source={activeOperation.source}
-                  config={config}
-                  path={path}
-                />
-              </article>
-              <PanelResizeHandle
-                target={layout}
-                property="--api-panel-width"
-                initial={448}
-                min={260}
-                max={560}
-                reverse
-                label={t('layout.inspector')}
-                controls="documentation-inspector"
-                storageKey={config.basePath}
-                className="inspector-resize"
-              />
-              <div className="api-examples" id="documentation-inspector">
-                {!activeOperation.kind ||
-                activeOperation.kind === 'endpoint' ? (
-                  <Playground
-                    ref={playground}
-                    key={`${activeApi.id}:${activeApi.version}:${activeOperation.slug}`}
+              ) : preferences.layout === 'classic' &&
+                activeOperation &&
+                activeApi ? (
+                <Suspense
+                  fallback={<p role="status">Loading API reference…</p>}
+                >
+                  <ClassicApiReference
+                    key={`${activeApi.id}:${activeApi.version}`}
                     api={activeApi}
-                    operation={activeOperation}
-                    basePath={site.config.basePath}
+                    activeOperation={activeOperation}
+                    apis={site.apis}
+                    basePath={config.basePath}
+                    operationBase={docHref(
+                      operationHref(activeApi, activeOperation),
+                    ).slice(0, -activeOperation.slug.length - 1)}
+                    onChooseApi={(api) => {
+                      setSelectedApi(`${api.id}:${api.version}`);
+                      if (api.operations[0])
+                        void loadPage(
+                          new URL(
+                            docHref(operationHref(api, api.operations[0])),
+                            location.origin,
+                          ),
+                          true,
+                        );
+                    }}
+                    renderDetails={(api, operation, prefix) => (
+                      <OperationDetails
+                        key={operation.slug}
+                        api={api}
+                        operation={operation}
+                        idPrefix={prefix}
+                        headingLevel={3}
+                      />
+                    )}
                     mockOnly={site.config.explorer?.mode === 'mock'}
                     relayEndpoint={site.config.explorer?.relay}
                     credentialSession={
@@ -1114,133 +1056,282 @@ export function App({
                       site.config.explorer?.oauthClients?.[activeApi.id]
                     }
                   />
-                ) : (
-                  <aside
-                    className="explorer-column"
-                    aria-label={t('api.eventExamples')}
-                  >
-                    {Object.entries(
-                      activeOperation.requestBody?.content ?? {},
-                    ).map(([type, media]) => (
-                      <MediaExamples
-                        key={type}
-                        title={t('api.incomingPayload', { type })}
-                        media={media}
-                        mediaType={type}
-                        schemas={activeApi.schemas}
+                </Suspense>
+              ) : activeOperation && activeApi ? (
+                <ResponseSelectionProvider
+                  key={`${activeApi.id}:${activeApi.version}:${activeOperation.slug}`}
+                  operation={activeOperation}
+                >
+                  <article lang={contentLocale} className="article api-article">
+                    <div className="breadcrumb">
+                      {t('navigation.api')}
+                      <Icon name="chevron" size={12} />
+                      {activeOperation.tags[0] ?? activeApi.title}
+                    </div>
+                    <div className="eyebrow">
+                      {activeOperation.tags[0] ?? 'API Reference'}
+                    </div>
+                    <h1>{activeOperation.summary}</h1>
+                    <p className="page-description">
+                      {activeOperation.description ||
+                        `Use this endpoint to ${activeOperation.summary.toLowerCase()}.`}
+                    </p>
+                    {activeOperation.kind &&
+                      activeOperation.kind !== 'endpoint' && (
+                        <div className="callout">
+                          <Icon name="info" />
+                          <span>
+                            {activeOperation.kind === 'webhook'
+                              ? 'Webhook'
+                              : 'Callback'}
+                            : your application receives this request from the
+                            API provider.
+                            {activeOperation.callback && (
+                              <>
+                                {' '}
+                                Triggered by{' '}
+                                <code>
+                                  {activeOperation.callback.operationId}
+                                </code>{' '}
+                                using{' '}
+                                <code>
+                                  {activeOperation.callback.expression}
+                                </code>
+                                .
+                              </>
+                            )}
+                          </span>
+                        </div>
+                      )}
+                    {site.lifecycle?.current ? (
+                      <OperationLifecycle
+                        entry={site.lifecycle.current}
+                        basePath={config.basePath + prefix}
                       />
-                    ))}
+                    ) : (
+                      activeOperation.deprecated && (
+                        <div className="callout warning">
+                          <Icon name="info" />
+                          This endpoint is deprecated. Check the migration guide
+                          before integrating.
+                        </div>
+                      )
+                    )}
+                    <div className="endpoint-address">
+                      <span
+                        className={`method-badge ${activeOperation.method}`}
+                      >
+                        {activeOperation.method}
+                      </span>
+                      <code>{activeOperation.path}</code>
+                      <span className="endpoint-version">
+                        {activeApi.version}
+                      </span>
+                      <CopyButton
+                        text={activeOperation.path}
+                        label={t('api.copyPath')}
+                      />
+                      {(!activeOperation.kind ||
+                        activeOperation.kind === 'endpoint') && (
+                        <button
+                          type="button"
+                          className="try-now"
+                          aria-label={t('playground.tryEndpoint')}
+                          aria-haspopup="dialog"
+                          onClick={(event) =>
+                            playground.current?.open(event.currentTarget)
+                          }
+                        >
+                          {t('playground.try')} <Icon name="arrow" size={14} />
+                        </button>
+                      )}
+                    </div>
+                    <OperationDetails
+                      key={`${activeApi.id}:${activeApi.version}:${activeOperation.slug}`}
+                      api={activeApi}
+                      operation={activeOperation}
+                    />
+                    <PageFooter
+                      source={activeOperation.source}
+                      config={config}
+                      path={path}
+                    />
+                  </article>
+                  <PanelResizeHandle
+                    target={layout}
+                    property="--api-panel-width"
+                    initial={448}
+                    min={260}
+                    max={560}
+                    reverse
+                    label={t('layout.inspector')}
+                    controls="documentation-inspector"
+                    storageKey={config.basePath}
+                    className="inspector-resize"
+                  />
+                  <div className="api-examples" id="documentation-inspector">
+                    {!activeOperation.kind ||
+                    activeOperation.kind === 'endpoint' ? (
+                      <Playground
+                        ref={playground}
+                        key={`${activeApi.id}:${activeApi.version}:${activeOperation.slug}`}
+                        api={activeApi}
+                        operation={activeOperation}
+                        basePath={site.config.basePath}
+                        mockOnly={site.config.explorer?.mode === 'mock'}
+                        relayEndpoint={site.config.explorer?.relay}
+                        credentialSession={
+                          site.config.explorer?.credentialReuse === false
+                            ? undefined
+                            : credentialSession
+                        }
+                        oauthClients={
+                          site.config.explorer?.oauthClients?.[activeApi.id]
+                        }
+                      />
+                    ) : (
+                      <aside
+                        className="explorer-column"
+                        aria-label={t('api.eventExamples')}
+                      >
+                        {Object.entries(
+                          activeOperation.requestBody?.content ?? {},
+                        ).map(([type, media]) => (
+                          <MediaExamples
+                            key={type}
+                            title={t('api.incomingPayload', { type })}
+                            media={media}
+                            mediaType={type}
+                            schemas={activeApi.schemas}
+                          />
+                        ))}
+                      </aside>
+                    )}
+                    <ResponsePreview
+                      api={activeApi}
+                      operation={activeOperation}
+                    />
+                  </div>
+                </ResponseSelectionProvider>
+              ) : activeGuide ? (
+                <>
+                  <article
+                    lang={contentLocale}
+                    className="article guide-article"
+                  >
+                    <div className="breadcrumb">
+                      {t('navigation.docs')}
+                      <Icon name="chevron" size={12} />
+                      {activeGuide.group}
+                    </div>
+                    <div className="eyebrow">{activeGuide.group}</div>
+                    <h1>{activeGuide.title}</h1>
+                    {activeGuide.description && (
+                      <p className="page-description">
+                        {activeGuide.description}
+                      </p>
+                    )}
+                    <div
+                      className="guide-content"
+                      dangerouslySetInnerHTML={{
+                        __html: guideHtml,
+                      }}
+                    />
+                    <div className="next-pages">
+                      {site.guides
+                        .filter((guide) => guide.slug !== activeGuide.slug)
+                        .slice(0, 2)
+                        .map((guide) => (
+                          <a
+                            key={guide.slug}
+                            href={docHref(guideHref(guide))}
+                            data-doc-route
+                          >
+                            <Icon name="book" />
+                            <strong>{guide.title}</strong>
+                            <span>
+                              {guide.description || t('navigation.continue')}
+                            </span>
+                            <Icon name="arrow" />
+                          </a>
+                        ))}
+                    </div>
+                    <PageFooter
+                      source={activeGuide.source}
+                      config={config}
+                      path={path}
+                    />
+                  </article>
+                  <PanelResizeHandle
+                    target={layout}
+                    property="--guide-panel-width"
+                    initial={210}
+                    min={160}
+                    max={340}
+                    reverse
+                    label={t('layout.inspector')}
+                    controls="documentation-inspector"
+                    storageKey={config.basePath}
+                    className="inspector-resize"
+                  />
+                  <aside className="page-toc" id="documentation-inspector">
+                    <h2>
+                      <Icon name="menu" size={14} />
+                      {t('navigation.onPage')}
+                    </h2>
+                    <nav>
+                      {activeGuide.headings
+                        .filter(
+                          (heading) => heading.level > 1 && heading.level < 4,
+                        )
+                        .map((heading) => (
+                          <a
+                            key={heading.id}
+                            href={safeNavigationHref(`#${heading.id}`)}
+                            className={heading.level === 3 ? 'nested' : ''}
+                          >
+                            {heading.text}
+                          </a>
+                        ))}
+                    </nav>
                   </aside>
-                )}
-                <ResponsePreview api={activeApi} operation={activeOperation} />
-              </div>
-            </ResponseSelectionProvider>
-          ) : activeGuide ? (
-            <>
-              <article lang={contentLocale} className="article guide-article">
-                <div className="breadcrumb">
-                  {t('navigation.docs')}
-                  <Icon name="chevron" size={12} />
-                  {activeGuide.group}
-                </div>
-                <div className="eyebrow">{activeGuide.group}</div>
-                <h1>{activeGuide.title}</h1>
-                {activeGuide.description && (
-                  <p className="page-description">{activeGuide.description}</p>
-                )}
-                <div
-                  className="guide-content"
-                  dangerouslySetInnerHTML={{
-                    __html: guideHtml,
-                  }}
-                />
-                <div className="next-pages">
-                  {site.guides
-                    .filter((guide) => guide.slug !== activeGuide.slug)
-                    .slice(0, 2)
-                    .map((guide) => (
-                      <a
-                        key={guide.slug}
-                        href={docHref(guideHref(guide))}
-                        data-doc-route
-                      >
-                        <Icon name="book" />
-                        <strong>{guide.title}</strong>
-                        <span>
-                          {guide.description || t('navigation.continue')}
-                        </span>
-                        <Icon name="arrow" />
-                      </a>
-                    ))}
-                </div>
-                <PageFooter
-                  source={activeGuide.source}
-                  config={config}
-                  path={path}
-                />
-              </article>
-              <PanelResizeHandle
-                target={layout}
-                property="--guide-panel-width"
-                initial={210}
-                min={160}
-                max={340}
-                reverse
-                label={t('layout.inspector')}
-                controls="documentation-inspector"
-                storageKey={config.basePath}
-                className="inspector-resize"
-              />
-              <aside className="page-toc" id="documentation-inspector">
-                <h2>
-                  <Icon name="menu" size={14} />
-                  {t('navigation.onPage')}
-                </h2>
-                <nav>
-                  {activeGuide.headings
-                    .filter((heading) => heading.level > 1 && heading.level < 4)
-                    .map((heading) => (
-                      <a
-                        key={heading.id}
-                        href={safeNavigationHref(`#${heading.id}`)}
-                        className={heading.level === 3 ? 'nested' : ''}
-                      >
-                        {heading.text}
-                      </a>
-                    ))}
-                </nav>
-              </aside>
+                </>
+              ) : (
+                <article lang={contentLocale} className="article">
+                  <div className="eyebrow">404</div>
+                  <h1>{t('navigation.notFound')}</h1>
+                  <p>{t('navigation.notFoundHelp')}</p>
+                  <a
+                    className="button-primary"
+                    href={docHref('/')}
+                    data-doc-route
+                  >
+                    {t('navigation.back')}
+                    <Icon name="arrow" />
+                  </a>
+                </article>
+              )}
+              {extensionsReady && !!site.readerExtensions?.length && (
+                <Suspense fallback={null}>
+                  <ReaderExtensions
+                    assets={site.readerExtensions}
+                    basePath={config.basePath}
+                    page={{
+                      path,
+                      title: pageMetadata(site, path).title,
+                      locale,
+                      kind: lifecyclePage
+                        ? 'lifecycle'
+                        : activeOperation
+                          ? 'operation'
+                          : activeGuide
+                            ? 'guide'
+                            : 'not-found',
+                    }}
+                  />
+                </Suspense>
+              )}
             </>
-          ) : (
-            <article lang={contentLocale} className="article">
-              <div className="eyebrow">404</div>
-              <h1>{t('navigation.notFound')}</h1>
-              <p>{t('navigation.notFoundHelp')}</p>
-              <a className="button-primary" href={docHref('/')} data-doc-route>
-                {t('navigation.back')}
-                <Icon name="arrow" />
-              </a>
-            </article>
-          )}
-          {extensionsReady && !!site.readerExtensions?.length && (
-            <Suspense fallback={null}>
-              <ReaderExtensions
-                assets={site.readerExtensions}
-                basePath={config.basePath}
-                page={{
-                  path,
-                  title: pageMetadata(site, path).title,
-                  locale,
-                  kind: lifecyclePage
-                    ? 'lifecycle'
-                    : activeOperation
-                      ? 'operation'
-                      : activeGuide
-                        ? 'guide'
-                        : 'not-found',
-                }}
-              />
-            </Suspense>
           )}
         </main>
       </div>

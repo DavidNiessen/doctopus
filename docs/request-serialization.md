@@ -34,7 +34,7 @@ Optional documented query/header rows can be removed without changing the specif
 
 Custom query values are literal text. Repeated names preserve their order, and an enabled empty value sends `name=`. Custom header names are case-insensitive; duplicate active custom header rows produce an error. Browser-controlled headers retain the restrictions below. Authentication-owned fields must use the authentication controls, and a request body's Content-Type must use the body format control. A custom Accept header can override the default response format.
 
-Additional rows stay in memory for the open modal. Changing the API server or closing the modal clears them; they are not stored with reader preferences. Credential-like custom names, including Authorization, API keys and tokens, have masked value inputs and placeholders in displayed/copied URLs and generated snippets. Sending uses the entered values.
+Additional rows stay in memory for the open modal. Navigating to a different published destination or closing the modal clears them; they are not stored with reader preferences. Credential-like custom names, including Authorization, API keys and tokens, have masked value inputs and placeholders in displayed/copied URLs and generated snippets. Sending uses the entered values.
 
 SDK callers can supply the same literal rows to `prepareRequest`:
 

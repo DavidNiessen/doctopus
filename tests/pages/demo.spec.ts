@@ -1,4 +1,4 @@
-import { openRequestSettings } from '../helpers/request-forms.js';
+import { changePublishedServer } from '../helpers/request-forms.js';
 import { test, expect } from '@playwright/test';
 import type { Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
@@ -71,7 +71,7 @@ test('static demo renders guides and direct endpoint links without backend or SP
   ).toBe(404);
 });
 
-test('Send mock stays local after server edits and supports highlighted, folded fullscreen copying', async ({
+test('Send mock stays local after published server changes and supports highlighted, folded fullscreen copying', async ({
   page,
 }) => {
   await page.addInitScript(() =>
@@ -92,10 +92,11 @@ test('Send mock stays local after server edits and supports highlighted, folded 
     playground.getByLabel('bearerAuth credential', { exact: true }),
   ).toBeVisible();
   await expect(playground.locator('.relay-controls')).toHaveCount(0);
-  await openRequestSettings(playground);
-  await playground
-    .getByLabel('API server', { exact: true })
-    .fill('https://example.com/never-call-this');
+  await changePublishedServer(
+    page,
+    playground,
+    'https://example.com/never-call-this',
+  );
   await playground
     .getByRole('button', { name: 'Send mock request', exact: true })
     .click();
@@ -174,7 +175,10 @@ test('POST, DELETE and classic playgrounds remain mock-only with no live confirm
   await expect(list.locator('.endpoint-disclosure')).toHaveCount(5);
   const row = list.locator('#classic-0-list-projects');
   await row.locator('summary').click();
-  await row.getByRole('button', { name: 'Try now', exact: true }).click();
+  await row
+    .locator('..')
+    .getByRole('button', { name: 'Try now', exact: true })
+    .click();
   await page
     .getByRole('button', { name: 'Send mock request', exact: true })
     .click();
@@ -249,4 +253,42 @@ test('documentation and deep endpoint pages remain readable without JavaScript',
   } finally {
     await context.close();
   }
+});
+
+test('site root selects API Reference for classic and All for modern', async ({
+  page,
+}) => {
+  await page.goto('');
+  await page
+    .getByRole('button', { name: 'Open reader settings', exact: true })
+    .click();
+  await page
+    .getByRole('combobox', { name: 'Documentation layout', exact: true })
+    .selectOption('classic');
+  await page.keyboard.press('Escape');
+  await expect(
+    page.getByRole('region', { name: 'API endpoint reference' }),
+  ).toBeVisible();
+  await page.goto('');
+  const tabs = page.getByRole('navigation', { name: 'Documentation sections' });
+  await expect(
+    tabs.getByRole('button', { name: 'API Reference', exact: true }),
+  ).toHaveAttribute('aria-pressed', 'true');
+  await expect(
+    page.getByRole('region', { name: 'API endpoint reference' }),
+  ).toBeVisible();
+  await page
+    .getByRole('button', { name: 'Open reader settings', exact: true })
+    .click();
+  await page
+    .getByRole('combobox', { name: 'Documentation layout', exact: true })
+    .selectOption('modern');
+  await page.keyboard.press('Escape');
+  await page.goto('');
+  await expect(
+    tabs.getByRole('button', { name: 'All', exact: true }),
+  ).toHaveAttribute('aria-pressed', 'true');
+  await expect(
+    page.getByRole('heading', { name: 'Welcome to Doctopus', exact: true }),
+  ).toBeVisible();
 });

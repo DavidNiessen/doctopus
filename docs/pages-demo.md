@@ -19,7 +19,7 @@ explorer:
   mode: mock
 ```
 
-This mode prevents the reader's Send action from reaching live fetch/relay transport. Authentication controls and relay selection are unavailable. Changing the displayed API server cannot enable live requests. No credentials, backend or database are required. Mock generation ignores request inputs and does not create, update or delete resources. The illustrative `demo.orbit.invalid` address has no live service. Static page, asset and search requests still load from GitHub Pages.
+This mode prevents the reader's Send action from reaching live fetch/relay transport. Authentication controls and relay selection are unavailable. The displayed URL is read-only; even a changed published server cannot enable live requests. No credentials, backend or database are required. Mock generation ignores request inputs and does not create, update or delete resources. The illustrative `demo.orbit.invalid` address has no live service. Static page, asset and search requests still load from GitHub Pages.
 
 Ordinary projects retain live sending by default; `explorer.mode: live` makes that choice explicit. Local mock-preview controls remain available alongside live sending. Mock mode is a demonstration feature, not a browser network sandbox for arbitrary custom scripts or styles.
 

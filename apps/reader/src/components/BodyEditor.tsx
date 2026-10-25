@@ -8,7 +8,6 @@ import {
 import type { JsonValueNode, Schema } from '@davidniessen/doctopus-contracts';
 import type { ReactNode } from 'react';
 import { BodyForm } from './BodyForm.js';
-import { Icon } from './Icon.js';
 import {
   BodyBranchContext as BranchContext,
   BodyBranchSelector as BranchSelector,
@@ -704,8 +703,11 @@ export function BodyEditor({
     (!('fields' in model) ||
       (model.value.entries.length <= 100 &&
         !model.value.entries.some(([name]) => !name)));
-  const shownMode =
-    available && (mode !== 'form' || formAvailable) ? mode : 'json';
+  const shownMode = available
+    ? mode === 'form' && !formAvailable
+      ? 'fields'
+      : mode
+    : 'json';
   useEffect(() => {
     if (!available) setMode('json');
   }, [available]);
@@ -801,22 +803,11 @@ export function BodyEditor({
           </button>
           <button
             type="button"
-            aria-pressed={shownMode === 'form'}
-            disabled={!formAvailable}
+            aria-pressed={shownMode !== 'json'}
+            disabled={!available}
             onClick={() => setMode('form')}
           >
             Form
-          </button>
-          <button
-            type="button"
-            aria-label="Fields"
-            title="Advanced schema fields"
-            className="body-advanced-fields"
-            aria-pressed={shownMode === 'fields'}
-            disabled={!available || ('fields' in model && !model.fields.length)}
-            onClick={() => setMode('fields')}
-          >
-            <Icon name="settings" size={14} />
           </button>
         </div>
         {shownMode === 'json' || !available ? (
@@ -833,39 +824,57 @@ export function BodyEditor({
             </label>
             {!available && <p className="subtle">{model.error}</p>}
           </>
-        ) : shownMode === 'form' && 'fields' in model ? (
-          <BodyForm
-            key={revision}
-            value={model.value}
-            fields={model.formFields}
-            required={model.required}
-            onChange={onChange}
-            onError={(error) => fieldError('form', error)}
-          />
         ) : (
-          <fieldset className="body-fields" key={revision}>
-            <legend>Request fields</legend>
-            {'fields' in model ? (
-              <ObjectFields
-                model={model}
-                onChange={(value) => onChange(serializeJsonValue(value, true))}
-                onError={fieldError}
-              />
-            ) : (
-              <ArrayFields
-                model={model}
-                path={[]}
-                onChange={(value) => onChange(serializeJsonValue(value, true))}
-                onError={fieldError}
+          <>
+            {shownMode === 'form' && 'fields' in model && (
+              <BodyForm
+                key={revision}
+                value={model.value}
+                fields={model.formFields}
+                required={model.required}
+                onChange={onChange}
+                onError={(error) => fieldError('form', error)}
               />
             )}
-            {errors.current.size > 0 && (
-              <p className="subtle">
-                Fix incomplete field values before sending, or return to JSON to
-                use the last valid values.
-              </p>
-            )}
-          </fieldset>
+            <details
+              className="body-schema-fields"
+              open={shownMode === 'fields' || !('fields' in model)}
+              onToggle={(event) =>
+                setMode(event.currentTarget.open ? 'fields' : 'form')
+              }
+            >
+              <summary>Schema controls</summary>
+              {(shownMode === 'fields' || !('fields' in model)) && (
+                <fieldset className="body-fields" key={revision}>
+                  <legend>Request fields</legend>
+                  {'fields' in model ? (
+                    <ObjectFields
+                      model={model}
+                      onChange={(value) =>
+                        onChange(serializeJsonValue(value, true))
+                      }
+                      onError={fieldError}
+                    />
+                  ) : (
+                    <ArrayFields
+                      model={model}
+                      path={[]}
+                      onChange={(value) =>
+                        onChange(serializeJsonValue(value, true))
+                      }
+                      onError={fieldError}
+                    />
+                  )}
+                  {errors.current.size > 0 && (
+                    <p className="subtle">
+                      Fix incomplete field values before sending, or return to
+                      JSON to use the last valid values.
+                    </p>
+                  )}
+                </fieldset>
+              )}
+            </details>
+          </>
         )}
       </details>
     </BranchContext.Provider>

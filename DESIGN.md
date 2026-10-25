@@ -225,7 +225,7 @@ Studio uses a flat header with a measured CSS height, a default 240px rail adjus
 
 Studio tables retain a minimum 720px table inside a labeled, focusable local scroll region, including mobile layouts. Do not cause page-wide overflow. Shared control height is 36px, becoming 44px at 760px and below or for a coarse pointer; compact example-toolbar controls have their own observed sizing. Preserve those component-specific rules rather than treating every small toolbar as a full form row.
 
-Classic endpoint rows align descriptions in a common grid column. Closed rows expose a separate, keyboard-accessible Try now button beside the disclosure, with explicit loading and retry states; the button is outside the native summary.
+Classic endpoint rows align descriptions in a common grid column. Each endpoint header retains the same keyboard-accessible Try now button in both disclosure states, with explicit loading and retry states; the button is outside the native summary.
 
 Classic reference remains an alternate layout: a maximum 1600px shell, navigation `min(250px, 26vw)`, no resize controls, examples below the article, and hidden contents rail. Its mobile main padding is 24px 16px.
 
@@ -255,13 +255,13 @@ Inputs, selects and textareas use resolved background/text, a field-border role 
 
 ### Navigation
 
-Reader links use compact method badges and a restrained accent tint for the active endpoint. Top-level reader tabs are underlined. Modern mode orders All, API Reference, Documentation; classic mode orders API Reference, Documentation and omits All. Classic mode selects the section corresponding to the current page. Studio navigation uses the same font and rounded selection rhythm. Mobile reader navigation is a drawer; mobile Studio navigation scrolls horizontally. Keep current-item semantics and visible keyboard focus.
+Reader links use compact method badges and a restrained accent tint for the active endpoint. Top-level reader tabs are underlined. Modern mode orders All, API Reference, Documentation; classic mode orders API Reference, Documentation and omits All. Classic mode selects API Reference at the site root; explicit guide links select Documentation. Modern mode defaults to All. Studio navigation uses the same font and rounded selection rhythm. Mobile reader navigation is a drawer; mobile Studio navigation scrolls horizontally. Keep current-item semantics and visible keyboard focus.
 
 Resize handles are keyboard-focusable separators with labels and current/minimum/maximum values. Arrow keys adjust widths; Shift increases the step; Home/End choose bounds; double-click restores the initial width. Width persistence is optional when browser storage is unavailable.
 
 ### Chips / Metadata
 
-HTTP methods carry semantic color pairs. Their shared badge uses 0.75rem text, a 1.5rem minimum height, a 2.75rem minimum width and 0.375rem corners. Sidebar rows retain their navigation height without shrinking the badge text; longer method names expand the badge rather than clipping. Type and required badges remain compact metadata beside the actual field label. Studio publication/build badges describe real state using the corresponding semantic role; cancelled builds use neutral roles.
+HTTP methods carry semantic color pairs. Their shared badge uses the same local monospace face as endpoint paths with 0.75rem text, a 1.5rem minimum height, a 2.75rem minimum width and 0.375rem corners. Sidebar rows retain their navigation height without shrinking the badge text; longer method names expand the badge rather than clipping. Type and required badges remain compact metadata beside the actual field label. Studio publication/build badges describe real state using the corresponding semantic role; cancelled builds use neutral roles.
 
 ### Code / Response Examples
 
@@ -292,3 +292,5 @@ Use native dialogs for focused settings, playground and fullscreen tasks. Settin
 - **Don't** replace meaningful tables with narrow mobile cards or hide columns to fit the viewport.
 - **Don't** add nonfunctional assistant controls, decorative dashboard charts or invented product claims.
 - **Don't** introduce font CDN or icon runtime requests.
+
+Page navigation retains the current page for quick fetches and displays an inline, theme-aware skeleton after 250ms. It uses a busy main region with a localized loading status, without a fixed loading toast. Request URLs are read-only and retain full-copy support. Body editing exposes Form and JSON; schema controls remain available within Form.
