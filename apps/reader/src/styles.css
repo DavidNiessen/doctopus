@@ -391,12 +391,9 @@ kbd {
 .sidebar-bottom strong {
   font-weight: 600;
 }
-.open-source-label {
-  font-size: var(--ui-text-xs);
-  border: 1px solid var(--ui-border, var(--border));
-  border-radius: 3px;
-  padding: 2px 4px;
-  margin-left: auto;
+.sidebar-bottom:hover strong {
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 .version-select {
   display: grid;
@@ -1497,9 +1494,6 @@ h3 {
   .header-actions {
     gap: 15px;
   }
-  .open-source-label {
-    display: none;
-  }
   .search-trigger {
     width: 290px;
   }
@@ -2092,8 +2086,8 @@ h3 {
   color: var(--muted);
 }
 .playground-dialog {
-  width: min(1280px, calc(100vw - 80px));
-  height: min(900px, calc(100dvh - 80px));
+  width: min(1600px, calc(100vw - 32px));
+  height: min(1100px, calc(100dvh - 32px));
   max-width: none;
   max-height: none;
   margin: auto;
