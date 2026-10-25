@@ -160,7 +160,7 @@ components:
 
 ## Overview
 
-**Creative North Star: "Familiar, precise documentation software"**
+**Creative North Star: "Familiar, precise documentation software"** guides the reader and operational workspace.
 
 Doctopus uses a centered, flat documentation canvas and a practical operating workspace. Typography, quiet dividers and restrained surface changes organize the interface. The violet octopus assets retain the product identity while the default reference uses mint accents; published branding and the prepared alternate palettes remain supported.
 
@@ -272,7 +272,7 @@ Use native dialogs for focused settings, playground and fullscreen tasks. Settin
 
 ## Do's and Don'ts
 
-### Do:
+### Do
 
 - **Do** preserve Doctopus naming and the violet octopus identity assets.
 - **Do** apply published or prepared palette roles consistently to text, controls, tables and code.
@@ -280,7 +280,7 @@ Use native dialogs for focused settings, playground and fullscreen tasks. Settin
 - **Do** preserve keyboard and pointer resizing, native dialog behavior, clipboard fidelity, folding and fullscreen behavior.
 - **Do** keep table overflow local, focusable and labeled, and preserve localization and text zoom.
 
-### Don't:
+### Don't
 
 - **Don't** wrap the main reading article in a decorative card.
 - **Don't** add decorative kickers to the settings heading or promote leftover eyebrow selectors into a reusable pattern.
