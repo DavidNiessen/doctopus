@@ -2,7 +2,7 @@
   "name": "doctopus",
   "version": "0.2.0-candidate.7",
   "private": true,
-  "description": "Doctopus — beautiful, self-hosted API documentation with an interactive playground and framework integrations.",
+  "description": "Doctopus \u2014 beautiful, self-hosted API documentation with an interactive playground and framework integrations.",
   "type": "module",
   "engines": {
     "node": ">=24.22.1 <25",
@@ -18,7 +18,7 @@
     "lint:js": "eslint . --max-warnings=0",
     "lint:markdown": "node scripts/lint-markdown.mjs",
     "check:pr-title": "node scripts/check-pr-title.mjs",
-    "build:packages": "tsc -b",
+    "build:packages": "node scripts/build-spec-browser-validator.mjs && tsc -b",
     "typecheck": "tsc -b && tsc -p tsconfig.tests.json",
     "test": "npm run build && vitest run",
     "build": "npm run build:packages && npm run build:client -w @davidniessen/doctopus-reader && npm run build:client -w @davidniessen/doctopus-studio",
