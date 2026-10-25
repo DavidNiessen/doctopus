@@ -623,7 +623,8 @@ export function Explorer({
       </aside>
     );
   return (
-    <aside
+    <div
+      role="region"
       className="explorer playground-workspace"
       aria-label={t('playground.label')}
     >
@@ -1160,6 +1161,6 @@ export function Explorer({
           </div>
         </section>
       </div>
-    </aside>
+    </div>
   );
 }

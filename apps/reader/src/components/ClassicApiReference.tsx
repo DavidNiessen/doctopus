@@ -18,6 +18,26 @@ import { Icon } from './Icon.js';
 import { useUi } from '../ui-translation.js';
 
 type Expanded = { api: ApiDocument; operation: Operation };
+async function loadOperation(
+  slug: string,
+  api: ApiDocument,
+  activeOperation: Operation,
+  operationBase: string,
+  basePath: string,
+  signal: AbortSignal,
+): Promise<Expanded> {
+  if (slug === activeOperation.slug) return { api, operation: activeOperation };
+  return readExpandedOperation(
+    await referenceJson(
+      `${operationBase}${slug}/page-data.json`,
+      signal,
+      16 * 1024 * 1024,
+    ),
+    api,
+    slug,
+    basePath,
+  );
+}
 const fragment = () => {
   const match = /^#classic-(\d{1,4})-([a-z0-9-]{1,512})$/.exec(location.hash);
   return match ? { page: Number(match[1]), slug: match[2]! } : undefined;
@@ -70,12 +90,60 @@ export default function ClassicApiReference({
   const playground = useRef<PlaygroundHandle>(null);
   const tryButton = useRef<HTMLButtonElement>(null);
   const versionSelect = useRef<HTMLSelectElement>(null);
+  const openingRequest = useRef<AbortController | null>(null);
+  const returnTrigger = useRef<HTMLElement | null>(null);
+  const [opening, setOpening] = useState<string | null>(null);
+  const [tryError, setTryError] = useState<{
+    slug: string;
+    trigger: HTMLButtonElement;
+  } | null>(null);
+  useEffect(() => {
+    setOpening(null);
+    setTryError(null);
+    return () => {
+      openingRequest.current?.abort();
+      openingRequest.current = null;
+    };
+  }, [api.id, api.version, operationBase, activeOperation.slug, page]);
+  async function openClosed(row: OperationRow, trigger: HTMLButtonElement) {
+    openingRequest.current?.abort();
+    const controller = new AbortController();
+    openingRequest.current = controller;
+    setOpening(row.slug);
+    setTryError(null);
+    try {
+      const next = await loadOperation(
+        row.slug,
+        api,
+        activeOperation,
+        operationBase,
+        basePath,
+        controller.signal,
+      );
+      if (next.operation.kind && next.operation.kind !== 'endpoint')
+        throw new Error('This operation does not accept outbound requests');
+      if (!controller.signal.aborted && openingRequest.current === controller)
+        setSelection({ ...next, trigger });
+    } catch {
+      if (!controller.signal.aborted && openingRequest.current === controller)
+        setTryError({ slug: row.slug, trigger });
+    } finally {
+      if (openingRequest.current === controller) {
+        openingRequest.current = null;
+        setOpening(null);
+      }
+    }
+  }
   const hadSelection = useRef(false);
   useEffect(() => {
-    if (!selection && hadSelection.current)
-      (tryButton.current ?? versionSelect.current)?.focus({
-        preventScroll: true,
-      });
+    if (selection)
+      returnTrigger.current =
+        selection.trigger ?? tryButton.current ?? versionSelect.current;
+    else if (hadSelection.current)
+      (returnTrigger.current?.isConnected
+        ? returnTrigger.current
+        : (tryButton.current ?? versionSelect.current)
+      )?.focus({ preventScroll: true });
     hadSelection.current = !!selection;
   }, [selection]);
   const index = api.operationIndex;
@@ -146,19 +214,14 @@ export default function ClassicApiReference({
     setDetails(null);
     setDetailError(false);
     void (async () => {
-      const next =
-        expanded === activeOperation.slug
-          ? { api, operation: activeOperation }
-          : readExpandedOperation(
-              await referenceJson(
-                `${operationBase}${expanded}/page-data.json`,
-                controller.signal,
-                16 * 1024 * 1024,
-              ),
-              api,
-              expanded,
-              basePath,
-            );
+      const next = await loadOperation(
+        expanded,
+        api,
+        activeOperation,
+        operationBase,
+        basePath,
+        controller.signal,
+      );
       if (!controller.signal.aborted) setDetails(next);
     })().catch(() => {
       if (!controller.signal.aborted) setDetailError(true);
@@ -310,84 +373,117 @@ export default function ClassicApiReference({
           {rows
             .filter((row) => row.tag === group)
             .map((row) => (
-              <details
-                className={`endpoint-disclosure method-${row.method}`}
-                id={`classic-${page}-${row.slug}`}
-                key={row.slug}
-                open={expanded === row.slug}
-                onToggle={(event) => {
-                  if (event.currentTarget.open) {
-                    setDetailError(false);
-                    setExpanded(row.slug);
-                  } else
-                    setExpanded((current) =>
-                      current === row.slug ? null : current,
-                    );
-                }}
-              >
-                <summary>
-                  <span className={`method-badge ${row.method}`}>
-                    {row.method}
-                  </span>
-                  <code>{row.path}</code>
-                  <span className="endpoint-summary">{row.summary}</span>
-                  {row.deprecated && (
-                    <span className="classic-deprecated">
-                      {t('classic.deprecated')}
+              <div className="classic-endpoint-row" key={row.slug}>
+                <details
+                  className={`endpoint-disclosure method-${row.method}`}
+                  id={`classic-${page}-${row.slug}`}
+                  open={expanded === row.slug}
+                  onToggle={(event) => {
+                    if (event.currentTarget.open) {
+                      setDetailError(false);
+                      setExpanded(row.slug);
+                    } else
+                      setExpanded((current) =>
+                        current === row.slug ? null : current,
+                      );
+                  }}
+                >
+                  <summary id={`classic-${page}-${row.slug}-summary`}>
+                    <span className={`method-badge ${row.method}`}>
+                      {row.method}
                     </span>
-                  )}
-                  <Icon name="chevron" size={18} />
-                </summary>
-                {expanded === row.slug && (
-                  <div className="classic-endpoint-content">
-                    {(!details || details.operation.slug !== row.slug) &&
-                      !detailError && (
-                        <p role="status">{t('classic.detailsLoading')}</p>
-                      )}
-                    {detailError && (
-                      <div role="alert">
-                        <p>{t('classic.detailsError')}</p>
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setDetailRevision((value) => value + 1)
-                          }
-                        >
-                          {t('classic.detailsRetry')}
-                        </button>
-                      </div>
+                    <code>{row.path}</code>
+                    <span className="endpoint-summary">{row.summary}</span>
+                    {row.deprecated && (
+                      <span className="classic-deprecated">
+                        {t('classic.deprecated')}
+                      </span>
                     )}
-                    {details && details.operation.slug === row.slug && (
-                      <>
-                        <div className="classic-endpoint-actions">
-                          {(!details.operation.kind ||
-                            details.operation.kind === 'endpoint') && (
-                            <button
-                              ref={tryButton}
-                              className="button-primary"
-                              type="button"
-                              onClick={(event) =>
-                                setSelection({
-                                  ...details,
-                                  trigger: event.currentTarget,
-                                })
-                              }
-                            >
-                              {t('playground.try')}
-                            </button>
-                          )}
-                        </div>
-                        <p>{details.operation.description}</p>
-                        {renderDetails(
-                          details.api,
-                          details.operation,
-                          `classic-${row.slug}-`,
+                    <Icon name="chevron" size={18} />
+                  </summary>
+                  {expanded === row.slug && (
+                    <div className="classic-endpoint-content">
+                      {(!details || details.operation.slug !== row.slug) &&
+                        !detailError && (
+                          <p role="status">{t('classic.detailsLoading')}</p>
                         )}
-                      </>
-                    )}
+                      {detailError && (
+                        <div role="alert">
+                          <p>{t('classic.detailsError')}</p>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setDetailRevision((value) => value + 1)
+                            }
+                          >
+                            {t('classic.detailsRetry')}
+                          </button>
+                        </div>
+                      )}
+                      {details && details.operation.slug === row.slug && (
+                        <>
+                          <div className="classic-endpoint-actions">
+                            {(!details.operation.kind ||
+                              details.operation.kind === 'endpoint') && (
+                              <button
+                                ref={tryButton}
+                                className="button-primary"
+                                type="button"
+                                onClick={(event) =>
+                                  setSelection({
+                                    ...details,
+                                    trigger: event.currentTarget,
+                                  })
+                                }
+                              >
+                                {t('playground.try')}
+                              </button>
+                            )}
+                          </div>
+                          <p>{details.operation.description}</p>
+                          {renderDetails(
+                            details.api,
+                            details.operation,
+                            `classic-${row.slug}-`,
+                          )}
+                        </>
+                      )}
+                    </div>
+                  )}
+                </details>
+                {expanded !== row.slug &&
+                  (!row.kind || row.kind === 'endpoint') && (
+                    <button
+                      className="button-primary classic-closed-try"
+                      type="button"
+                      aria-haspopup="dialog"
+                      aria-describedby={`classic-${page}-${row.slug}-summary`}
+                      aria-busy={opening === row.slug}
+                      aria-label={t('playground.try')}
+                      disabled={opening === row.slug}
+                      onClick={(event) =>
+                        void openClosed(row, event.currentTarget)
+                      }
+                    >
+                      {t(
+                        opening === row.slug
+                          ? 'classic.opening'
+                          : 'playground.try',
+                      )}
+                    </button>
+                  )}
+                {tryError?.slug === row.slug && (
+                  <div className="classic-try-error" role="alert">
+                    <p>{t('classic.detailsError')}</p>
+                    <button
+                      type="button"
+                      onClick={() => void openClosed(row, tryError.trigger)}
+                    >
+                      {t('classic.detailsRetry')}
+                    </button>
                   </div>
                 )}
-              </details>
+              </div>
             ))}
         </section>
       ))}

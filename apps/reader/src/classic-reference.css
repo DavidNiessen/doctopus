@@ -64,12 +64,45 @@
   margin: 30px 0 16px;
   color: var(--heading);
 }
+.classic-endpoint-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  margin: 10px 0;
+}
+.classic-endpoint-row > .endpoint-disclosure {
+  grid-column: 1 / -1;
+  grid-row: 1;
+}
+.classic-closed-try {
+  grid-column: 2;
+  grid-row: 1;
+  z-index: 1;
+  align-self: center;
+  justify-self: end;
+  margin-right: 44px;
+  min-width: 88px;
+  min-height: 36px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: var(--ui-text-md);
+}
+.classic-try-error {
+  grid-column: 1 / -1;
+  color: var(--error-text);
+  font-size: var(--ui-text-md);
+  padding: 12px 16px;
+}
+.classic-try-error button {
+  color: var(--accent-text);
+  min-height: var(--ui-control-height);
+  padding: 6px 0;
+}
 .endpoint-disclosure {
   scroll-margin-top: 128px;
   --endpoint-color: #347fc4;
   border: 1px solid var(--endpoint-color);
   border-radius: 5px;
-  margin: 10px 0;
+  margin: 0;
   background: color-mix(in srgb, var(--endpoint-color) 7%, var(--bg));
   overflow: clip;
 }
@@ -86,10 +119,13 @@
 .endpoint-disclosure > summary {
   list-style: none;
   position: relative;
-  display: flex;
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 36%) minmax(0, 1fr) auto;
   align-items: center;
   gap: 14px;
-  padding: 14px 16px;
+  min-height: 56px;
+  padding: 10px 146px 10px 16px;
+  text-align: left;
   cursor: pointer;
   color: var(--heading);
 }
@@ -97,23 +133,27 @@
   display: none;
 }
 .endpoint-disclosure > summary > code {
-  flex: 0 1 36%;
+  grid-column: 2;
   min-width: 0;
   overflow-wrap: anywhere;
   font-size: 0.9375rem;
   font-weight: 600;
 }
 .endpoint-summary {
-  flex: 1;
+  grid-column: 3;
+  text-align: left;
   min-width: 0;
   overflow-wrap: anywhere;
   font-size: 0.9375rem;
 }
 .endpoint-disclosure > summary > svg {
-  margin-left: auto;
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 .endpoint-disclosure[open] > summary > svg {
-  transform: rotate(90deg);
+  transform: translateY(-50%) rotate(90deg);
 }
 .classic-deprecated {
   font-size: var(--ui-text-sm);
@@ -159,19 +199,23 @@
 }
 @media (max-width: 600px) {
   .endpoint-disclosure > summary {
-    flex-wrap: wrap;
-    padding-right: 44px;
+    grid-template-columns: 4.5rem minmax(0, 1fr);
+    padding: 12px 44px 68px 16px;
     gap: 10px;
   }
-  .endpoint-disclosure > summary > code {
-    flex: 1;
+  .endpoint-disclosure[open] > summary {
+    padding-bottom: 12px;
   }
-  .endpoint-summary {
-    flex-basis: 100%;
+  .endpoint-summary,
+  .classic-deprecated {
+    grid-column: 1 / -1;
   }
   .endpoint-disclosure > summary > svg {
-    position: absolute;
-    right: 14px;
-    top: 16px;
+    top: 24px;
+  }
+  .classic-closed-try {
+    align-self: end;
+    min-height: 44px;
+    margin-bottom: 12px;
   }
 }

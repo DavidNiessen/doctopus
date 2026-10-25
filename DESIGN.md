@@ -144,7 +144,10 @@ components:
   method-get:
     backgroundColor: '{colors.light-get-surface}'
     textColor: '{colors.light-get-text}'
-    rounded: '{rounded.badge}'
+    rounded: '{rounded.compact-control}'
+    padding: '0 8px'
+    height: '24px'
+    width: '44px'
   code-example:
     backgroundColor: '{colors.light-surface}'
     textColor: '{colors.light-text}'
@@ -222,6 +225,8 @@ Studio uses a flat header with a measured CSS height, a default 240px rail adjus
 
 Studio tables retain a minimum 720px table inside a labeled, focusable local scroll region, including mobile layouts. Do not cause page-wide overflow. Shared control height is 36px, becoming 44px at 760px and below or for a coarse pointer; compact example-toolbar controls have their own observed sizing. Preserve those component-specific rules rather than treating every small toolbar as a full form row.
 
+Classic endpoint rows align descriptions in a common grid column. Closed rows expose a separate, keyboard-accessible Try now button beside the disclosure, with explicit loading and retry states; the button is outside the native summary.
+
 Classic reference remains an alternate layout: a maximum 1600px shell, navigation `min(250px, 26vw)`, no resize controls, examples below the article, and hidden contents rail. Its mobile main padding is 24px 16px.
 
 ## Elevation & Depth
@@ -246,17 +251,17 @@ Primary actions pair the action background with white text; hover darkens the sa
 
 ### Inputs / Fields
 
-Inputs, selects and textareas use resolved background/text, a field-border role and the shared control radius. Focus changes the border and adds an accent outline/ring. Request forms group labels, descriptions, type metadata, required state and controls in real sections; advanced controls use native disclosure. Studio forms use consistent label spacing and stacked mobile columns. Preserve error, permission and disabled states rather than relying on color alone.
+Inputs, selects and textareas use resolved background/text, a field-border role and the shared control radius. Credential prefixes and inputs form one bordered control with a shared focus ring; the input does not draw a second inner ring. Focus changes the border and adds an accent outline/ring. The search field uses 8px vertical and 12px horizontal padding so the caret and placeholder sit inside the focus boundary. Search result icon columns accommodate full method names without shrinking. Request forms group labels, descriptions, type metadata, required state and controls in real sections; advanced controls use native disclosure. Studio forms use consistent label spacing and stacked mobile columns. Preserve error, permission and disabled states rather than relying on color alone.
 
 ### Navigation
 
-Reader links use compact method badges and a restrained accent tint for the active endpoint. Top-level reader tabs are underlined in the final workspace cascade. Studio navigation uses the same font and rounded selection rhythm. Mobile reader navigation is a drawer; mobile Studio navigation scrolls horizontally. Keep current-item semantics and visible keyboard focus.
+Reader links use compact method badges and a restrained accent tint for the active endpoint. Top-level reader tabs are underlined. Modern mode orders All, API Reference, Documentation; classic mode orders API Reference, Documentation and omits All. Classic mode selects the section corresponding to the current page. Studio navigation uses the same font and rounded selection rhythm. Mobile reader navigation is a drawer; mobile Studio navigation scrolls horizontally. Keep current-item semantics and visible keyboard focus.
 
 Resize handles are keyboard-focusable separators with labels and current/minimum/maximum values. Arrow keys adjust widths; Shift increases the step; Home/End choose bounds; double-click restores the initial width. Width persistence is optional when browser storage is unavailable.
 
 ### Chips / Metadata
 
-HTTP methods carry semantic color pairs. Type and required badges remain compact metadata beside the actual field label. Studio publication/build badges describe real state using the corresponding semantic role; cancelled builds use neutral roles.
+HTTP methods carry semantic color pairs. Their shared badge uses 0.75rem text, a 1.5rem minimum height, a 2.75rem minimum width and 0.375rem corners. Sidebar rows retain their navigation height without shrinking the badge text; longer method names expand the badge rather than clipping. Type and required badges remain compact metadata beside the actual field label. Studio publication/build badges describe real state using the corresponding semantic role; cancelled builds use neutral roles.
 
 ### Code / Response Examples
 

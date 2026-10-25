@@ -326,6 +326,7 @@ export const defaultUiMessages = Object.freeze({
   'classic.pageError': 'This endpoint page could not be loaded.',
   'classic.retry': 'Retry endpoint list',
   'classic.deprecated': 'Deprecated',
+  'classic.opening': 'Opening…',
   'classic.detailsLoading': 'Loading endpoint details…',
   'classic.detailsError': 'Endpoint details could not be loaded.',
   'classic.detailsRetry': 'Retry endpoint details',

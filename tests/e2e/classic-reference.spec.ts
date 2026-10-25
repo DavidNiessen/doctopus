@@ -259,6 +259,17 @@ test('classic section navigation retains guides and restores endpoint navigation
   });
   await expect(
     sections.getByRole('button', { name: 'All', exact: true }),
+  ).toHaveCount(0);
+  await expect(sections.getByRole('button')).toHaveText([
+    'API Reference',
+    'Documentation',
+  ]);
+  await expect(
+    sections.getByRole('button', { name: 'API Reference', exact: true }),
+  ).toHaveAttribute('aria-pressed', 'true');
+  await page.reload();
+  await expect(
+    sections.getByRole('button', { name: 'API Reference', exact: true }),
   ).toHaveAttribute('aria-pressed', 'true');
   await sections
     .getByRole('button', { name: 'Documentation', exact: true })
@@ -268,6 +279,13 @@ test('classic section navigation retains guides and restores endpoint navigation
   await expect(page.locator('.sidebar .nav-group a').first()).toBeVisible();
   await expect(page.locator('.sidebar .endpoint-link')).toHaveCount(0);
   await expect(page.locator('.classic-reference')).toHaveCount(0);
+  await page.reload();
+  await expect(
+    sections.getByRole('button', { name: 'Documentation', exact: true }),
+  ).toHaveAttribute('aria-pressed', 'true');
+  await expect(
+    sections.getByRole('button', { name: 'All', exact: true }),
+  ).toHaveCount(0);
 
   await sections
     .getByRole('button', { name: 'API Reference', exact: true })
@@ -293,4 +311,90 @@ test('classic section navigation retains guides and restores endpoint navigation
   await expect(
     page.locator('.sidebar .nav-group a:not(.endpoint-link)'),
   ).toHaveCount(0);
+});
+
+test('closed endpoint actions align descriptions and open the correct playground without expanding details', async ({
+  page,
+}) => {
+  await classic(page);
+  const descriptions = await page
+    .locator('.endpoint-disclosure .endpoint-summary')
+    .evaluateAll((nodes) =>
+      nodes.map((node) => node.getBoundingClientRect().left),
+    );
+  expect(
+    Math.max(...descriptions) - Math.min(...descriptions),
+  ).toBeLessThanOrEqual(1);
+  const row = page.locator('#classic-0-serializeparameters');
+  const action = row
+    .locator('..')
+    .getByRole('button', { name: 'Try now', exact: true });
+  await action.focus();
+  await action.press('Enter');
+  const dialog = page.getByLabel('API playground');
+  await expect(dialog).toBeVisible();
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  await expect(page.locator('.endpoint-disclosure[open]')).toHaveCount(0);
+  await expect(dialog.getByLabel('Request URL', { exact: true })).toContainText(
+    '/serialization/',
+  );
+  await dialog
+    .getByLabel('bearer credential', { exact: true })
+    .fill('demo-token');
+  const response = page.waitForResponse(
+    (item) =>
+      item.url().includes('/v1/serialization/') &&
+      item.request().method() === 'GET',
+  );
+  await dialog.getByRole('button', { name: 'Send request' }).click();
+  expect((await response).status()).toBe(200);
+  await page.keyboard.press('Escape');
+  await expect(action).toBeFocused();
+  await expect(page.locator('.endpoint-disclosure[open]')).toHaveCount(0);
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+});
+
+test('closed endpoint actions recover from metadata errors and discard results after leaving the reference', async ({
+  page,
+}) => {
+  let attempt = 0;
+  const pending = deferred(),
+    settled = deferred();
+  await page.route('**/serializeparameters/page-data.json', async (route) => {
+    attempt++;
+    if (attempt === 1)
+      return route.fulfill({ status: 503, body: 'Unavailable' });
+    if (attempt === 3) {
+      await pending.promise;
+      await route.continue().catch(() => {});
+      settled.resolve();
+      return;
+    }
+    await route.continue();
+  });
+  await classic(page);
+  const row = page.locator('#classic-0-serializeparameters');
+  const parent = row.locator('..');
+  const action = parent.getByRole('button', { name: 'Try now', exact: true });
+  await action.click();
+  await expect(parent.getByRole('alert')).toContainText('Endpoint details');
+  await expect(row).not.toHaveAttribute('open', '');
+  await parent
+    .getByRole('button', { name: 'Retry endpoint details', exact: true })
+    .click();
+  await expect(page.getByLabel('API playground')).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(action).toBeFocused();
+  await action.click();
+  await expect(action).toHaveAttribute('aria-busy', 'true');
+  await page
+    .getByRole('navigation', { name: 'Documentation sections' })
+    .getByRole('button', { name: 'Documentation', exact: true })
+    .click();
+  await expect(page).toHaveURL(/\/guides\//);
+  pending.resolve();
+  await settled.promise;
+  await page.waitForLoadState('networkidle');
+  await expect(page.getByLabel('API playground')).toHaveCount(0);
+  expect(new URL(page.url()).searchParams.has('playground')).toBe(false);
 });

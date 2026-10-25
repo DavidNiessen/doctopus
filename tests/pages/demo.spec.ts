@@ -172,8 +172,9 @@ test('POST, DELETE and classic playgrounds remain mock-only with no live confirm
   await page.keyboard.press('Escape');
   const list = page.getByRole('region', { name: 'API endpoint reference' });
   await expect(list.locator('.endpoint-disclosure')).toHaveCount(5);
-  await list.locator('summary').filter({ hasText: 'List projects' }).click();
-  await list.getByRole('button', { name: 'Try now', exact: true }).click();
+  const row = list.locator('#classic-0-list-projects');
+  await row.locator('summary').click();
+  await row.getByRole('button', { name: 'Try now', exact: true }).click();
   await page
     .getByRole('button', { name: 'Send mock request', exact: true })
     .click();

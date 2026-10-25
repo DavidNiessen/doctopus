@@ -223,6 +223,11 @@ test('All is the default and documentation/API filters change sidebar items and 
   const sidebar = page.getByRole('complementary', {
     name: 'Documentation navigation',
   });
+  await expect(navigation.getByRole('button')).toHaveText([
+    'All',
+    'API Reference',
+    'Documentation',
+  ]);
   await expect(
     navigation.getByRole('button', { name: 'All', exact: true }),
   ).toHaveAttribute('aria-pressed', 'true');

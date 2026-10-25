@@ -163,6 +163,7 @@ i18n:
       classic.pageError: 'Diese Endpunktseite konnte nicht geladen werden.'
       classic.retry: 'Endpunktliste erneut laden'
       classic.deprecated: 'Veraltet'
+      classic.opening: 'Öffnen…'
       classic.detailsLoading: 'Endpunktdetails werden geladen…'
       classic.detailsError: 'Die Endpunktdetails konnten nicht geladen werden.'
       classic.detailsRetry: 'Endpunktdetails erneut laden'
