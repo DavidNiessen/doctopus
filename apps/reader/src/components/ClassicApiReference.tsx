@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import type { ApiDocument, Operation } from '@davidniessen/doctopus-contracts';
-import { safeNavigationHref } from '@davidniessen/doctopus-contracts';
 import {
   readExpandedOperation,
   readOperationCatalog,
@@ -361,14 +360,6 @@ export default function ClassicApiReference({
                     {details && details.operation.slug === row.slug && (
                       <>
                         <div className="classic-endpoint-actions">
-                          <a
-                            href={safeNavigationHref(
-                              `${operationBase}${row.slug}/#classic-${page}-${row.slug}`,
-                            )}
-                            data-doc-route
-                          >
-                            {t('classic.permalink')}
-                          </a>
                           {(!details.operation.kind ||
                             details.operation.kind === 'endpoint') && (
                             <button

@@ -178,10 +178,7 @@ test('localized classic lists retain translated retry states, counts, pagination
   await page.locator('#classic-1-listprojects > summary').click();
   await expect(
     page.getByRole('link', { name: 'Dauerhafter Endpunktlink', exact: true }),
-  ).toHaveAttribute(
-    'href',
-    '/localized/api/api/v1/listprojects/#classic-1-listprojects',
-  );
+  ).toHaveCount(0);
   await page.getByRole('button', { name: 'Jetzt testen', exact: true }).click();
   await expect(
     page.getByRole('dialog', {
@@ -189,6 +186,7 @@ test('localized classic lists retain translated retry states, counts, pagination
       exact: true,
     }),
   ).toBeVisible();
+  await expect(page).toHaveURL(/#classic-1-listprojects$/);
   await page.keyboard.press('Escape');
   await expect(
     page.getByRole('button', { name: 'Jetzt testen', exact: true }),

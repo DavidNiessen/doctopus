@@ -142,15 +142,10 @@
 }
 .classic-endpoint-actions {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   flex-wrap: wrap;
   gap: 12px;
-}
-.classic-endpoint-actions > a {
-  font-size: var(--ui-text-md);
-  color: var(--accent-text);
-  text-decoration: underline;
 }
 .classic-endpoint-actions > button {
   padding: 9px 16px;
