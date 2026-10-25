@@ -169,9 +169,9 @@ export function App({
   const [mobileNav, setMobileNav] = useState(false);
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [navigationMode, setNavigationMode] = useState<'all' | 'docs' | 'api'>(
-    'all',
-  );
+  const [selectedNavigationMode, setNavigationMode] = useState<
+    'all' | 'docs' | 'api'
+  >('all');
   const [query, setQuery] = useState('');
   const dialog = useRef<HTMLDialogElement>(null);
   const playground = useRef<PlaygroundHandle>(null);
@@ -224,6 +224,12 @@ export function App({
       activeApi;
   const firstApi = activeApi?.operations[0];
   const lifecyclePage = site.lifecycle?.page;
+  const navigationMode =
+    preferences.layout === 'classic' && selectedNavigationMode === 'all'
+      ? activeOperation || lifecyclePage
+        ? 'api'
+        : 'docs'
+      : selectedNavigationMode;
   useEffect(() => {
     setNavigationMode((previous) =>
       previous === 'all' ? 'all' : activeOperation ? 'api' : 'docs',
@@ -650,17 +656,11 @@ export function App({
           </div>
         </div>
         <nav className="header-tabs" aria-label={t('navigation.sections')}>
-          <span className="section-fallback active" hidden={preferencesReady}>
-            {t('navigation.all')}
-          </span>
-          <a
-            className="section-fallback"
-            hidden={preferencesReady}
-            href={docHref(site.guides[0] ? guideHref(site.guides[0]) : '/')}
-          >
-            <Icon name="book" size={16} />
-            {t('navigation.docs')}
-          </a>
+          {preferences.layout !== 'classic' && (
+            <span className="section-fallback active" hidden={preferencesReady}>
+              {t('navigation.all')}
+            </span>
+          )}
           {firstApi && activeApi && (
             <a
               className="section-fallback"
@@ -671,38 +671,27 @@ export function App({
               {t('navigation.api')}
             </a>
           )}
-          <button
-            type="button"
-            hidden={!preferencesReady}
-            className={navigationMode === 'all' ? 'active' : ''}
-            aria-pressed={navigationMode === 'all'}
-            aria-controls="documentation-navigation"
-            onClick={() => setNavigationMode('all')}
-          >
-            <Icon name="globe" size={16} />
-            {t('navigation.all')}
-          </button>
-          <button
-            type="button"
-            hidden={!preferencesReady}
-            className={navigationMode === 'docs' ? 'active' : ''}
-            aria-pressed={navigationMode === 'docs'}
-            aria-controls="documentation-navigation"
-            onClick={() => {
-              setNavigationMode('docs');
-              if (!activeGuide && site.guides[0])
-                void loadPage(
-                  new URL(
-                    docHref(guideHref(site.guides[0])),
-                    window.location.origin,
-                  ),
-                  true,
-                );
-            }}
+          <a
+            className="section-fallback"
+            hidden={preferencesReady}
+            href={docHref(site.guides[0] ? guideHref(site.guides[0]) : '/')}
           >
             <Icon name="book" size={16} />
             {t('navigation.docs')}
-          </button>
+          </a>
+          {preferences.layout !== 'classic' && (
+            <button
+              type="button"
+              hidden={!preferencesReady}
+              className={navigationMode === 'all' ? 'active' : ''}
+              aria-pressed={navigationMode === 'all'}
+              aria-controls="documentation-navigation"
+              onClick={() => setNavigationMode('all')}
+            >
+              <Icon name="globe" size={16} />
+              {t('navigation.all')}
+            </button>
+          )}
           {firstApi && activeApi && (
             <button
               type="button"
@@ -726,6 +715,27 @@ export function App({
               {t('navigation.api')}
             </button>
           )}
+          <button
+            type="button"
+            hidden={!preferencesReady}
+            className={navigationMode === 'docs' ? 'active' : ''}
+            aria-pressed={navigationMode === 'docs'}
+            aria-controls="documentation-navigation"
+            onClick={() => {
+              setNavigationMode('docs');
+              if (!activeGuide && site.guides[0])
+                void loadPage(
+                  new URL(
+                    docHref(guideHref(site.guides[0])),
+                    window.location.origin,
+                  ),
+                  true,
+                );
+            }}
+          >
+            <Icon name="book" size={16} />
+            {t('navigation.docs')}
+          </button>
           {(site.lifecycle?.total ?? 0) > 0 && (
             <a
               className={lifecyclePage ? 'active' : ''}

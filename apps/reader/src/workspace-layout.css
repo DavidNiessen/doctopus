@@ -171,14 +171,7 @@
 }
 .sidebar .endpoint-link {
   gap: 12px;
-}
-.sidebar .method-badge {
-  min-width: 24px;
-  max-width: 32px;
-  padding: 1px 3px;
-  border-radius: 4px;
-  font: 700 9px/1.1 var(--ui-font);
-  letter-spacing: 0;
+  padding-block: 6px;
 }
 .sidebar-bottom {
   padding: 20px 16px;
@@ -316,13 +309,6 @@
 .try-now:hover,
 .request-url-bar .url-send:hover {
   background: #1d4ed8;
-}
-.method-badge {
-  font-family: var(--ui-font);
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 1.2;
-  letter-spacing: 0;
 }
 .method-badge.get {
   color: #087444;
