@@ -20,6 +20,15 @@ export function validateSpringMetadata(metadata) {
     'Missing Spring configuration group.',
   );
   const names = [
+    'url',
+    'title',
+    'description',
+    'theme',
+    'layout',
+    'appearance',
+    'logo',
+    'logo-dark',
+    'favicon',
     'artifact-digest',
     'directory',
     'enabled',

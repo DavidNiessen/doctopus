@@ -1,5 +1,7 @@
 # Install from GitHub Packages
 
+Current source integrations offer direct OpenAPI mode: bundled assets, a spec URL and application settings. Once matching renamed artifacts are published, consumers need no documentation CLI build or config file. Until then, use the [source installation instructions](direct-integrations.md#source-installation). Archived releases below describe their historical capabilities.
+
 Doctopus packages use the coordinates below for future releases. **The renamed packages are not yet published.** Build the current source using the [README](../README.md), or follow the [archived 0.2.0-candidate.7 instructions](archive/0.2.0-candidate.7-installation.md) for the previously accepted release under its legacy names. Those immutable artifacts remain unchanged. Independent reviews and stable release approval remain open.
 
 GitHub requires authentication to download npm and Maven packages, including public packages. No npm or Maven Central account is needed. For local installation, use your GitHub username and a personal access token **classic** with `read:packages`, following [GitHub's npm registry guide](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry) and [Maven registry guide](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry). Keep token values out of source control, command arguments and chat.

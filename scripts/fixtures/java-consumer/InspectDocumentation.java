@@ -32,6 +32,8 @@ class InspectDocumentation {
       require(sha(content(jar, legal + "LICENSE")).equals(args[4]), "Source license is missing or changed");
       require(sha(content(jar, legal + "NOTICE")).equals(args[5]), "Source notice is missing or changed");
       String publicType = module.equals("core") ? "dev/niessen/doctopus/core/Publication" : "dev/niessen/doctopus/spring/DoctopusProperties";
+      if (module.equals("core")) require(unique.contains("dev/niessen/doctopus/core/DirectDocumentation."
+          + (classifier.equals("sources") ? "java" : "html")), "Missing direct runtime source/API documentation");
       String metadata = "";
       if (classifier.equals("sources")) {
         require(unique.contains(publicType + ".java"), "Public sources are missing");

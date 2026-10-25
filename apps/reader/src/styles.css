@@ -3252,3 +3252,10 @@ label:has(input[type='radio']) {
 .request-field-control:not(:has(.request-field-actions)) {
   grid-template-columns: minmax(0, 1fr);
 }
+
+.direct-reference-status {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: clamp(24px, 6vw, 80px) 24px;
+  color: var(--text);
+}

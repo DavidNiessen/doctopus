@@ -17,8 +17,12 @@ export const EditorThemeContext = createContext<{
   accent: themePresets.mint,
   mode: 'light',
 });
-export function useReaderPreferences(basePath: string) {
-  const [preferences, setPreferences] = useState(defaultReaderPreferences);
+export function useReaderPreferences(
+  basePath: string,
+  defaults?: Partial<import('./reader-preferences.js').ReaderPreferences>,
+) {
+  const initial = () => ({ ...defaultReaderPreferences(), ...defaults });
+  const [preferences, setPreferences] = useState(initial);
   const [ready, setReady] = useState(false);
   const [stored, setStored] = useState(true);
   const [systemDark, setSystemDark] = useState(false);
@@ -33,7 +37,7 @@ export function useReaderPreferences(basePath: string) {
       try {
         const source =
           localStorage.getItem(key) ?? localStorage.getItem(legacyKey);
-        const next = parseReaderPreferences(source);
+        const next = source ? parseReaderPreferences(source) : initial();
         if (!source) {
           const legacy = localStorage.getItem('doctopus-theme');
           if (legacy === 'light' || legacy === 'dark') next.mode = legacy;

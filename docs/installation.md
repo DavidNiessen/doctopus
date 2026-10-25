@@ -1,6 +1,8 @@
 # Installation and usage guide
 
-This guide takes you from a source checkout to a working documentation site, then covers existing applications and the optional management platform.
+For an existing Spring Boot, Express or Fastify application, start with the [direct integration quickstart](direct-integrations.md): configure a specification URL and runtime branding, then start your application. **That setup needs no `docs.config.yaml`, documentation build or publication directory.**
+
+This guide also covers the optional standalone/static site workflow and management platform. Those features use a build project with a YAML/JSON configuration. Choose the path that fits your application before following the source-build and publication steps.
 
 **Current installation path:** build Doctopus from source. The renamed npm/Maven packages and container coordinates are not yet published. The [GitHub Packages guide](github-packages.md) distinguishes future coordinates from the [previously published prerelease](archive/0.2.0-candidate.7-installation.md). A version in this repository does not establish registry availability.
 
@@ -21,17 +23,19 @@ This guide takes you from a source checkout to a working documentation site, the
 
 ## Choose your setup
 
-| Goal                                              | Install or run                                             | Database needed? |
-| ------------------------------------------------- | ---------------------------------------------------------- | ---------------- |
-| Publish guides and an API reference               | CLI at build time; any suitable static host at runtime     | No               |
-| Add docs to an existing Spring Boot application   | CLI at build time; Java core and Spring starter at runtime | No               |
-| Add docs to Express or Fastify                    | CLI at build time; the Node adapter in your application    | No               |
-| Manage multiple projects, access and publications | Server, Studio, PostgreSQL and artifact storage            | Yes              |
-| Execute queued builds from Studio                 | The management platform plus a separate Linux Worker       | Yes              |
+| Goal                                              | Install or run                                         | Database needed? |
+| ------------------------------------------------- | ------------------------------------------------------ | ---------------- |
+| Publish guides and an API reference               | CLI at build time; any suitable static host at runtime | No               |
+| Add docs to an existing Spring Boot application   | Spring starter with a spec URL; optional prebuilt site | No               |
+| Add docs to Express or Fastify                    | Node adapter with a spec URL; optional prebuilt site   | No               |
+| Manage multiple projects, access and publications | Server, Studio, PostgreSQL and artifact storage        | Yes              |
+| Execute queued builds from Studio                 | The management platform plus a separate Linux Worker   | Yes              |
 
-The basic flow is **OpenAPI YAML/JSON + guides + configuration → CLI build → static publication → Reader in the browser**. Framework adapters serve that same publication. They use an existing OpenAPI generator, such as springdoc, to supply the specification.
+For direct integrations, the flow is **dependency + specification URL + application settings → start the application → Reader loads the specification**. Your application or an existing OpenAPI generator supplies the document.
 
-The first sections need only Git and Node.js. Stop after static hosting or framework integration if you do not need centralized administration.
+For optional static publications, the flow is **OpenAPI YAML/JSON + guides + project configuration → CLI build → static publication → Reader**. The framework adapters can also serve that prebuilt publication when selected explicitly.
+
+The source/static-build sections below use Git and Node.js. A consuming Java application using bundled direct-mode artifacts does not need Node. Neither direct integration needs centralized administration.
 
 ## Install the tools
 
@@ -230,7 +234,9 @@ The repository's [Pages demo workflow](pages-demo.md#deployment-pipeline) publis
 
 ## Integrate with Spring Boot
 
-The Spring starter serves a prebuilt publication through MVC or WebFlux. Node.js is needed for the documentation build, not inside the deployed Java application. Your application continues to provide its own API and security.
+The default direct setup bundles the UI and loads your spec URL in the browser. Use [Spring Boot direct mode](direct-integrations.md#spring-boot) for the dependency, raw spec endpoint and `application.yml` title/theme settings. No documentation project or Node installation is required by a Java consumer of published artifacts.
+
+The remainder of this section covers the optional prebuilt publication workflow for sites with authored guides. Your application continues to provide its own API and security.
 
 ### Import your generated OpenAPI document
 
@@ -289,7 +295,9 @@ To update, build a new publication, deploy it as an immutable replacement and re
 
 ## Integrate with Express or Fastify
 
-The adapters require Express 5 or Fastify 5 and a publication built for their mount path. The following examples use ES modules and `basePath: /docs`.
+For normal API-only integration, use [Express](direct-integrations.md#express) or [Fastify](direct-integrations.md#fastify) direct mode: supply a spec URL and runtime options, with no CLI or project config file.
+
+The adapters require Express 5 or Fastify 5. The following examples cover optional prebuilt publications, using ES modules and `basePath: /docs`.
 
 ### Install a source-built adapter
 

@@ -1,5 +1,7 @@
 # Pinned external-reference snapshots
 
+Frozen reference snapshots are part of optional compiled publications. [Direct integration mode](direct-integrations.md) loads a self-contained spec in the browser; bundle external references before pointing a direct integration at that document.
+
 `doctopus vendor-spec` explicitly imports an OpenAPI 3.0/3.1 YAML or JSON root and its reviewed external reference documents. Every source has an exact URL and mandatory SHA-256 pin. The command validates the complete cached graph before recording a ready snapshot. Builds, doctor and preview use only local, hash-verified files; compilation never refreshes upstream sources.
 
 For a self-contained document, the simpler [remote importer](remote-import.md) remains available. Local project references keep their existing behavior without this feature.

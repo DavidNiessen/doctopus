@@ -12,10 +12,14 @@
       "types": "./dist/render.d.ts",
       "import": "./dist/render.js"
     },
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./integration": {
+      "types": "./dist/integration.d.ts",
+      "import": "./dist/integration.js"
+    }
   },
   "scripts": {
-    "build:client": "vite build && node ../../scripts/write-browser-notices.mjs dist/client"
+    "build:client": "vite build && node ../../scripts/write-browser-notices.mjs dist/client && node ../../scripts/package-reader-integration.mjs"
   },
   "dependencies": {
     "@davidniessen/doctopus-contracts": "0.2.0-candidate.7",
@@ -25,7 +29,8 @@
     "dompurify": "3.4.17",
     "jsdom": "30.1.3",
     "react": "19.3.1",
-    "react-dom": "19.3.1"
+    "react-dom": "19.3.1",
+    "@davidniessen/doctopus-spec": "0.2.0-candidate.7"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"

@@ -20,7 +20,8 @@
     "@davidniessen/doctopus-compiler": "0.2.0-candidate.7",
     "@davidniessen/doctopus-contracts": "0.2.0-candidate.7",
     "@fastify/static": "10.1.7",
-    "express-rate-limit": "8.7.1"
+    "express-rate-limit": "8.7.1",
+    "@davidniessen/doctopus-reader": "0.2.0-candidate.7"
   },
   "peerDependencies": {
     "express": "^5.0.0",

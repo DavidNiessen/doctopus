@@ -1,7 +1,7 @@
 ---
 order: 3
 title: Install Doctopus
-description: Choose a setup, build your first site and find the right integration.
+description: Add an API reference to your application or publish a standalone documentation site.
 group: Get started
 ---
 
@@ -13,18 +13,18 @@ Start with the [installation and usage guide](setup.md). It walks through a work
 
 ## Choose your setup
 
-1. **Host a static site.** [Build and publish a static site](setup.md#heading-deploy-a-static-publication) on your preferred host. No application server or database is needed at runtime.
-2. **Use an existing Java application.** Follow the [Spring Boot installation](setup.md#heading-integrate-with-spring-boot) to serve documentation from your application.
-3. **Use an existing Node.js application.** Follow the [Express and Fastify installation](setup.md#heading-integrate-with-express-or-fastify) to mount the built site in your app.
+1. **Use an existing Spring Boot application.** [Add the starter and configure your OpenAPI URL](../integrations/get-started.md#heading-spring-boot) in application properties or YAML. The UI is bundled; no documentation build or project configuration file is needed.
+2. **Use an existing Node.js application.** [Mount the Express adapter](../integrations/get-started.md#heading-express) or [Fastify plugin](../integrations/get-started.md#heading-fastify), passing your specification URL and UI options.
+3. **Host a static site with authored guides.** [Build and publish a static site](setup.md#heading-deploy-a-static-publication) on your preferred host. This optional workflow uses project configuration and the CLI; no application server or database is needed at runtime.
 4. **Manage projects centrally.** Follow the [Server and Studio installation](setup.md#heading-install-server-and-studio) for projects, access and publications. This setup needs PostgreSQL and artifact storage.
 5. **Automate approved builds.** [Add a Worker](setup.md#heading-add-automated-builds-with-a-worker) to the management platform on a separate build host.
 
-Node.js and the CLI are needed at build time for every setup. Static sites and Java integrations do not need a Node process at runtime. Studio, Worker and PostgreSQL are optional for a simple documentation UI.
+Consuming the bundled Spring starter requires no Node process, documentation CLI or generated site directory. A Node integration uses the application's normal runtime. Building the Doctopus libraries from source currently requires the pinned development tools; see [source installation](../integrations/get-started.md#heading-source-installation). Studio, Worker and PostgreSQL are optional.
 
 ## Find your next guide
 
 - **Installation:** [full walkthrough](setup.md), [CLI commands](cli.md), and [packages and releases](packages.md).
-- **Integrations:** [Spring Boot and Node.js](../integrations/frameworks.md), [OpenAPI import](../integrations/openapi-import.md), and [supported specifications](../integrations/openapi-support.md).
+- **Integrations:** [quick setup](../integrations/get-started.md), [Spring Boot and Node.js](../integrations/frameworks.md), [OpenAPI import](../integrations/openapi-import.md), and [supported specifications](../integrations/openapi-support.md).
 - **Authoring:** [write guides](../authoring/guides.md), [configure your site](../authoring/customization.md), [build plugins](../authoring/plugins.md), [versions](../authoring/versions.md), and [languages](../authoring/languages.md).
 - **Playground:** [authentication](../playground/authentication.md), [request bodies](../playground/request-bodies.md), [parameters](../playground/parameters.md), and [mock responses](../playground/mock-responses.md).
 - **Operations:** [Server and Studio](../operations/server.md), [build management](../operations/studio-builds.md), [Worker setup](../operations/worker.md), [deployment and recovery](../operations/deployment.md), [offline installation](../operations/offline.md), and [diagnostics](../operations/diagnostics.md).

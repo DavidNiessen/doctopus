@@ -395,3 +395,14 @@ export type {
   SourceSnapshotInfo,
   BuildPolicy,
 } from './builds.js';
+
+export {
+  directDocumentationConfig,
+  isDirectDocumentationRoute,
+  escapeHtml,
+  encodeHtmlJson,
+} from './direct-documentation.js';
+export type {
+  DirectDocumentationOptions,
+  DirectDocumentationConfig,
+} from './direct-documentation.js';

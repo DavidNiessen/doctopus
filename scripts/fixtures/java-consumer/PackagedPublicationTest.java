@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 
 class PackagedPublicationTest {
   @Test void publicClassesComeFromTheExactInstalledJarsAndVerifyTheRealPublication() throws Exception {
+    verifyOrigin(dev.niessen.doctopus.core.DirectDocumentation.class, "consumer.core.sha256");
     verifyOrigin(Publication.class, "consumer.core.sha256");
     verifyOrigin(DoctopusAutoConfiguration.class, "consumer.starter.sha256");
     var publication = new Publication(Path.of(System.getProperty("consumer.fixture")),

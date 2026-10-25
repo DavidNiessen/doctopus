@@ -1,4 +1,6 @@
 import assert from 'node:assert/strict';
+import { createRequire } from 'node:module';
+import { readWorkspacePackages } from './lib/workspaces.mjs';
 import { readFile, readdir, writeFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -51,13 +53,95 @@ assert(
   packages.has('react') && packages.has('react-dom'),
   'Expected React browser bundle source maps',
 );
+// Generated CommonJS proxy source maps can omit a usable physical package path.
+// Resolve their declared owner instead of depending on npm's hoisted layout.
+async function dependencyDirectory(name) {
+  try {
+    return dirname(fileURLToPath(import.meta.resolve(name)));
+  } catch (error) {
+    if (error.code !== 'ERR_MODULE_NOT_FOUND') throw error;
+    const repository = fileURLToPath(new URL('../', import.meta.url));
+    const owners = (await readWorkspacePackages(repository)).map((pkg) => ({
+      directory: join(repository, pkg.path),
+      metadata: pkg.metadata,
+    }));
+    const seen = new Set(owners.map((owner) => owner.directory));
+    // Follow installed, declared dependency edges. This also finds bundled
+    // transitive helpers without assuming that pnpm exposes them at the root.
+    for (let index = 0; index < owners.length; index++) {
+      assert(owners.length <= 2000, 'Bundled dependency graph exceeds limit');
+      const owner = owners[index];
+      const require = createRequire(join(owner.directory, 'package.json'));
+      try {
+        return dirname(require.resolve(name));
+      } catch (failure) {
+        if (
+          !['MODULE_NOT_FOUND', 'ERR_PACKAGE_PATH_NOT_EXPORTED'].includes(
+            failure.code,
+          )
+        )
+          throw failure;
+      }
+      for (const dependency of Object.keys({
+        ...owner.metadata.dependencies,
+        ...owner.metadata.optionalDependencies,
+        ...(index === 0 ? owner.metadata.devDependencies : {}),
+      })) {
+        let directory;
+        try {
+          directory = dirname(require.resolve(dependency + '/package.json'));
+        } catch (failure) {
+          if (
+            !['MODULE_NOT_FOUND', 'ERR_PACKAGE_PATH_NOT_EXPORTED'].includes(
+              failure.code,
+            )
+          )
+            throw failure;
+          try {
+            directory = dirname(require.resolve(dependency));
+          } catch (missing) {
+            if (
+              !['MODULE_NOT_FOUND', 'ERR_PACKAGE_PATH_NOT_EXPORTED'].includes(
+                missing.code,
+              )
+            )
+              throw missing;
+            continue;
+          }
+        }
+        for (;;) {
+          if (seen.has(directory)) break;
+          try {
+            const metadata = JSON.parse(
+              await readFile(join(directory, 'package.json'), 'utf8'),
+            );
+            if (metadata.name === dependency) {
+              seen.add(directory);
+              owners.push({ directory, metadata });
+              break;
+            }
+          } catch (missing) {
+            if (missing.code !== 'ENOENT') throw missing;
+          }
+          const parent = dirname(directory);
+          if (parent === directory) break;
+          directory = parent;
+        }
+      }
+    }
+    throw new Error(`${name}: cannot resolve bundled dependency metadata`, {
+      cause: error,
+    });
+  }
+}
+
+const components = [];
 const sections = [
   'Third-party notices for the bundled browser code.\nProject code is licensed under Apache-2.0. Dependencies retain their own licenses.\n',
 ];
 for (const name of [...packages.keys()].sort()) {
   // Some ESM packages intentionally do not export package.json.
-  let directory =
-    packages.get(name) ?? dirname(fileURLToPath(import.meta.resolve(name)));
+  let directory = packages.get(name) ?? (await dependencyDirectory(name));
   let file;
   for (;;) {
     const candidate = join(directory, 'package.json');
@@ -74,6 +158,15 @@ for (const name of [...packages.keys()].sort()) {
     directory = parent;
   }
   const metadata = JSON.parse(await readFile(file, 'utf8'));
+  components.push({
+    type: 'library',
+    name,
+    version: metadata.version,
+    purl: `pkg:npm/${name.replaceAll('@', '%40')}@${metadata.version}`,
+    ...(typeof metadata.license === 'string'
+      ? { licenses: [{ expression: metadata.license }] }
+      : {}),
+  });
   const files = await readdir(dirname(file));
   const license = files.find((name) =>
     /^licen[cs]e(?:\.(?:md|txt))?$/i.test(name),
@@ -103,6 +196,15 @@ for (const name of ['INTER-LICENSE.txt', 'JETBRAINS-MONO-LICENSE.txt']) {
 await writeFile(
   join(output, 'assets/THIRD_PARTY_NOTICES.txt'),
   sections.join('\n\n' + '='.repeat(72) + '\n\n'),
+);
+await writeFile(
+  join(output, 'assets/BROWSER_SBOM.cdx.json'),
+  JSON.stringify({
+    bomFormat: 'CycloneDX',
+    specVersion: '1.6',
+    version: 1,
+    components,
+  }) + '\n',
 );
 console.log(
   `Browser notices include ${packages.size} bundled dependencies/helpers.`,

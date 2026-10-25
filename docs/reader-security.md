@@ -1,5 +1,7 @@
 # Reader data boundaries
 
+In [direct framework mode](direct-integrations.md), the host serves bundled, inventory-verified UI assets and public runtime configuration. The browser downloads and parses a bounded, self-contained specification in a dedicated worker. Schema meta-validation is compiled during product development, so it requires no browser eval permission. Java/Node hosts do not fetch the configured spec URL. Direct mode needs JavaScript; compiled publications retain their server-rendered content.
+
 The compiler validates configuration and sanitizes authored content before publication. The reader also checks HTML and navigation read from its bootstrap data and fetched page data. These checks complement publication verification and private-document authorization; they do not authenticate a compromised hosting origin or sandbox trusted browser plugins.
 
 ## Guide HTML

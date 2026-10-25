@@ -31,12 +31,20 @@ export const demoHandbook = [
     'Understand source installs, registry authentication and available releases.',
   ],
   [
+    'direct-integrations',
+    'integrations/get-started',
+    'Integrations',
+    190,
+    'Add to your application',
+    'Add a bundled API reference with Spring properties or Node options; no site build required.',
+  ],
+  [
     'integrations',
     'integrations/frameworks',
     'Integrations',
     200,
     'Spring Boot and Node.js',
-    'Serve a verified publication from Spring Boot, Express or Fastify.',
+    'Configure Spring Boot, Express and Fastify in direct or prebuilt mode.',
   ],
   [
     'remote-import',

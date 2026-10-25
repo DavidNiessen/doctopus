@@ -13,6 +13,11 @@ export default defineConfig({
   },
   webServer: [
     {
+      command: 'node scripts/direct-docs-browser-fixture.mjs',
+      url: 'http://127.0.0.1:4191/health/ready',
+      reuseExistingServer: false,
+    },
+    {
       command: 'node scripts/reader-extensions-browser-fixture.mjs',
       url: 'http://127.0.0.1:4178/health/ready',
       reuseExistingServer: false,

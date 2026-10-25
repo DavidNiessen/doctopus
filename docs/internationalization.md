@@ -1,5 +1,7 @@
 # Reader languages and UI translations
 
+This guide describes translated compiled publications and authored guide trees. Basic [direct integrations](direct-integrations.md) use the bundled English Reader and application settings; choose a compiled publication for the multilingual authoring workflow below.
+
 Projects can customize the core reader labels without JavaScript plugins or remote translation services. `defaultLocale` selects the HTML language and the UI message catalog. The current catalog covers navigation/search, personal settings and prepared appearance presets, classic endpoint lists, schema-reference and lifecycle guidance, playground/URL-bar actions, response-editor controls, clipboard feedback and the page footer. Advanced body-editor and administration wording still uses English. Configured locales generate reader routes and a language menu. Guides can have authored locale variants. Missing guide variants and API content use the default-locale sources with an explicit fallback notice when the UI language differs. Source files are never translated automatically.
 
 ## Locale routes and content fallback

@@ -38,7 +38,7 @@ Exit: snippets execute against a mock API; parameters match OpenAPI serializatio
 
 ### M4 — Plugin SDK and framework adapters
 
-Deliver SDK hooks/manifests, capability documentation, compatibility checks, a conformance harness, and first-party source/snippet/theme examples. Implement generic Java assets, Spring Boot adapters, Express/Fastify adapters, and CLI recipes for other languages.
+Deliver SDK hooks/manifests, capability documentation, compatibility checks, a conformance harness, and first-party source/snippet/theme examples. Implement generic Java assets, Spring Boot adapters, Express/Fastify adapters, and CLI recipes for other languages. Existing Spring/Node applications must have a bundled direct OpenAPI URL mode configured through framework-native settings, without a documentation project file or CLI build; retain optional prebuilt publications for authored portals.
 
 Exit: fresh packaged sample applications run on the documented support matrix, including context paths, reverse proxies, authentication, and reactive/servlet behavior where advertised. A plugin authored using only public SDK docs passes the harness. Java production deployments require no Node runtime. Resolve the Spring Boot 3/4 artifact split using actual tests.
 

@@ -1,5 +1,7 @@
 # Trusted reader extensions
 
+These compiled browser extensions belong to optional publication projects. Basic [direct integrations](direct-integrations.md) use bundled UI assets and runtime settings instead, without a project config file.
+
 Reader extensions add optional page-change behavior and interactive footer widgets to the React reader. They use a separate browser-only SDK entry point and prebuilt ESM files. The builder copies and fingerprints those files without importing them. The reader loads them after hydration; projects without extensions load no extension runtime. Core pages remain readable without JavaScript.
 
 ## Trust and configuration

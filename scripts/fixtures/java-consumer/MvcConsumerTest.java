@@ -42,4 +42,8 @@ class MvcConsumerTest {
         "org.springframework.web.reactive.DispatcherHandler", false);
   }
 
+  @Test void installedMvcStarterServesBundledDirectDocumentation() throws Exception {
+    HostProbe.exerciseDirect(Application.class, WebApplicationType.SERVLET, "org.springframework.web.reactive.DispatcherHandler");
+  }
+
 }

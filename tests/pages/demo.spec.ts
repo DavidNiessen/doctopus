@@ -255,6 +255,19 @@ test('documentation and deep endpoint pages remain readable without JavaScript',
     await expect(page.locator('.guide-content')).toContainText(
       'pnpm install --frozen-lockfile',
     );
+    await page.goto(baseURL! + 'guides/integrations/get-started/');
+    await expect(
+      page.getByRole('heading', {
+        name: 'Add to your application',
+        exact: true,
+      }),
+    ).toBeVisible();
+    await expect(page.locator('.guide-content')).toContainText(
+      'doctopus.url=/openapi.yaml',
+    );
+    await expect(page.locator('.guide-content')).toContainText(
+      'createExpressDocs',
+    );
     await page.goto(baseURL! + 'api/orbit/v1/list-projects/');
     await expect(
       page.getByRole('heading', { name: 'List projects', exact: true }),
@@ -301,17 +314,18 @@ test('handbook groups support setup navigation, local fragments, search and mobi
   ).toBeVisible();
   await page
     .locator('.guide-content')
-    .getByRole('link', { name: 'Spring Boot installation', exact: true })
+    .getByRole('link', {
+      name: 'Add the starter and configure your OpenAPI URL',
+      exact: true,
+    })
     .click();
   await expect(page).toHaveURL(
-    /\/guides\/installation\/setup\/#heading-integrate-with-spring-boot$/,
+    /\/guides\/integrations\/get-started\/#heading-spring-boot$/,
   );
-  await expect(
-    page.locator('#heading-integrate-with-spring-boot'),
-  ).toBeVisible();
+  await expect(page.locator('#heading-spring-boot')).toBeVisible();
   await page.reload();
   await expect(
-    page.getByRole('heading', { name: 'Installation and usage', exact: true }),
+    page.getByRole('heading', { name: 'Add to your application', exact: true }),
   ).toBeVisible();
   await expect(page.locator('.guide-content')).toContainText('/v3/api-docs');
   const docs = await (await request.get('site.json')).json();

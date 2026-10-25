@@ -49,6 +49,23 @@ class InspectJar {
           && "dev.niessen".equals(properties.getProperty("groupId")), "Embedded Maven coordinates disagree");
       require(unique.contains(module.equals("core") ? "dev/niessen/doctopus/core/Publication.class"
           : "dev/niessen/doctopus/spring/DoctopusAutoConfiguration.class"), "Missing public runtime entrypoint");
+      if (module.equals("core")) {
+        require(unique.contains("dev/niessen/doctopus/core/DirectDocumentation.class"), "Missing direct runtime entrypoint");
+        String root = "META-INF/doctopus/reader/";
+        require(new String(content(jar, root + "direct.html"), java.nio.charset.StandardCharsets.UTF_8)
+            .contains("__DOCTOPUS_CONFIG__"), "Missing direct shell template");
+        String inventory = new String(content(jar, root + "direct-assets.json"), java.nio.charset.StandardCharsets.UTF_8);
+        var matcher = java.util.regex.Pattern.compile("\"(assets/[A-Za-z0-9][A-Za-z0-9._-]*)\"\\s*:\\s*\"([a-f0-9]{64})\"").matcher(inventory);
+        var verified = new HashSet<String>();
+        while (matcher.find()) {
+          require(verified.add(matcher.group(1)), "Duplicate bundled asset");
+          require(sha(content(jar, root + matcher.group(1))).equals(matcher.group(2)), "Bundled asset differs from inventory");
+        }
+        require(verified.containsAll(List.of("assets/reader.js", "assets/reader.css", "assets/THIRD_PARTY_NOTICES.txt",
+            "assets/BROWSER_SBOM.cdx.json")) && verified.size() < 100, "Missing bundled UI or browser legal/component inventory");
+        require(names.stream().filter(name -> name.startsWith(root + "assets/") && !name.endsWith("/")).count()
+            == verified.size(), "Uninventoried bundled asset");
+      }
       if (module.equals("spring-boot-starter")) {
         require(new String(content(jar, "META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports"),
             java.nio.charset.StandardCharsets.UTF_8).trim().equals("dev.niessen.doctopus.spring.DoctopusAutoConfiguration"),
@@ -67,8 +84,9 @@ class InspectJar {
     var entry = jar.getJarEntry(name);
     require(entry != null && !entry.isDirectory(), "Missing required archive entry: " + name);
     try (var input = jar.getInputStream(entry)) {
-      byte[] bytes = input.readNBytes(2 * 1024 * 1024 + 1);
-      require(bytes.length <= 2 * 1024 * 1024, "Oversized archive entry");
+      int limit = name.startsWith("META-INF/doctopus/reader/assets/") ? 16 * 1024 * 1024 : 2 * 1024 * 1024;
+      byte[] bytes = input.readNBytes(limit + 1);
+      require(bytes.length <= limit, "Oversized archive entry");
       return bytes;
     }
   }

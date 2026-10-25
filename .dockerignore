@@ -20,3 +20,5 @@ test-results
 
 # Exclude artifacts produced before the Doctopus rename too.
 **/.api-docs
+
+integrations/java/.reader-resources/

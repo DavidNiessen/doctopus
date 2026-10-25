@@ -1,4 +1,4 @@
-import { pointerEscape, record } from './source.js';
+import { pointerEscape, record } from './portable-source.js';
 
 export const unsupportedSchemaScopeKeywords: ReadonlySet<string> = new Set([
   '$id',

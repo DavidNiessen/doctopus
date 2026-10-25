@@ -14,7 +14,7 @@ The static site contains fictional Orbit projects and webhooks, authored guides,
 
 ## Documentation handbook
 
-The **Documentation** tab also contains the Doctopus installation and usage handbook. Its sidebar groups the demo tour and setup chooser under **Get started**, then presents **Installation**, **Integrations**, **Authoring**, **Playground** and **Operations**. Orbit remains the fictional API reference; the handbook teaches visitors how to install and use Doctopus itself.
+The **Documentation** tab also contains the Doctopus installation and usage handbook, including [direct Spring and Node setup](direct-integrations.md), runtime branding options and the optional static-site workflow. Its sidebar groups the demo tour and setup chooser under **Get started**, then presents **Installation**, **Integrations**, **Authoring**, **Playground** and **Operations**. Orbit remains the fictional API reference; the handbook teaches visitors how to install and use Doctopus itself.
 
 The [setup chooser](../examples/pages-demo/guides/installation/overview.md) is authored in the demo. The remaining handbook pages are staged as ordinary Markdown from the canonical files in `docs/` by [the handbook manifest](../scripts/lib/demo-handbook.mjs). Each entry defines its route, title, description, group and reading order. Update the canonical guide once; the next demo build includes it automatically. Add a manifest entry to publish another user-facing guide. Internal planning and release-evidence files are not included in the handbook.
 

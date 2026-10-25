@@ -1,6 +1,8 @@
 # Branding, themes and discoverability
 
-The reader uses local assets and original components. Configuration works in YAML or JSON. Theme settings are validated during build and doctor checks; custom CSS is a trusted presentation extension.
+For an existing Spring Boot or Node application, configure direct-mode branding through [application properties or adapter options](direct-integrations.md#runtime-options). The header title, description, logos, favicon, prepared theme, initial layout and appearance need no project config file or documentation rebuild. Restart the integration to apply changed application settings.
+
+The remaining sections describe optional compiled/static publications. Their publisher configuration uses YAML or JSON, supports additional theme tokens and custom CSS, and is validated during build and doctor checks.
 
 ## Theme tokens
 
@@ -82,6 +84,6 @@ Robots directives are hints, not access control. Protect every private artifact 
 
 Visitors can open **Reader settings** to choose the published theme or a prepared Mint, Ocean, Violet or Neutral preset, alongside system/light/dark appearance and modern/classic layout. Preferences stay in their browser and synchronize across tabs for the same documentation base path. Response editor colors follow the selected theme automatically.
 
-Custom appearance controls, named themes and the temporary `?theme-editor=1` preview are removed. To change published branding, edit the validated `theme` section in the project's YAML or JSON configuration and rebuild. Existing custom visitor settings are discarded while recognized mode, layout and preset choices migrate.
+Custom appearance controls, named themes and the temporary `?theme-editor=1` preview are removed. For a compiled publication, change published branding through the validated `theme` section in the project's YAML or JSON configuration and rebuild. Existing custom visitor settings are discarded while recognized mode, layout and preset choices migrate.
 
 See [workspace layout and fullscreen responses](reader-layout.md) for responsive islands, visitor width preferences, keyboard resizing and response viewing.

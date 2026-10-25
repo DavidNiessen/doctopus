@@ -39,6 +39,7 @@ import type {
   Operation,
   SiteData,
   SearchResult,
+  DirectDocumentationConfig,
 } from '@davidniessen/doctopus-contracts';
 import { PanelResizeHandle } from './PanelResizeHandle.js';
 import { LocaleMenu } from './LocaleMenu.js';
@@ -117,9 +118,11 @@ function guideTabKey(event: ReactKeyboardEvent<HTMLDivElement>) {
 export function App({
   site: initialSite,
   initialPath,
+  direct,
 }: {
   site: SiteData;
   initialPath: string;
+  direct?: DirectDocumentationConfig;
 }) {
   const layout = useRef<HTMLDivElement>(null);
   const [site, setSite] = useState(initialSite);
@@ -129,7 +132,10 @@ export function App({
     mode: preferredMode,
     stored,
     ready: preferencesReady,
-  } = useReaderPreferences(site.config.basePath);
+  } = useReaderPreferences(
+    site.config.basePath,
+    direct ? { layout: direct.layout, mode: direct.appearance } : undefined,
+  );
   const [credentialSession] = useState(createCredentialSession);
   useSyncExternalStore(
     credentialSession.subscribe,
@@ -388,7 +394,7 @@ export function App({
   }
   function openSearch() {
     dialog.current?.showModal();
-    if (!searchLoaded.current) {
+    if (!direct && !searchLoaded.current) {
       searchLoaded.current = true;
       setSearchLoading(true);
       if (!searchWorker.current && !workerFailed) {
@@ -491,14 +497,18 @@ export function App({
     );
     setLoading(true);
     try {
-      const response = await fetch(
-        href(
-          `${nextPath.endsWith('/') ? nextPath : `${nextPath}/`}page-data.json`,
-        ),
-        { credentials: 'same-origin', ...(signal ? { signal } : {}) },
-      );
-      if (!response.ok) throw new Error('Page data unavailable');
-      const next = (await response.json()) as SiteData;
+      const next = direct
+        ? initialSite
+        : await (async () => {
+            const response = await fetch(
+              href(
+                `${nextPath.endsWith('/') ? nextPath : `${nextPath}/`}page-data.json`,
+              ),
+              { credentials: 'same-origin', ...(signal ? { signal } : {}) },
+            );
+            if (!response.ok) throw new Error('Page data unavailable');
+            return (await response.json()) as SiteData;
+          })();
       if (
         next.schemaVersion !== 1 ||
         !next.config ||
@@ -580,17 +590,21 @@ export function App({
       <header className="site-header">
         <div className="header-main">
           <a className="brand" href={docHref('/')} data-doc-route>
-            {config.logo ? (
+            {direct?.logo || config.logo ? (
               <>
                 <img
                   className="brand-logo logo-light"
-                  src={href('/media/' + config.logo)}
+                  src={safeNavigationHref(
+                    direct?.logo ?? href('/media/' + config.logo),
+                  )}
                   alt=""
                 />
-                {config.logoDark && (
+                {(direct?.logoDark || config.logoDark) && (
                   <img
                     className="brand-logo logo-dark"
-                    src={href('/media/' + config.logoDark)}
+                    src={safeNavigationHref(
+                      direct?.logoDark ?? href('/media/' + config.logoDark),
+                    )}
                     alt=""
                   />
                 )}
@@ -1010,6 +1024,13 @@ export function App({
                   page={lifecyclePage}
                   basePath={config.basePath + prefix}
                 />
+              ) : direct && contentPath === '/' && !activeOperation ? (
+                <article className="article">
+                  <p className="eyebrow">{t('navigation.api')}</p>
+                  <h1>{config.name}</h1>
+                  <p>{config.description}</p>
+                  <p className="subtle">{t('classic.empty')}</p>
+                </article>
               ) : preferences.layout === 'classic' &&
                 activeOperation &&
                 activeApi ? (
@@ -1020,6 +1041,7 @@ export function App({
                     key={`${activeApi.id}:${activeApi.version}`}
                     api={activeApi}
                     activeOperation={activeOperation}
+                    direct={!!direct}
                     apis={site.apis}
                     basePath={config.basePath}
                     operationBase={docHref(
