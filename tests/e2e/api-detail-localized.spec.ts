@@ -32,6 +32,7 @@ test('localized endpoint details and parameter presence keep wire values and cop
   await expect(page.locator('#query-parameters')).toContainText(
     'Der Parameter limit in query.',
   );
+  await page.locator('#responses .inline-response-example > summary').click();
   const example = page.locator('#responses .code-block');
   const value = await example.locator('pre > code').textContent();
   await example

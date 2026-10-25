@@ -20,3 +20,6 @@ playwright-studio-report/
 
 # Keep pre-rename local artifacts and reports out of source control.
 .api-docs/
+
+# Local Impeccable screenshots; design tokens stay versioned.
+.impeccable/review/

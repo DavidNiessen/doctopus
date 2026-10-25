@@ -48,6 +48,12 @@ import { Playground } from './Playground.js';
 import type { PlaygroundHandle } from './Playground.js';
 import { SchemaView } from './SchemaView.js';
 import { MediaExamples } from './MediaExamples.js';
+import { CopyButton } from './CopyButton.js';
+import { ResponsePreview } from './ResponsePreview.js';
+import {
+  ResponseSelectionProvider,
+  useResponseSelection,
+} from './ResponseSelection.js';
 import { PageFooter } from './PageFooter.js';
 import { DeprecationCenter, OperationLifecycle } from './Lifecycle.js';
 
@@ -477,6 +483,12 @@ export function App({
       style={
         {
           '--accent': config.theme.accent,
+          '--code-string': readableAccent('#b45d34', theme, palette),
+          '--code-key': readableAccent('#237da3', theme, palette),
+          '--code-number': readableAccent('#b0662d', theme, palette),
+          '--code-keyword': readableAccent('#8e65b9', theme, palette),
+          '--code-comment': palette.muted,
+          '--code-flag': readableAccent('#2787c0', theme, palette),
           '--success-text': readableAccent('#169965', theme, palette),
           '--error-text': readableAccent('#b03642', theme, palette),
           '--action-bg': readableAccent(config.theme.accent, 'light'),
@@ -497,7 +509,7 @@ export function App({
           '--text': palette.text,
           '--muted': palette.muted,
           '--heading': palette.heading,
-          '--sidebar-width': `${config.theme.sidebarWidth ?? 274}px`,
+          '--sidebar-width': `${config.theme.sidebarWidth ?? 288}px`,
           '--content-width': `${config.theme.contentWidth ?? 760}px`,
           '--radius': `${config.theme.radius}px`,
         } as CSSProperties
@@ -883,7 +895,7 @@ export function App({
           <PanelResizeHandle
             target={layout}
             property="--sidebar-width"
-            initial={config.theme.sidebarWidth ?? 274}
+            initial={config.theme.sidebarWidth ?? 288}
             min={220}
             max={380}
             label={t('layout.navigation')}
@@ -968,7 +980,10 @@ export function App({
               />
             </Suspense>
           ) : activeOperation && activeApi ? (
-            <>
+            <ResponseSelectionProvider
+              key={`${activeApi.id}:${activeApi.version}:${activeOperation.slug}`}
+              operation={activeOperation}
+            >
               <article lang={contentLocale} className="article api-article">
                 <div className="breadcrumb">
                   {t('navigation.api')}
@@ -1027,6 +1042,10 @@ export function App({
                   </span>
                   <code>{activeOperation.path}</code>
                   <span className="endpoint-version">{activeApi.version}</span>
+                  <CopyButton
+                    text={activeOperation.path}
+                    label={t('api.copyPath')}
+                  />
                   {(!activeOperation.kind ||
                     activeOperation.kind === 'endpoint') && (
                     <button
@@ -1056,7 +1075,7 @@ export function App({
               <PanelResizeHandle
                 target={layout}
                 property="--api-panel-width"
-                initial={365}
+                initial={448}
                 min={260}
                 max={560}
                 reverse
@@ -1065,7 +1084,7 @@ export function App({
                 storageKey={config.basePath}
                 className="inspector-resize"
               />
-              <div className="inspector-island" id="documentation-inspector">
+              <div className="api-examples" id="documentation-inspector">
                 {!activeOperation.kind ||
                 activeOperation.kind === 'endpoint' ? (
                   <Playground
@@ -1103,8 +1122,9 @@ export function App({
                     ))}
                   </aside>
                 )}
+                <ResponsePreview api={activeApi} operation={activeOperation} />
               </div>
-            </>
+            </ResponseSelectionProvider>
           ) : activeGuide ? (
             <>
               <article lang={contentLocale} className="article guide-article">
@@ -1351,19 +1371,15 @@ function OperationDetails({
 }) {
   const Heading = headingLevel === 3 ? 'h3' : 'h2';
   const t = useUi();
-  const [responseStatus, setResponseStatus] = useState(
-    operation.responses[0]?.status ?? '200',
-  );
-  const response =
-    operation.responses.find((item) => item.status === responseStatus) ??
-    operation.responses[0];
-  const [responseType, setResponseType] = useState(
-    Object.keys(response?.content ?? {})[0] ?? '',
-  );
-  const responseTypes = Object.keys(response?.content ?? {});
-  const mediaType = responseTypes.includes(responseType)
-    ? responseType
-    : (responseTypes[0] ?? '');
+  const selection = useResponseSelection(operation);
+  const {
+    response,
+    status: responseStatus,
+    setStatus: setResponseStatus,
+    types: responseTypes,
+    type: mediaType,
+    setType: setResponseType,
+  } = selection;
   const responseMedia = response?.content[mediaType];
   return (
     <>
@@ -1373,8 +1389,14 @@ function OperationDetails({
             <Icon name="lock" size={19} />
             {t('api.authorization')}
           </Heading>
-          <div className="callout">
-            <Icon name="shield" />
+          <div
+            className={
+              operation.security.length === 1 &&
+              Object.keys(operation.security[0]!).length > 0
+                ? 'sr-only'
+                : 'authorization-policy'
+            }
+          >
             <span>
               {operation.security.some(
                 (alternative) => Object.keys(alternative).length === 0,
@@ -1391,6 +1413,43 @@ function OperationDetails({
               <small>{t('api.credentialsHint')}</small>
             </span>
           </div>
+          {[
+            ...new Set(
+              operation.security.flatMap((alternative) =>
+                Object.keys(alternative),
+              ),
+            ),
+          ].map((name) => {
+            const scheme = api.securitySchemes[name];
+            const header = scheme?.type !== 'apiKey';
+            const required = operation.security.every((alternative) =>
+              Object.hasOwn(alternative, name),
+            );
+            return (
+              <div className="parameter-row authorization-reference" key={name}>
+                <div className="field-heading">
+                  <code>
+                    {header ? 'Authorization' : (scheme.name ?? name)}
+                  </code>
+                  <span className="type-label">string</span>
+                  <span className="type-label">
+                    {header ? 'header' : (scheme.in ?? 'header')}
+                  </span>
+                  {required && (
+                    <span className="required">{t('schema.required')}</span>
+                  )}
+                </div>
+                <p>
+                  {scheme?.description ??
+                    (scheme?.scheme === 'bearer' ||
+                    scheme?.type === 'oauth2' ||
+                    scheme?.type === 'openIdConnect'
+                      ? t('api.bearerDescription')
+                      : name)}
+                </p>
+              </div>
+            );
+          })}
         </section>
       )}
       {(['path', 'query', 'header', 'cookie'] as const).map((location) => {
@@ -1448,6 +1507,11 @@ function OperationDetails({
             {operation.requestBody.required && (
               <span className="required">{t('schema.required')}</span>
             )}
+            {Object.keys(operation.requestBody.content).length === 1 && (
+              <span className="section-media-label">
+                {Object.keys(operation.requestBody.content)[0]}
+              </span>
+            )}
           </Heading>
           {operation.requestBody.description && (
             <p>{operation.requestBody.description}</p>
@@ -1455,7 +1519,9 @@ function OperationDetails({
           {Object.entries(operation.requestBody.content).map(
             ([type, media]) => (
               <div key={type}>
-                <span className="media-label">{type}</span>
+                {Object.keys(operation.requestBody!.content).length > 1 && (
+                  <span className="media-label">{type}</span>
+                )}
                 <SchemaView
                   schema={media.schema}
                   schemas={api.schemas}
@@ -1480,7 +1546,6 @@ function OperationDetails({
               aria-pressed={responseStatus === item.status}
               onClick={() => {
                 setResponseStatus(item.status);
-                setResponseType(Object.keys(item.content)[0] ?? '');
               }}
             >
               <span
@@ -1515,12 +1580,17 @@ function OperationDetails({
               schemas={api.schemas}
               legacyNullable={api.openapiVersion?.startsWith('3.0') === true}
             />
-            <MediaExamples
-              key={`${responseStatus}:${mediaType}`}
-              media={responseMedia}
-              mediaType={mediaType}
-              schemas={api.schemas}
-            />
+            <details className="inline-response-example">
+              <summary>{t('examples.responseTitle')}</summary>
+              <MediaExamples
+                key={`${responseStatus}:${mediaType}`}
+                media={responseMedia}
+                mediaType={mediaType}
+                schemas={api.schemas}
+                selectedId={selection.example}
+                onSelect={selection.setExample}
+              />
+            </details>
           </>
         )}
       </section>

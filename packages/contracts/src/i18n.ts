@@ -133,6 +133,9 @@ export const defaultUiMessages = Object.freeze({
   'playground.browserFailure':
     'The browser could not complete this request. Check the destination, CORS policy and network connection. Copy the cURL example to run it locally.',
   'api.authorization': 'Authorization',
+  'api.copyPath': 'Copy endpoint path',
+  'api.bearerDescription':
+    'Bearer authentication header. Use Bearer <token>, where <token> is your access token.',
   'api.authOptional': 'Authentication is optional.',
   'api.authRequired': 'Authentication is required.',
   'api.anonymous': 'Anonymous',
@@ -233,14 +236,14 @@ export const defaultUiMessages = Object.freeze({
   'settings.light': 'Light',
   'settings.dark': 'Dark',
   'settings.layout': 'Documentation layout',
-  'settings.modern': 'Modern islands',
+  'settings.modern': 'Modern documentation',
   'settings.classic': 'Classic API reference',
   'settings.editorTheme': 'Response editor theme',
   'settings.follow': 'Follow appearance',
   'settings.contrast': 'High contrast',
   'settings.custom': 'Custom palette',
   'settings.layoutHelp':
-    'Modern islands have resizable navigation and inspectors. Classic groups collapsed, method-colored endpoints in the main reference page.',
+    'The modern layout has resizable navigation and inspectors. Classic groups collapsed, method-colored endpoints in the main reference page.',
   'settings.editorPalette': 'Custom editor palette',
   'settings.editorColor': 'Editor {color} color',
   'settings.editorPreview': 'Editor palette preview',

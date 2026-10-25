@@ -561,6 +561,7 @@ export function Explorer({
   const snippet = (
     <>
       <div className="snippet-controls">
+        <span className="snippet-title">{staticSample?.label ?? language}</span>
         <select
           aria-label="Code language"
           value={language}
@@ -578,24 +579,38 @@ export function Explorer({
             </option>
           ))}
         </select>
-        <span>{staticSample ? 'Build-time example' : 'Example'}</span>
         <CopyButton
           text={exampleCode}
           label="Copy request example"
           disabled={!exampleCode}
         />
+        {previewOnly && (
+          <button
+            type="button"
+            className="try-now"
+            onClick={onOpen}
+            aria-haspopup="dialog"
+            title={t('playground.try')}
+          >
+            <Icon name="play" size={14} />
+            <span className="sr-only">{t('playground.try')}</span>
+          </button>
+        )}
       </div>
       {staticSample && (
         <p className="static-sample-notice">
-          Generated when these docs were built. Playground inputs do not change
-          this example.
+          <strong>Build-time example</strong>. Generated when these docs were
+          built. Playground inputs do not change this example.
         </p>
       )}
       {staticSample || preview.request ? (
         <CodeBlock
+          toolbar={false}
           code={exampleCode}
           language={staticSample?.language ?? language}
         />
+      ) : previewOnly ? (
+        <p className="preview-hint">{t('playground.intro')}</p>
       ) : (
         <p className="preview-error">{preview.error}</p>
       )}
@@ -604,25 +619,7 @@ export function Explorer({
   if (previewOnly)
     return (
       <aside className="explorer request-example" aria-label="Request example">
-        <div className="explorer-header">
-          <Icon name="terminal" size={15} />
-          Request example
-          <button
-            type="button"
-            className="try-now"
-            onClick={onOpen}
-            aria-haspopup="dialog"
-          >
-            {t('playground.try')} <Icon name="arrow" size={14} />
-          </button>
-        </div>
-        {preview.request || operation.codeSamples?.length ? (
-          snippet
-        ) : (
-          <p className="preview-hint">
-            Open the playground to configure this request.
-          </p>
-        )}
+        {snippet}
       </aside>
     );
   return (

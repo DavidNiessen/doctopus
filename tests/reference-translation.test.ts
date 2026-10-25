@@ -69,7 +69,15 @@ it('localizes schema guidance while retaining technical keywords, property names
   ])
     expect(html).toContain(text);
   expect(html).toContain('<code>name</code>');
-  expect(html).toContain('<dt>required</dt>');
+  expect(html).not.toContain('<dt>required</dt>');
+  expect(
+    render(
+      createElement(SchemaView, {
+        schema: { type: 'object', required: ['undeclared'] },
+        schemas: {},
+      }),
+    ),
+  ).toContain('<dt>required</dt>');
   expect(html).toContain('Exactly one variant must match.');
   expect(html).toContain('&lt;img src=x onerror=alert(1)&gt;');
   expect(html).not.toContain('<img');
