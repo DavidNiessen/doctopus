@@ -255,6 +255,8 @@ The endpoint address bar follows the published corner radius, with a 1px border 
 
 Inputs, selects and textareas use resolved background/text, a field-border role and the shared control radius. Credential prefixes and inputs form one bordered control with a shared focus ring; the input does not draw a second inner ring. Focus changes the border and adds an accent outline/ring. The search field uses 8px vertical and 12px horizontal padding so the caret and placeholder sit inside the focus boundary. Search result icon columns accommodate full method names without shrinking. Request forms group labels, descriptions, type metadata, required state and controls in real sections; advanced controls use native disclosure. Studio forms use consistent label spacing and stacked mobile columns. Preserve error, permission and disabled states rather than relying on color alone.
 
+Custom request fields align their key and value controls at the top of the row. Key inputs share value-input padding; type metadata underneath the key does not vertically shift the value or its actions. Compact layouts retain stacked controls and touch sizing.
+
 ### Navigation
 
 Reader links use compact method badges and a restrained accent tint for the active endpoint. Top-level reader tabs are underlined. Modern mode orders All, API Reference, Documentation; classic mode orders API Reference, Documentation and omits All. Classic mode selects API Reference at the site root; explicit guide links select Documentation. Modern mode defaults to All. Studio navigation uses the same font and rounded selection rhythm. Mobile reader navigation is a drawer; mobile Studio navigation scrolls horizontally. Keep current-item semantics and visible keyboard focus.

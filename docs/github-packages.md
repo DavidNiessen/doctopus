@@ -71,7 +71,7 @@ Supply the token through your shell/CI secret store. The repository and server I
 
 ## Containers and static hosting
 
-The Linux amd64 server image is public and its anonymous pull/runtime checks passed. Pin the accepted manifest digest:
+The archived prerelease's Linux amd64 image passed anonymous pull/runtime checks under its legacy coordinates. Renamed Doctopus images are not yet published. Once a renamed release is available, select its documented version and pin the accepted manifest digest; the future image reference has this form:
 
 ```sh
 docker pull ghcr.io/davidniessen/doctopus:DOCTOPUS_VERSION

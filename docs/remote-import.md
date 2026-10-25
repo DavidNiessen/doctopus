@@ -26,7 +26,7 @@ Output paths must stay inside the real project root. Parent directories must alr
 For an explicitly approved local springdoc endpoint:
 
 ```sh
-doctopus import-spec http://127.0.0.1:8080/v3/doctopus . \
+doctopus import-spec http://127.0.0.1:8080/v3/api-docs . \
   --allow-origin http://127.0.0.1:8080 \
   --allow-http --allow-private-network \
   --output openapi.json
