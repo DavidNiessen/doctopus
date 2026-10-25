@@ -2,7 +2,7 @@
 order: 2
 title: Make it yours
 description: Prepared themes, two layouts, responsive islands and accessible controls.
-group: Explore
+group: Get started
 ---
 
 ## Pick a theme

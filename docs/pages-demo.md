@@ -12,6 +12,14 @@ The later [published .7 acceptance](release-acceptance.md) includes signed candi
 
 The static site contains fictional Orbit projects and webhooks, authored guides, local search, API schemas, request examples, prepared themes, modern/classic layouts, resizable panels and the modal playground. **Send mock** generates a documented success response entirely in the browser. Mock controls also preview error statuses, named examples and seeded schema data. Highlighting, folding, fullscreen and complete-response copying work normally.
 
+## Documentation handbook
+
+The **Documentation** tab also contains the Doctopus installation and usage handbook. Its sidebar groups the demo tour and setup chooser under **Get started**, then presents **Installation**, **Integrations**, **Authoring**, **Playground** and **Operations**. Orbit remains the fictional API reference; the handbook teaches visitors how to install and use Doctopus itself.
+
+The [setup chooser](../examples/pages-demo/guides/installation/overview.md) is authored in the demo. The remaining handbook pages are staged as ordinary Markdown from the canonical files in `docs/` by [the handbook manifest](../scripts/lib/demo-handbook.mjs). Each entry defines its route, title, description, group and reading order. Update the canonical guide once; the next demo build includes it automatically. Add a manifest entry to publish another user-facing guide. Internal planning and release-evidence files are not included in the handbook.
+
+The staging step rewrites links between published guides to their nested demo routes and adapts heading fragments to the Reader. Related repository files and guides outside the handbook retain GitHub links. Fenced and inline code examples remain literal. The demo build runs the full documentation doctor on the assembled publication and fails on warnings as well as errors, including broken local links and fragments. Search includes the complete rendered handbook. Direct static routes and Markdown content remain readable without JavaScript.
+
 The demonstration explicitly configures:
 
 ```yaml
@@ -33,7 +41,7 @@ pnpm run demo:pages
 pnpm run test:pages
 ```
 
-The verified static root is `.doctopus/pages-demo/`. The build copies only the dedicated demo into temporary storage, applies the deployment origin/base path and removes the temporary project afterward. It replaces this generated output directory. The default URL derives from `GITHUB_REPOSITORY`, falling back to this repository. `PAGES_SITE_URL=https://docs.example.com/preview` overrides the build URL when testing another static host; it must be HTTPS without credentials, query or fragment. Custom-domain deployment additionally requires the corresponding GitHub Pages domain configuration.
+The verified static root is `.doctopus/pages-demo/`. The build copies the dedicated demo and the selected canonical Markdown guides into temporary storage, applies the deployment origin/base path and removes the temporary project afterward. It replaces this generated output directory. The default URL derives from `GITHUB_REPOSITORY`, falling back to this repository. `PAGES_SITE_URL=https://docs.example.com/preview` overrides the build URL when testing another static host; it must be HTTPS without credentials, query or fragment. Custom-domain deployment additionally requires the corresponding GitHub Pages domain configuration.
 
 To inspect the default build interactively, run `node scripts/pages-demo-browser-fixture.mjs` and open `http://127.0.0.1:4180/doctopus/`. This preview serves plain generated files and directory indexes, with no SPA fallback or API routes.
 

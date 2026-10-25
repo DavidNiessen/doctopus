@@ -174,8 +174,8 @@ jobs:
           cache: npm
       - run: npm ci --ignore-scripts
       - run: npm run build
-      - run: npm run demo:pages
-      - run: node packages/cli/dist/main.js doctor examples/pages-demo --strict
+      - name: Build and strictly audit the assembled demo
+        run: npm run demo:pages
       - run: npx playwright install chromium
       - run: npm run test:pages
       - name: Retain tested static demo

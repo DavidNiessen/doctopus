@@ -239,6 +239,16 @@ test('documentation and deep endpoint pages remain readable without JavaScript',
     await expect(
       page.getByRole('heading', { name: 'Playground tour', exact: true }),
     ).toBeVisible();
+    await page.goto(baseURL! + 'guides/installation/setup/');
+    await expect(
+      page.getByRole('heading', {
+        name: 'Installation and usage',
+        exact: true,
+      }),
+    ).toBeVisible();
+    await expect(page.locator('.guide-content')).toContainText(
+      'pnpm install --frozen-lockfile',
+    );
     await page.goto(baseURL! + 'api/orbit/v1/list-projects/');
     await expect(
       page.getByRole('heading', { name: 'List projects', exact: true }),
@@ -253,6 +263,81 @@ test('documentation and deep endpoint pages remain readable without JavaScript',
   } finally {
     await context.close();
   }
+});
+
+test('handbook groups support setup navigation, local fragments, search and mobile reading', async ({
+  page,
+  request,
+}) => {
+  await page.goto('./');
+  await page
+    .getByRole('button', { name: 'Documentation', exact: true })
+    .click();
+  const sidebar = page.getByLabel('Documentation navigation', { exact: true });
+  await expect(sidebar.getByRole('navigation')).toHaveCount(6);
+  for (const group of [
+    'Get started',
+    'Installation',
+    'Integrations',
+    'Authoring',
+    'Playground',
+    'Operations',
+  ]) {
+    await expect(
+      sidebar.getByRole('navigation', { name: group, exact: true }),
+    ).toHaveCount(1);
+  }
+  await sidebar
+    .getByRole('link', { name: 'Install Doctopus', exact: true })
+    .click();
+  await expect(
+    page.getByRole('heading', { name: 'Install Doctopus', exact: true }),
+  ).toBeVisible();
+  await page
+    .locator('.guide-content')
+    .getByRole('link', { name: 'Spring Boot installation', exact: true })
+    .click();
+  await expect(page).toHaveURL(
+    /\/guides\/installation\/setup\/#heading-integrate-with-spring-boot$/,
+  );
+  await expect(
+    page.locator('#heading-integrate-with-spring-boot'),
+  ).toBeVisible();
+  await page.reload();
+  await expect(
+    page.getByRole('heading', { name: 'Installation and usage', exact: true }),
+  ).toBeVisible();
+  await expect(page.locator('.guide-content')).toContainText('/v3/api-docs');
+  const docs = await (await request.get('site.json')).json();
+  expect(docs.guides.length).toBeGreaterThan(20);
+  for (const guide of docs.guides) {
+    expect((await request.get(`guides/${guide.slug}/`)).status()).toBe(200);
+  }
+  await page
+    .getByRole('button', { name: 'Search documentation', exact: true })
+    .click();
+  const search = page.getByRole('dialog', {
+    name: 'Search documentation',
+    exact: true,
+  });
+  await search
+    .getByRole('textbox', { name: 'Search documentation', exact: true })
+    .fill('offline installation');
+  await search
+    .getByRole('link')
+    .filter({ hasText: 'Offline installations' })
+    .first()
+    .click();
+  await expect(
+    page.getByRole('heading', { name: 'Offline installations', exact: true }),
+  ).toBeVisible();
+  await page.setViewportSize({ width: 390, height: 844 });
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
 });
 
 test('site root selects API Reference for classic and All for modern', async ({
