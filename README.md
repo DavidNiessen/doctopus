@@ -12,7 +12,7 @@ Start with the [complete installation and usage guide](docs/installation.md) for
 
 The owner has [deferred independent launch reviews and pilots for prereleases](docs/adr/0002-deferred-prerelease-reviews.md). Those reviews remain unfinished; automated checks and protected registry installation acceptance remain required. This deferral is not a stable production release approval.
 
-Try the [GitHub Pages demo](https://davidniessen.github.io/doctopus/): bundled mock responses run entirely in your browser, with no API server or credentials. See [demo deployment and local preview](docs/pages-demo.md).
+Try the [GitHub Pages demo](https://doctopus.niessen.dev/): bundled mock responses run entirely in your browser, with no API server or credentials. See [demo deployment and local preview](docs/pages-demo.md).
 
 Build Doctopus from source using the commands below, or consult [GitHub Packages and GHCR](docs/github-packages.md) for the publication status and archived prerelease installation. npm/Maven installation requires GitHub authentication; running generated static documentation requires no account. Independent reviews and stable production approval remain open.
 

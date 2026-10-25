@@ -64,7 +64,7 @@ pnpm run demo:build
 pnpm run demo:serve
 ```
 
-Open **[http://127.0.0.1:3000/](http://127.0.0.1:3000/)**. The ordinary example has live requests; run `pnpm run demo:api` from the repository root in another terminal for its local API. To explore a complete mock-only site instead, use the [public demo](https://davidniessen.github.io/doctopus/) or the [local Pages demo instructions](pages-demo.md#build-and-preview-locally).
+Open **[http://127.0.0.1:3000/](http://127.0.0.1:3000/)**. The ordinary example has live requests; run `pnpm run demo:api` from the repository root in another terminal for its local API. To explore a complete mock-only site instead, use the [public demo](https://doctopus.niessen.dev/) or the [local Pages demo instructions](pages-demo.md#build-and-preview-locally).
 
 Press Ctrl+C to stop the example before continuing with another server on the same port.
 

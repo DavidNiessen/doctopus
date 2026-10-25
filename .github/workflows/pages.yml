@@ -73,6 +73,14 @@ jobs:
           cache: npm
       - run: npm ci --ignore-scripts
       - run: npx playwright install chromium
+      - name: Verify the HTTPS publication
+        run: |
+          node --input-type=module <<'NODE'
+          import { appendFileSync } from 'node:fs';
+          const address = new URL(process.env.PAGES_DEMO_URL);
+          address.protocol = 'https:';
+          appendFileSync(process.env.GITHUB_ENV, `PAGES_DEMO_URL=${address.href}\n`);
+          NODE
       - name: Wait for the public site
         run: curl --proto '=https' --fail --retry 12 --retry-all-errors --retry-delay 5 --max-time 10 --output /dev/null "$PAGES_DEMO_URL"
       - name: Exercise the public demo without calling an API server

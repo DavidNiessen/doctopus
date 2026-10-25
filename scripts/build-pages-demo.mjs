@@ -9,23 +9,21 @@ import {
 } from '@davidniessen/doctopus-compiler';
 import { parseConfig, parseSource } from '@davidniessen/doctopus-spec';
 import { stageDemoHandbook } from './lib/demo-handbook.mjs';
+import { pagesSiteAddress } from './lib/pages-site-address.mjs';
 
 const repository = fileURLToPath(new URL('../', import.meta.url));
-const [owner, name] = (
-  process.env.GITHUB_REPOSITORY ?? 'DavidNiessen/doctopus'
-).split('/');
-const defaultUrl = `https://${owner.toLowerCase()}.github.io${name.toLowerCase() === `${owner.toLowerCase()}.github.io` ? '' : '/' + name}`;
-const address = new URL(process.env.PAGES_SITE_URL ?? defaultUrl);
-if (
-  address.protocol !== 'https:' ||
-  address.username ||
-  address.password ||
-  address.search ||
-  address.hash
-)
-  throw new Error(
-    'PAGES_SITE_URL must be an HTTPS site URL without credentials, query or fragment.',
-  );
+const customDomain = await readFile(
+  join(repository, 'examples/pages-demo/CNAME'),
+  'utf8',
+).catch((error) => {
+  if (error.code === 'ENOENT') return undefined;
+  throw error;
+});
+const address = pagesSiteAddress({
+  repository: process.env.GITHUB_REPOSITORY,
+  siteUrl: process.env.PAGES_SITE_URL,
+  customDomain,
+});
 const staging = await mkdtemp(join(tmpdir(), 'doctopus-pages-source-'));
 try {
   await cp(join(repository, 'examples/pages-demo'), staging, {

@@ -1,6 +1,6 @@
 # Public GitHub Pages demo
 
-The public demo is intended for [davidniessen.github.io/doctopus](https://davidniessen.github.io/doctopus/). Deployment availability depends on repository Pages settings and successful GitHub Actions runs. The source is [examples/pages-demo](../examples/pages-demo), separate from the localhost API example.
+The public demo is intended for [doctopus.niessen.dev](https://doctopus.niessen.dev/). Deployment availability depends on repository Pages settings and successful GitHub Actions runs. The source is [examples/pages-demo](../examples/pages-demo), separate from the localhost API example.
 
 ## Verified public deployment
 
@@ -41,9 +41,9 @@ pnpm run demo:pages
 pnpm run test:pages
 ```
 
-The verified static root is `.doctopus/pages-demo/`. The build copies the dedicated demo and the selected canonical Markdown guides into temporary storage, applies the deployment origin/base path and removes the temporary project afterward. It replaces this generated output directory. The default URL derives from `GITHUB_REPOSITORY`, falling back to this repository. `PAGES_SITE_URL=https://docs.example.com/preview` overrides the build URL when testing another static host; it must be HTTPS without credentials, query or fragment. Custom-domain deployment additionally requires the corresponding GitHub Pages domain configuration.
+The verified static root is `.doctopus/pages-demo/`. The build copies the dedicated demo and the selected canonical Markdown guides into temporary storage, applies the deployment origin/base path and removes the temporary project afterward. It replaces this generated output directory. The default URL comes from `examples/pages-demo/CNAME`, currently `doctopus.niessen.dev`, so assets and navigation use the domain root. Keep that hostname aligned with the custom domain in GitHub Pages settings and its DNS record. Without a CNAME file, the build derives a project or user Pages URL from `GITHUB_REPOSITORY`, falling back to this repository. `PAGES_SITE_URL=https://docs.example.com/preview` overrides the build URL when testing another static host; it must be HTTPS without credentials, query or fragment. Custom-domain deployment additionally requires the corresponding GitHub Pages domain configuration.
 
-To inspect the default build interactively, run `node scripts/pages-demo-browser-fixture.mjs` and open `http://127.0.0.1:4180/doctopus/`. This preview serves plain generated files and directory indexes, with no SPA fallback or API routes.
+To inspect the default build interactively, run `node scripts/pages-demo-browser-fixture.mjs` and open `http://127.0.0.1:4180/`. This preview serves plain generated files and directory indexes, with no SPA fallback or API routes.
 
 The dedicated browser suite blocks external requests and fails if one is attempted. It exercises direct/reloaded subpath links, 404s, local GET/POST/DELETE responses, error previews, published-server changes, classic playgrounds, exact response copy, fullscreen/folding, local search, theme matching, mobile accessibility and reading without JavaScript.
 
@@ -58,7 +58,7 @@ A separate **Verify hosted mock demo** job checks out the exact tested source wi
 To repeat those checks against the public site after installing the pinned dependencies and Playwright Chromium:
 
 ```sh
-PAGES_DEMO_URL=https://davidniessen.github.io/doctopus/ pnpm run test:pages
+PAGES_DEMO_URL=https://doctopus.niessen.dev/ pnpm run test:pages
 ```
 
 `PAGES_DEMO_URL` selects an existing HTTPS publication without credentials, query or fragment; the path is normalized to a trailing slash. Explicit loopback HTTP is also supported for acceptance fixtures. Omitting it retains the ordinary local static-preview tests and their verified generated artifact. These tests load public documentation only and never need deployment or API credentials.
