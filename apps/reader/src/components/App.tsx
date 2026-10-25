@@ -235,7 +235,7 @@ export function App({
   const lifecyclePage = site.lifecycle?.page;
   const navigationMode =
     preferences.layout === 'classic' && selectedNavigationMode === 'all'
-      ? activeOperation || lifecyclePage
+      ? activeOperation || lifecyclePage || (contentPath === '/' && firstApi)
         ? 'api'
         : 'docs'
       : selectedNavigationMode;

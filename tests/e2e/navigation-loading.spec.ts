@@ -17,6 +17,22 @@ test('home respects the layout default while explicit guide links still open doc
     .first()
     .getAttribute('href');
   expect(guide).toBeTruthy();
+  const firstEndpoint = await page
+    .locator('.endpoint-link[data-doc-route]')
+    .first()
+    .getAttribute('href');
+  let releaseHome = () => {};
+  const pendingHome = new Promise<void>((resolve) => {
+    releaseHome = resolve;
+  });
+  await page.route(
+    new URL(firstEndpoint! + 'page-data.json', root).href,
+    async (route) => {
+      await pendingHome;
+      await route.continue();
+    },
+    { times: 1 },
+  );
   await page
     .getByRole('button', { name: 'Open reader settings', exact: true })
     .click();
@@ -24,6 +40,11 @@ test('home respects the layout default while explicit guide links still open doc
     .getByRole('combobox', { name: 'Documentation layout', exact: true })
     .selectOption('classic');
   await page.keyboard.press('Escape');
+  await expect(
+    sections.getByRole('button', { name: 'API Reference', exact: true }),
+  ).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('main')).toHaveAttribute('aria-busy', 'true');
+  releaseHome();
   await expect(
     page.getByRole('region', { name: 'API endpoint reference' }),
   ).toBeVisible();
