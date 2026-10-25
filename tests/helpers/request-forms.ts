@@ -48,6 +48,11 @@ export async function openSchemaControls(playground: Locator) {
     !(await section.evaluate((element) => (element as HTMLDetailsElement).open))
   )
     await section.locator('summary').click();
+  // The native toggle event updates React after the summary click completes.
+  // Wait for the schema fields so callers cannot target the outgoing form.
+  await expect(
+    section.getByRole('group', { name: 'Request fields', exact: true }),
+  ).toBeVisible();
 }
 
 /** Simulate a changed published specification without exposing a destination editor in the UI. */
