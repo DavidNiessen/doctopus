@@ -1,3 +1,4 @@
+import { openRequestSettings } from '../helpers/request-forms.js';
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 const route =
@@ -20,6 +21,10 @@ test('oneOf controls require explicit selection and preserve values, privacy and
     exact: true,
   });
   await expect(fields).toBeDisabled();
+  await playground
+    .getByRole('group', { name: 'Request body editor', exact: true })
+    .getByRole('button', { name: 'JSON', exact: true })
+    .click();
   await playground.getByLabel('Request body', { exact: true }).fill(raw);
   await branch.selectOption('0');
   await expect(
@@ -127,6 +132,7 @@ test('anyOf array branches retain existing items, allow explicit additions and d
 }) => {
   await page.goto(route);
   const playground = page.getByLabel('API playground');
+  await openRequestSettings(playground);
   await playground
     .getByRole('combobox', { name: 'Content type', exact: true })
     .selectOption('application/vnd.doctopus.variants+json');
@@ -182,6 +188,7 @@ test('anyOf array branches retain existing items, allow explicit additions and d
   await playground.getByRole('button', { name: 'Close playground' }).click();
   await page.getByRole('button', { name: 'Switch to dark theme' }).click();
   await page.getByRole('button', { name: 'Try this endpoint' }).click();
+  await openRequestSettings(playground);
   await playground
     .getByRole('combobox', { name: 'Content type', exact: true })
     .selectOption('application/vnd.doctopus.variants+json');
@@ -215,6 +222,7 @@ test('unsupported sibling constraints retain JSON and example/media resets clear
 }) => {
   await page.goto(route);
   const playground = page.getByLabel('API playground');
+  await openRequestSettings(playground);
   await playground
     .getByRole('combobox', { name: 'Content type', exact: true })
     .selectOption('application/vnd.doctopus.constrained+json');
@@ -236,6 +244,7 @@ test('unsupported sibling constraints retain JSON and example/media resets clear
       'additional constraints',
     );
   }
+  await openRequestSettings(playground);
   await playground
     .getByRole('combobox', { name: 'Content type', exact: true })
     .selectOption('application/json');

@@ -1,3 +1,4 @@
+import { openRequestSettings } from '../helpers/request-forms.js';
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
@@ -136,6 +137,7 @@ test('multipart uploads send real binary files and structured parts while previe
   await expect(
     playground.getByText('2 selected · 8 bytes', { exact: true }),
   ).toBeVisible();
+  await openRequestSettings(playground);
   await playground
     .getByRole('combobox', { name: 'Request example' })
     .selectOption('named:minimal');
@@ -154,6 +156,7 @@ test('multipart uploads send real binary files and structured parts while previe
       mimeType: 'application/octet-stream',
       buffer: bytes,
     });
+  await openRequestSettings(playground);
   await playground
     .getByLabel('API server', { exact: true })
     .fill('http://127.0.0.1:4010/v1/');
@@ -161,12 +164,14 @@ test('multipart uploads send real binary files and structured parts while previe
   await expect(
     playground.getByLabel('Upload documents', { exact: true }),
   ).toHaveValue('');
+  await openRequestSettings(playground);
   await playground
     .getByRole('combobox', { name: 'Content type', exact: true })
     .selectOption('application/json');
   await expect(
     playground.getByLabel('Upload documents', { exact: true }),
   ).toHaveCount(0);
+  await openRequestSettings(playground);
   await playground
     .getByRole('combobox', { name: 'Content type', exact: true })
     .selectOption('multipart/form-data');
@@ -200,11 +205,19 @@ test('invalid and oversized multipart inputs cannot send and valid upload contro
     .getByLabel('Part documents header X-Upload-Token', { exact: true })
     .fill('fixture-part-token');
   await playground
+    .getByRole('group', { name: 'Request body editor', exact: true })
+    .getByRole('button', { name: 'JSON', exact: true })
+    .click();
+  await playground
     .getByLabel('Request body', { exact: true })
     .fill('{"title":');
   await expect(
     playground.getByRole('button', { name: 'Send request' }),
   ).toBeDisabled();
+  await playground
+    .getByRole('group', { name: 'Request body editor', exact: true })
+    .getByRole('button', { name: 'JSON', exact: true })
+    .click();
   await playground
     .getByLabel('Request body', { exact: true })
     .fill('{"title":"Valid"}');

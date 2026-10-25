@@ -14,6 +14,10 @@ test('body fields retain exact numbers, protect snippet secrets and send the edi
   await playground.locator('.playground-request-example > summary').click();
   const raw =
     '{"name":"before","enabled":false,"count":0,"id":9007199254740993,"mode":"auto","note":"hello","options":["cat"],"metadata":{"precise":1.234567890123456789},"password":"fixture-body-password","responseOnly":"retained-read-only-value","custom":{"huge":1e400},"fixed":"fixed"}';
+  await playground
+    .getByRole('group', { name: 'Request body editor', exact: true })
+    .getByRole('button', { name: 'JSON', exact: true })
+    .click();
   await playground.getByLabel('Request body', { exact: true }).fill(raw);
   await playground.getByRole('button', { name: 'Fields', exact: true }).click();
   await expect(
@@ -114,6 +118,10 @@ test('body fields retain exact numbers, protect snippet secrets and send the edi
   await page.getByRole('button', { name: 'Close playground' }).click();
   await page.getByRole('button', { name: 'Switch to dark theme' }).click();
   await page.getByRole('button', { name: 'Try now', exact: true }).click();
+  await playground
+    .getByRole('group', { name: 'Request body editor', exact: true })
+    .getByRole('button', { name: 'JSON', exact: true })
+    .click();
   await playground.getByLabel('Request body', { exact: true }).fill(serialized);
   await playground
     .getByLabel('bearer credential', { exact: true })
@@ -165,6 +173,10 @@ test('invalid drafts can return to JSON without changing the last valid body', a
   await expect(
     playground.getByRole('button', { name: 'Send request' }),
   ).toBeEnabled();
+  await playground
+    .getByRole('group', { name: 'Request body editor', exact: true })
+    .getByRole('button', { name: 'JSON', exact: true })
+    .click();
   await playground
     .getByLabel('Request body', { exact: true })
     .fill('{"name":"a","name":"b"}');

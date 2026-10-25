@@ -7,7 +7,8 @@ import {
 } from '@davidniessen/doctopus-contracts';
 import type { JsonValueNode, Schema } from '@davidniessen/doctopus-contracts';
 import type { ReactNode } from 'react';
-import { BodyTable } from './BodyTable.js';
+import { BodyForm } from './BodyForm.js';
+import { Icon } from './Icon.js';
 import {
   BodyBranchContext as BranchContext,
   BodyBranchSelector as BranchSelector,
@@ -657,7 +658,7 @@ export function BodyEditor({
   legacy,
   onChange,
   onError,
-  initialMode = 'json',
+  initialMode = 'form',
   allowVariants = true,
 }: {
   body: string;
@@ -666,10 +667,10 @@ export function BodyEditor({
   legacy: boolean;
   onChange: (body: string) => void;
   onError: (error: string) => void;
-  initialMode?: 'json' | 'fields';
+  initialMode?: 'json' | 'fields' | 'form';
   allowVariants?: boolean;
 }) {
-  const [mode, setMode] = useState<'json' | 'fields' | 'table'>(initialMode);
+  const [mode, setMode] = useState<'json' | 'fields' | 'form'>(initialMode);
   const [variant, setVariant] = useState<number | undefined>();
   const [revision, setRevision] = useState(0);
   const [selections, setSelections] = useState<ReadonlyMap<string, number>>(
@@ -693,12 +694,18 @@ export function BodyEditor({
       bodyFieldModel(body, selectedSchema, schemas, legacy, {
         variants: allowVariants,
         selections,
-        table: true,
+        form: true,
       }),
     [body, selectedSchema, schemas, legacy, allowVariants, selections],
   );
   const available = model.available;
-  const shownMode = available ? mode : 'json';
+  const formAvailable =
+    available &&
+    (!('fields' in model) ||
+      (model.value.entries.length <= 100 &&
+        !model.value.entries.some(([name]) => !name)));
+  const shownMode =
+    available && (mode !== 'form' || formAvailable) ? mode : 'json';
   useEffect(() => {
     if (!available) setMode('json');
   }, [available]);
@@ -741,7 +748,8 @@ export function BodyEditor({
   };
   return (
     <BranchContext.Provider value={branchActions}>
-      <div className="body-editor">
+      <details className="request-form-section body-editor" open>
+        <summary>Body</summary>
         {variants && (
           <div className="body-variant-selector">
             <label>
@@ -793,24 +801,22 @@ export function BodyEditor({
           </button>
           <button
             type="button"
-            aria-pressed={shownMode === 'table'}
-            disabled={
-              !available ||
-              !('fields' in model) ||
-              model.value.entries.length > 100 ||
-              model.value.entries.some(([name]) => !name)
-            }
-            onClick={() => setMode('table')}
+            aria-pressed={shownMode === 'form'}
+            disabled={!formAvailable}
+            onClick={() => setMode('form')}
           >
-            Table
+            Form
           </button>
           <button
             type="button"
+            aria-label="Fields"
+            title="Advanced schema fields"
+            className="body-advanced-fields"
             aria-pressed={shownMode === 'fields'}
             disabled={!available || ('fields' in model && !model.fields.length)}
             onClick={() => setMode('fields')}
           >
-            Fields
+            <Icon name="settings" size={14} />
           </button>
         </div>
         {shownMode === 'json' || !available ? (
@@ -827,22 +833,18 @@ export function BodyEditor({
             </label>
             {!available && <p className="subtle">{model.error}</p>}
           </>
-        ) : shownMode === 'table' && 'fields' in model ? (
-          <BodyTable
+        ) : shownMode === 'form' && 'fields' in model ? (
+          <BodyForm
             key={revision}
             value={model.value}
-            fields={model.tableFields}
+            fields={model.formFields}
+            required={model.required}
             onChange={onChange}
-            onError={(error) => fieldError('table', error)}
+            onError={(error) => fieldError('form', error)}
           />
         ) : (
           <fieldset className="body-fields" key={revision}>
             <legend>Request fields</legend>
-            <p className="subtle">
-              Complex schemas use JSON. Unknown and read-only values are
-              retained; edit them in JSON. Required fields and schema
-              constraints still apply.
-            </p>
             {'fields' in model ? (
               <ObjectFields
                 model={model}
@@ -865,7 +867,7 @@ export function BodyEditor({
             )}
           </fieldset>
         )}
-      </div>
+      </details>
     </BranchContext.Provider>
   );
 }

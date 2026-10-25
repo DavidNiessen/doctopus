@@ -1,3 +1,4 @@
+import { addParameter, openRequestSettings } from '../helpers/request-forms.js';
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
@@ -6,17 +7,20 @@ test('parameter rows add repeated query fields and headers, preserve toggled dra
 }) => {
   await page.goto('api/orbit/v1/list-projects/?playground=open');
   const playground = page.getByLabel('API playground', { exact: true });
+  await addParameter(playground, 'query');
   await playground
     .getByLabel('query parameter name 1', { exact: true })
     .fill('tag');
   await playground
     .getByLabel('query parameter value 1', { exact: true })
     .fill('a&b + café');
+  await addParameter(playground, 'query');
   await playground
     .getByLabel('query parameter name 2', { exact: true })
     .fill('tag');
   const url = playground.getByLabel('Request URL', { exact: true });
   await expect(url).toContainText('?tag=a%26b%20%2B%20caf%C3%A9&tag=');
+  await addParameter(playground, 'header');
   await playground
     .getByLabel('header parameter name 1', { exact: true })
     .fill('trace');
@@ -71,6 +75,7 @@ test('custom credential fields stay out of copied examples and custom rows clear
 }) => {
   await page.goto('api/orbit/v1/list-projects/?playground=open');
   const playground = page.getByLabel('API playground', { exact: true });
+  await addParameter(playground, 'query');
   await playground
     .getByLabel('query parameter name 1', { exact: true })
     .fill('api_key');
@@ -90,12 +95,14 @@ test('custom credential fields stay out of copied examples and custom rows clear
   expect(await page.evaluate(() => JSON.stringify(localStorage))).not.toContain(
     'private-custom-credential',
   );
+  await openRequestSettings(playground);
   await playground
     .getByLabel('API server', { exact: true })
     .fill('https://other.example.test');
   await expect(
     playground.getByLabel('query parameter name 1', { exact: true }),
-  ).toHaveValue('');
+  ).toHaveCount(0);
+  await addParameter(playground, 'query');
   await playground
     .getByLabel('query parameter name 1', { exact: true })
     .fill('temporary');
@@ -106,10 +113,10 @@ test('custom credential fields stay out of copied examples and custom rows clear
   await page.getByRole('button', { name: 'Try now', exact: true }).click();
   await expect(
     playground.getByLabel('query parameter name 1', { exact: true }),
-  ).toHaveValue('');
+  ).toHaveCount(0);
 });
 
-test('rounded method badges stay vertically aligned and parameter tables fit the reported and compact viewports', async ({
+test('rounded method badges stay vertically aligned and parameter forms fit the reported and compact viewports', async ({
   page,
 }) => {
   for (const width of [360, 855, 1141]) {

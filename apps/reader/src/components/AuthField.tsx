@@ -16,6 +16,8 @@ export function AuthField({
   client,
   server,
   credentialExpiresAt,
+  mockOnly = false,
+  required = false,
 }: {
   name: string;
   scheme: SecurityScheme | undefined;
@@ -26,10 +28,13 @@ export function AuthField({
   redirectUri: string;
   client?: { clientId: string; issuer: string } | undefined;
   server: string;
+  mockOnly?: boolean;
+  required?: boolean;
 }) {
   const ui = useContext(UiContext),
     t = ui.text;
   const flow =
+    !mockOnly &&
     scheme?.type === 'oauth2' &&
     scheme.flows?.authorizationCode &&
     typeof scheme.flows.authorizationCode === 'object'
@@ -147,30 +152,59 @@ export function AuthField({
   }
   return (
     <div className="auth-field">
-      <label>
-        {name}
-        <input
-          ref={input}
-          type="password"
-          autoComplete="off"
-          aria-label={t('auth.credentialLabel', { name })}
-          disabled={busy}
-          value={credential}
-          onChange={(event) => {
-            setError(undefined);
-            if (event.target.value !== credential) {
-              token.current = undefined;
-              setExpiresAt(undefined);
-              setStatus('');
+      <label className="auth-primary-field request-form-field">
+        <span className="request-field-meta">
+          <span className="request-field-heading">
+            <code>
+              {scheme?.type === 'http' ||
+              scheme?.type === 'oauth2' ||
+              scheme?.type === 'openIdConnect'
+                ? 'Authorization'
+                : (scheme?.name ?? name)}
+            </code>
+            <span className="request-type-badge">
+              string{scheme?.scheme ? `<${scheme.scheme}>` : ''}
+            </span>
+            {required && (
+              <span className="request-required-badge">
+                {t('schema.required')}
+              </span>
+            )}
+          </span>
+          <span className="request-field-description">
+            {scheme?.description ??
+              (scheme?.type === 'http' && scheme.scheme === 'bearer'
+                ? 'Bearer authentication token.'
+                : name)}
+          </span>
+        </span>
+        <span className="auth-credential-control">
+          {scheme?.scheme === 'bearer' && (
+            <span className="auth-credential-prefix">Bearer</span>
+          )}
+          <input
+            ref={input}
+            type="password"
+            autoComplete="off"
+            aria-label={t('auth.credentialLabel', { name })}
+            disabled={busy}
+            value={credential}
+            onChange={(event) => {
+              setError(undefined);
+              if (event.target.value !== credential) {
+                token.current = undefined;
+                setExpiresAt(undefined);
+                setStatus('');
+              }
+              onChange(event.target.value);
+            }}
+            placeholder={
+              scheme?.scheme === 'basic'
+                ? t('auth.basicPlaceholder')
+                : t('auth.tokenPlaceholder')
             }
-            onChange(event.target.value);
-          }}
-          placeholder={
-            scheme?.scheme === 'basic'
-              ? t('auth.basicPlaceholder')
-              : t('auth.tokenPlaceholder')
-          }
-        />
+          />
+        </span>
       </label>
       {credential && (
         <button

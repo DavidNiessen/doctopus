@@ -1,3 +1,4 @@
+import { openRequestSettings } from '../helpers/request-forms.js';
 import { test, expect } from '@playwright/test';
 
 test('named examples, explicit null, media types and custom request values are usable', async ({
@@ -49,6 +50,7 @@ test('named examples, explicit null, media types and custom request values are u
   await expect(
     playground.getByRole('textbox', { name: 'Request body', exact: true }),
   ).toHaveValue('null');
+  await openRequestSettings(playground);
   await playground
     .getByRole('combobox', { name: 'Request example', exact: true })
     .selectOption('named:zero');
@@ -61,12 +63,14 @@ test('named examples, explicit null, media types and custom request values are u
   await expect(
     playground.getByRole('combobox', { name: 'Request example', exact: true }),
   ).toHaveValue('');
+  await openRequestSettings(playground);
   await playground
     .getByRole('combobox', { name: 'Content type', exact: true })
     .selectOption('text/plain');
   await expect(
     playground.getByRole('textbox', { name: 'Request body', exact: true }),
   ).toHaveValue('  keep these spaces  ');
+  await openRequestSettings(playground);
   await playground
     .getByRole('combobox', { name: 'Requested response format', exact: true })
     .selectOption('text/plain');

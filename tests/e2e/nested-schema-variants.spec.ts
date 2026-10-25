@@ -1,3 +1,4 @@
+import { openRequestSettings } from '../helpers/request-forms.js';
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import type { Page } from '@playwright/test';
@@ -6,6 +7,7 @@ const route =
 async function open(page: Page) {
   await page.goto(route);
   const playground = page.getByLabel('API playground');
+  await openRequestSettings(playground);
   await playground
     .getByRole('combobox', { name: 'Content type', exact: true })
     .selectOption('application/vnd.doctopus.nested+json');
@@ -21,6 +23,10 @@ test('nested choices preserve other drafts, numeric tokens and hidden values, an
   const playground = await open(page);
   // Install precise/unknown body values before entering fields again.
   await playground.getByRole('button', { name: 'JSON', exact: true }).click();
+  await playground
+    .getByRole('group', { name: 'Request body editor', exact: true })
+    .getByRole('button', { name: 'JSON', exact: true })
+    .click();
   await playground
     .getByLabel('Request body', { exact: true })
     .fill(
@@ -273,6 +279,7 @@ test('nested JSON and omission reset descendant choices while preserving the con
   await playground.getByRole('button', { name: 'Close playground' }).click();
   await page.getByRole('button', { name: 'Switch to dark theme' }).click();
   await page.getByRole('button', { name: 'Try this endpoint' }).click();
+  await openRequestSettings(playground);
   await playground
     .getByRole('combobox', { name: 'Content type', exact: true })
     .selectOption('application/vnd.doctopus.nested+json');

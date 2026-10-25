@@ -1,3 +1,4 @@
+import { openRequestSettings } from '../helpers/request-forms.js';
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 const route =
@@ -12,6 +13,10 @@ test('array items support edits, additions and removal with precise requests and
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto(route);
   const playground = page.getByLabel('API playground');
+  await playground
+    .getByRole('group', { name: 'Request body editor', exact: true })
+    .getByRole('button', { name: 'JSON', exact: true })
+    .click();
   await playground.getByLabel('Request body', { exact: true }).fill(raw);
   await playground.getByRole('button', { name: 'Fields', exact: true }).click();
   await expect(
@@ -98,6 +103,10 @@ test('array items support edits, additions and removal with precise requests and
         .click();
       await page.getByRole('button', { name: 'Switch to dark theme' }).click();
       await page.getByRole('button', { name: 'Try this endpoint' }).click();
+      await playground
+        .getByRole('group', { name: 'Request body editor', exact: true })
+        .getByRole('button', { name: 'JSON', exact: true })
+        .click();
       await playground.getByLabel('Request body', { exact: true }).fill(sent);
       await playground
         .getByRole('button', { name: 'Fields', exact: true })
@@ -133,6 +142,10 @@ test('array reindexing discards incomplete drafts and mode changes restore valid
   await page.goto(route);
   const playground = page.getByLabel('API playground'),
     send = playground.getByRole('button', { name: 'Send request' });
+  await playground
+    .getByRole('group', { name: 'Request body editor', exact: true })
+    .getByRole('button', { name: 'JSON', exact: true })
+    .click();
   await playground.getByLabel('Request body', { exact: true }).fill(raw);
   await playground.getByRole('button', { name: 'Fields', exact: true }).click();
   await playground.getByLabel('Body members[1].id', { exact: true }).fill('-');
@@ -205,9 +218,14 @@ test('root array bodies use referenced item fields and preserve exact batch requ
   await page.goto(route);
   const playground = page.getByLabel('API playground');
   const media = 'application/vnd.doctopus.list+json';
+  await openRequestSettings(playground);
   await playground
     .getByRole('combobox', { name: 'Content type', exact: true })
     .selectOption(media);
+  await playground
+    .getByRole('group', { name: 'Request body editor', exact: true })
+    .getByRole('button', { name: 'JSON', exact: true })
+    .click();
   await playground
     .getByLabel('Request body', { exact: true })
     .fill(
@@ -260,9 +278,14 @@ test('root array bodies use referenced item fields and preserve exact batch requ
         .click();
       await page.getByRole('button', { name: 'Switch to dark theme' }).click();
       await page.getByRole('button', { name: 'Try this endpoint' }).click();
+      await openRequestSettings(playground);
       await playground
         .getByRole('combobox', { name: 'Content type', exact: true })
         .selectOption(media);
+      await playground
+        .getByRole('group', { name: 'Request body editor', exact: true })
+        .getByRole('button', { name: 'JSON', exact: true })
+        .click();
       await playground.getByLabel('Request body', { exact: true }).fill(sent);
       await playground
         .getByRole('button', { name: 'Fields', exact: true })

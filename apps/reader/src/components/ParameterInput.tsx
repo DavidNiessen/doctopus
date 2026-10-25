@@ -27,12 +27,6 @@ export function ParameterInput({
   const id = useId();
   const t = useUi();
   const included = presence ?? value !== '';
-  const hint =
-    !parameter.required && !included && value
-      ? t('parameter.omitted')
-      : included && value === ''
-        ? t('parameter.empty')
-        : '';
   const input = (
     <input
       id={id}
@@ -45,7 +39,6 @@ export function ParameterInput({
           : t('parameter.label', { name: parameter.name })
       }
       aria-required={parameter.required}
-      aria-describedby={hint ? id + '-presence' : undefined}
       value={value}
       placeholder={
         parameter.schema.type === 'array'
@@ -78,7 +71,7 @@ export function ParameterInput({
             )
           }
         />
-        <span className={compact ? 'sr-only' : undefined}>
+        <span className="sr-only">
           {t(parameter.required ? 'parameter.allowEmpty' : 'parameter.include')}
         </span>
       </label>
@@ -89,38 +82,49 @@ export function ParameterInput({
     ) : null;
   const heading = (
     <span className="parameter-name" title={parameter.description}>
-      <code>{parameter.name}</code>
-      <small>
-        {parameter.in}
-        {parameter.required ? ' · ' + t('schema.required') : ''}
-      </small>
+      <span className="request-field-heading">
+        <code>{parameter.name}</code>
+        <span className="request-type-badge">
+          {String(parameter.schema.type ?? 'string')}
+        </span>
+        {parameter.required && (
+          <span className="request-required-badge">{t('schema.required')}</span>
+        )}
+      </span>
+      {parameter.description && (
+        <span className="request-field-description">
+          {parameter.description}
+        </span>
+      )}
     </span>
   );
-  const help = hint ? (
-    <p id={id + '-presence'} className="parameter-presence-hint">
-      {hint}
-    </p>
-  ) : null;
   if (compact)
     return (
-      <div className="request-parameter-row" data-parameter-row="documented">
-        {toggle}
-        <label htmlFor={id}>{heading}</label>
-        {input}
-        <button
-          type="button"
-          className="parameter-remove"
-          disabled={parameter.required}
-          aria-label={t('parameter.remove', {
-            location: parameter.in,
-            name: parameter.name,
-          })}
-          title={parameter.required ? t('schema.required') : undefined}
-          onClick={onRemove}
-        >
-          <Icon name="close" size={14} />
-        </button>
-        {help}
+      <div className="request-form-field" data-parameter-row="documented">
+        <label htmlFor={id} className="request-field-meta">
+          {heading}
+        </label>
+        <div className="request-field-control">
+          {input}
+          <div className="request-field-actions">
+            {toggle}
+            {onRemove && (
+              <button
+                type="button"
+                className="parameter-remove"
+                disabled={parameter.required}
+                aria-label={t('parameter.remove', {
+                  location: parameter.in,
+                  name: parameter.name,
+                })}
+                title={parameter.required ? t('schema.required') : undefined}
+                onClick={onRemove}
+              >
+                <Icon name="close" size={14} />
+              </button>
+            )}
+          </div>
+        </div>
       </div>
     );
   return (
@@ -130,7 +134,6 @@ export function ParameterInput({
         {input}
       </label>
       {toggle}
-      {help}
     </div>
   );
 }

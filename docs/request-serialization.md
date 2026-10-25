@@ -26,9 +26,9 @@ An absent flag preserves automatic inclusion of nonempty input. `true` includes 
 
 cURL snippets use `--header 'trace;'` for an empty custom header; `trace:` would remove that header in cURL. Generated clients in all five languages are executed against a loopback server with empty headers, alongside the existing body, multipart and error/redirect cases.
 
-## Editable parameter rows
+## Editable parameter forms
 
-The playground groups query parameters and headers into compact Key / Value rows. Enter a custom name and value in the blank final row; another blank row appears automatically. **Add query parameter** and **Add header parameter** focus that insertion row. Uncheck a row to omit it while keeping its draft, or use its remove button to discard it.
+The playground groups query parameters and headers into rounded forms. Documented fields show their name, type, required badge and description beside the input. **Add query parameter** and **Add header parameter** reveal a custom-field form and focus its name. Uncheck a field to omit it while keeping its draft, or use its remove button to discard it. Empty groups remain collapsed until opened. Parameter-presence changes do not add explanatory text below the controls.
 
 Optional documented query/header rows can be removed without changing the specification. **Restore documented parameters** brings them back with their previous values. Required documented fields stay visible and cannot be removed. Path fields and documented arrays, objects, styles and content-based values retain their existing validation and serialization.
 
