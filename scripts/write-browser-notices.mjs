@@ -95,6 +95,11 @@ for (const name of [...packages.keys()].sort()) {
     );
   }
 }
+for (const name of ['INTER-LICENSE.txt', 'JETBRAINS-MONO-LICENSE.txt']) {
+  sections.push(
+    `Locally bundled interface font: ${name}\n\n${await readFile(new URL('../apps/shared/fonts/' + name, import.meta.url), 'utf8')}`,
+  );
+}
 await writeFile(
   join(output, 'assets/THIRD_PARTY_NOTICES.txt'),
   sections.join('\n\n' + '='.repeat(72) + '\n\n'),

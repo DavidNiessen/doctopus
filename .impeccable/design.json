@@ -1,0 +1,226 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-25T12:52:58Z",
+  "title": "Design System: Doctopus",
+  "extensions": {
+    "colorMeta": {
+      "mint": {
+        "role": "primary",
+        "displayName": "Mint",
+        "purpose": "Default reference preset; resolved separately for readable text."
+      },
+      "ocean": {
+        "role": "primary",
+        "displayName": "Ocean",
+        "purpose": "Prepared preset and request action hue."
+      },
+      "violet": {
+        "role": "secondary",
+        "displayName": "Violet",
+        "purpose": "Prepared preset; violet octopus assets remain the product identity."
+      },
+      "neutral-accent": {
+        "role": "primary",
+        "displayName": "Neutral",
+        "purpose": "Prepared neutral reader preset."
+      },
+      "light-background": {
+        "role": "neutral",
+        "displayName": "Light canvas"
+      },
+      "dark-background": {
+        "role": "neutral",
+        "displayName": "Dark canvas"
+      }
+    },
+    "typographyMeta": {
+      "endpoint-title": {
+        "displayName": "Endpoint title",
+        "purpose": "Modern reader endpoint heading; becomes 1.875rem at the reader mobile breakpoint."
+      },
+      "workspace-title": {
+        "displayName": "Workspace title",
+        "purpose": "Studio page heading; becomes 1.75rem at the Studio mobile breakpoint."
+      },
+      "body": {
+        "displayName": "Guide body",
+        "purpose": "Reading prose, with a maximum paragraph measure of 72ch."
+      },
+      "code": {
+        "displayName": "Example code",
+        "purpose": "Locally hosted JetBrains Mono in request/response examples."
+      }
+    },
+    "shadows": [
+      {
+        "name": "shared-chrome",
+        "value": "0 1px 2px #00000005",
+        "purpose": "Shared subtle chrome token; major reader/workspace surfaces explicitly remain flat."
+      },
+      {
+        "name": "settings-dialog",
+        "value": "0 16px 60px #0003",
+        "purpose": "Focused native reader settings dialog."
+      },
+      {
+        "name": "response-fullscreen",
+        "value": "0 24px 90px #0004",
+        "purpose": "Native fullscreen response overlay."
+      },
+      {
+        "name": "mobile-navigation",
+        "value": "16px 0 40px #0002",
+        "purpose": "Reader mobile navigation drawer."
+      },
+      {
+        "name": "field-focus",
+        "value": "0 0 0 3px color-mix(in srgb, var(--accent-text) 12%, transparent)",
+        "purpose": "Studio field focus ring; reader uses configured accent in the same mix."
+      }
+    ],
+    "motion": [
+      {
+        "name": "reduced-motion",
+        "value": "animation: none !important; transition: none !important; scroll-behavior: auto !important",
+        "purpose": "Applied under prefers-reduced-motion: reduce in both applications."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "reader-single-column-with-rail",
+        "value": "1280px",
+        "purpose": "Applied from 761px through 1280px; API examples and guide contents leave the side column."
+      },
+      {
+        "name": "reader-narrow-rail",
+        "value": "1023px",
+        "purpose": "Applied from 761px through 1023px; fixed 220px navigation track."
+      },
+      {
+        "name": "reader-mobile-and-shared-controls",
+        "value": "760px",
+        "purpose": "Reader drawer/stacked layout and shared larger control minimum; coarse pointers also use the larger minimum."
+      },
+      {
+        "name": "reader-settings-single-column",
+        "value": "520px",
+        "purpose": "Settings control grid becomes one column."
+      },
+      {
+        "name": "studio-compact",
+        "value": "1000px",
+        "purpose": "Studio heading stacks and content padding changes."
+      },
+      {
+        "name": "studio-mobile",
+        "value": "620px",
+        "purpose": "Studio navigation becomes horizontal, rail resizing disappears and forms stack."
+      },
+      {
+        "name": "studio-build-controls",
+        "value": "600px",
+        "purpose": "Build controls stack."
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary action",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Studio action button; the application supplies its real action.",
+      "html": "<button class=\"ds-primary\" type=\"button\">Create build</button>",
+      "css": ".ds-primary{font:600 .875rem var(--ui-font, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', ui-sans-serif, system-ui, sans-serif);min-height:var(--ui-control-height,36px);padding:8px 14px;border-radius:8px;cursor:pointer;border:0;background:var(--action-bg,#087a50);color:#fff}.ds-primary:hover{background:color-mix(in srgb,var(--action-bg,#087a50) 88%,#000)}.ds-primary:focus-visible{outline:2px solid var(--accent-text,#087a50);outline-offset:4px}.ds-primary:active:not(:disabled){filter:brightness(.94)}.ds-primary:disabled{opacity:.55;cursor:not-allowed}@media(max-width:620px){.ds-primary{min-height:44px}}"
+    },
+    {
+      "name": "Secondary action",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Bordered secondary action with a quiet surface hover.",
+      "html": "<button class=\"ds-secondary\" type=\"button\">Refresh</button>",
+      "css": ".ds-secondary{font:600 .875rem var(--ui-font, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', ui-sans-serif, system-ui, sans-serif);min-height:var(--ui-control-height,36px);padding:8px 14px;border-radius:8px;cursor:pointer;border:1px solid var(--ui-border,var(--border,#e5e9e7));background:var(--bg,#fff);color:var(--text,#3f4945)}.ds-secondary:hover{background:var(--surface,#f8faf9)}.ds-secondary:focus-visible{outline:2px solid var(--accent-text,#087a50);outline-offset:4px}.ds-secondary:active:not(:disabled){filter:brightness(.94)}.ds-secondary:disabled{opacity:.55;cursor:not-allowed}@media(max-width:620px){.ds-secondary{min-height:44px}}"
+    },
+    {
+      "name": "Labeled field",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "Native labeled input using the common palette and focus treatment.",
+      "html": "<label class=\"ds-field\">Project name<input class=\"ds-field-input\" value=\"Doctopus\" /><small class=\"ds-field-help\">Choose the project for this workspace.</small></label>",
+      "css": ".ds-field{display:grid;gap:8px;color:var(--text,#3f4945);font:500 .875rem var(--ui-font, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', ui-sans-serif, system-ui, sans-serif)}.ds-field-input{min-width:0;min-height:var(--ui-control-height,36px);padding:8px 10px;border:1px solid var(--ui-field-border,color-mix(in srgb,var(--muted,#626e68) 55%,var(--bg,#fff)));border-radius:8px;background:var(--bg,#fff);color:var(--text,#3f4945);font:.875rem var(--ui-font, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', ui-sans-serif, system-ui, sans-serif)}.ds-field-input:focus{border-color:var(--action-bg,#087a50);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent-text,#087a50) 12%,transparent)}.ds-field-input:focus-visible{outline:2px solid var(--accent-text,#087a50);outline-offset:3px}.ds-field-help{font-size:.8125rem;color:var(--muted,#626e68)}@media(max-width:760px){.ds-field-input{font-size:max(16px,1rem)}}"
+    },
+    {
+      "name": "Reader navigation",
+      "kind": "nav",
+      "refersTo": "navigation-item",
+      "description": "Flat reader links with current-item tint and visible keyboard focus.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Reference\"><a class=\"ds-nav-link\" href=\"#overview\">Overview</a><a class=\"ds-nav-link ds-nav-current\" href=\"#endpoints\" aria-current=\"page\">Endpoints</a></nav>",
+      "css": ".ds-nav{display:grid;gap:4px;background:var(--bg,#fff);font:400 .875rem/20px var(--ui-font, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', ui-sans-serif, system-ui, sans-serif)}.ds-nav-link{display:flex;align-items:center;min-height:36px;padding:8px 16px;border-radius:12px;color:var(--muted,#626e68);text-decoration:none}.ds-nav-link:hover{background:var(--surface,#f8faf9);color:var(--heading,#17211c)}.ds-nav-current{background:color-mix(in srgb,var(--accent,#07c983) 9%,var(--bg,#fff));color:var(--accent-text,#087a50);font-weight:600}.ds-nav-link:focus-visible{outline:2px solid var(--accent-text,#087a50);outline-offset:4px}"
+    },
+    {
+      "name": "HTTP method metadata",
+      "kind": "chip",
+      "refersTo": "method-get",
+      "description": "Compact GET and POST badges with the shipped appearance-specific pairs.",
+      "html": "<div class=\"ds-methods\"><span class=\"ds-method ds-get\">GET</span><span class=\"ds-method ds-post\">POST</span></div>",
+      "css": ".ds-methods{display:flex;gap:8px}.ds-method{display:inline-block;padding:3px 5px;border-radius:4px;font:700 .75rem/1.2 var(--ui-font, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', ui-sans-serif, system-ui, sans-serif)}.ds-get{color:light-dark(#087444,#61d79b);background:light-dark(#e4f8ed,#123426)}.ds-post{color:light-dark(#225fbb,#6db3ff);background:light-dark(#eaf2ff,#142f43)}"
+    },
+    {
+      "name": "Code example surface",
+      "kind": "card",
+      "refersTo": "code-example",
+      "description": "Quiet bordered example with local, focusable code overflow.",
+      "html": "<section class=\"ds-code-card\" aria-label=\"Response example\"><div class=\"ds-code-toolbar\">Response · application/json</div><pre class=\"ds-code-pre\" tabindex=\"0\" aria-label=\"Response example code\"><code>{\n  \"status\": \"succeeded\"\n}</code></pre></section>",
+      "css": ".ds-code-card{overflow:hidden;min-width:0;border:1px solid var(--ui-border,var(--border,#e5e9e7));border-radius:16px;background:var(--surface,#f8faf9);color:var(--text,#3f4945)}.ds-code-toolbar{min-height:36px;padding:7px 12px;color:var(--heading,#17211c);font:600 .75rem var(--ui-font, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', ui-sans-serif, system-ui, sans-serif)}.ds-code-pre{margin:0;padding:16px 18px;max-height:320px;overflow:auto;border-radius:14px;background:var(--bg,#fff);font:400 .75rem/1.8 var(--ui-mono, 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace);tab-size:2}.ds-code-pre code{font:inherit}.ds-code-pre:focus-visible{outline:2px solid var(--accent-text,#087a50);outline-offset:4px}"
+    },
+    {
+      "name": "Operational table",
+      "kind": "custom",
+      "description": "Minimum-width data table in a labeled, keyboard-focusable local scroll region.",
+      "html": "<div class=\"ds-table-scroll\" tabindex=\"0\" role=\"region\" aria-label=\"Scrollable build history\"><table class=\"ds-table\"><thead><tr><th scope=\"col\">Build</th><th scope=\"col\">State</th><th scope=\"col\">Source</th></tr></thead><tbody><tr><td>1042</td><td><span class=\"ds-state\">Succeeded</span></td><td>openapi.yaml</td></tr></tbody></table></div>",
+      "css": ".ds-table-scroll{max-width:100%;overflow:auto;border:1px solid var(--border,#e5e9e7);border-radius:12px;background:var(--bg,#fff);color:var(--text,#3f4945)}.ds-table-scroll:focus-visible{outline:2px solid var(--accent-text,#087a50);outline-offset:4px}.ds-table{border-collapse:collapse;width:100%;min-width:720px;font:400 .8125rem/1.6 var(--ui-font, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', ui-sans-serif, system-ui, sans-serif);font-variant-numeric:tabular-nums}.ds-table th{padding:12px 16px;text-align:left;font-weight:500;white-space:nowrap;background:var(--surface,#f8faf9)}.ds-table td{padding:16px;border-bottom:1px solid var(--border,#e5e9e7)}.ds-table tbody tr:last-child td{border-bottom:0}.ds-table tbody tr:hover{background:color-mix(in srgb,var(--surface,#f8faf9) 55%,var(--bg,#fff))}.ds-state{white-space:nowrap;border-radius:5px;padding:3px 7px;font-size:.6875rem;font-weight:500;background:var(--success-surface,#eaf7ef);color:var(--success-text,#12654c)}"
+    },
+    {
+      "name": "Source disclosure",
+      "kind": "custom",
+      "description": "Native progressive disclosure used for operational source details.",
+      "html": "<details class=\"ds-source\"><summary class=\"ds-source-summary\">Approved source</summary><p class=\"ds-source-description\">Review the source before starting a build.</p><code class=\"ds-source-code\">openapi.yaml</code></details>",
+      "css": ".ds-source{padding:16px 0;border-bottom:1px solid var(--ui-border,var(--border,#e5e9e7));background:var(--bg,#fff);color:var(--text,#3f4945);font:.875rem var(--ui-font, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', ui-sans-serif, system-ui, sans-serif)}.ds-source-summary{cursor:pointer;font-size:.9375rem}.ds-source-summary:hover{color:var(--heading,#17211c)}.ds-source-summary:focus-visible{outline:2px solid var(--accent-text,#087a50);outline-offset:4px}.ds-source-description{color:var(--muted,#626e68);font-size:.875rem;line-height:1.7}.ds-source-code{font-family:var(--ui-mono, 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace);overflow-wrap:anywhere}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Familiar, precise documentation software",
+    "overview": "Doctopus uses a centered, flat documentation canvas and a practical operating workspace. Typography, quiet dividers and restrained surface changes organize the interface. The violet octopus assets retain the product identity while the default reference uses mint accents; published branding and the prepared alternate palettes remain supported.\n\nDocumentation prioritizes reading and understanding. The playground and Studio prioritize completing real tasks, with labeled forms, meaningful tables and explicit states. This is the Doctopus project system: its documented patterns describe the implemented reader and Studio rather than a universal interface template.",
+    "keyCharacteristics": [
+      "Centered documentation shell with an unboxed article.",
+      "Shared local typefaces, palette roles and native controls.",
+      "Separate request/response examples and adjustable workspace tracks.",
+      "Flat surfaces with depth reserved for overlays."
+    ],
+    "rules": [
+      {
+        "name": "Resolved Palette",
+        "body": "Use the resolved palette for body text, inputs, tables and examples. Derive accent and syntax text against the actual background and surface rather than using raw brand colors as text.",
+        "section": "colors"
+      },
+      {
+        "name": "Content Before Containers",
+        "body": "Keep the reading article and workspace shell flat. Use borders and surfaces to group actual controls, examples, data and focused tasks.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do preserve Doctopus naming and the violet octopus identity assets.",
+      "Do apply published or prepared palette roles consistently to text, controls, tables and code.",
+      "Do keep labels, descriptions, required/type metadata and explicit operational states visible where they are needed.",
+      "Do preserve keyboard and pointer resizing, native dialog behavior, clipboard fidelity, folding and fullscreen behavior.",
+      "Do keep table overflow local, focusable and labeled, and preserve localization and text zoom."
+    ],
+    "donts": [
+      "Don't wrap the main reading article in a decorative card.",
+      "Don't add decorative kickers to the settings heading or promote leftover eyebrow selectors into a reusable pattern.",
+      "Don't replace meaningful tables with narrow mobile cards or hide columns to fit the viewport.",
+      "Don't add nonfunctional assistant controls, decorative dashboard charts or invented product claims.",
+      "Don't introduce font CDN or icon runtime requests."
+    ]
+  }
+}

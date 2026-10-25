@@ -105,7 +105,7 @@ The owner deferred independent security, isolation, accessibility, license revie
 - **release:** centralize runtime versions and audit distribution metadata ([6aec759](https://github.com/DavidNiessen/doctopus/commit/6aec7595056e05183d059c5e96d52a47c8f9397d))
 - **reader:** open the API playground in a modal ([4887037](https://github.com/DavidNiessen/doctopus/commit/48870372b4a4a45d8486a772fa322bde080f3ed6))
 - **release:** propose semantic versions and conventional changelogs ([bf62683](https://github.com/DavidNiessen/doctopus/commit/bf62683133d1bacbfad245d2f4e26be058abdd8b))
-- **reader:** add response-only Monaco viewer and Scalar-style URL bar ([e082e5c](https://github.com/DavidNiessen/doctopus/commit/e082e5c52647b8a5352d7688987fca496414355d))
+- **reader:** add response-only Monaco viewer and Unified URL bar ([e082e5c](https://github.com/DavidNiessen/doctopus/commit/e082e5c52647b8a5352d7688987fca496414355d))
 - **release:** prepare reviewed version and changelog changes ([8608769](https://github.com/DavidNiessen/doctopus/commit/8608769c013bf25757da4f466533d7e8cd022e88))
 - **reader:** add bounded nested request body fields ([0e8c29d](https://github.com/DavidNiessen/doctopus/commit/0e8c29d3916b1fe4b49602c132830f4c8d5078d8))
 - **reader:** add bounded array request body controls ([85f6a34](https://github.com/DavidNiessen/doctopus/commit/85f6a34033ee7fce1f060ad19bff9bce8138e014))

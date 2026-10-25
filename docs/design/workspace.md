@@ -1,6 +1,8 @@
-# Documentation workspace design
+# Previous documentation workspace review
 
-This redesign applies the [Apple Design skill](https://github.com/dickwu/apple-design-skill/blob/914b6a377c22755597e4405e54911b996de822d7/SKILL.md) to the React reader and Studio. Its HIG references inform web accessibility and design principles; this is not a native Apple app, a Liquid Glass implementation or a claim of independent accessibility approval. Reader appearance/layout controls remain available as explicitly requested, including preset themes and matching response-editor colors.
+The current visual system is documented in [DESIGN.md](../../DESIGN.md).
+
+This document records an earlier accessibility and workspace design review of the React reader and Studio. It describes web behavior and local checks rather than independent accessibility approval. Reader appearance/layout controls remain available as explicitly requested, including prepared themes and matching response-editor colors.
 
 ## Review and direction
 
@@ -10,7 +12,7 @@ The product's job is to help an API consumer understand an endpoint and confiden
 
 The baseline screenshots show several improvements worth making, rather than a new navigation model:
 
-- **High:** mobile toolbar icons use 30px targets. Increase these to 44px and desktop targets to 36px. `accessibility.md › Mobility`: “Offer sufficiently sized controls.” Native Apple point sizes are design guidance here; browser CSS pixels and measured web hit regions are tested separately.
+- **High:** mobile toolbar icons use 30px targets. Increase these to 44px and desktop targets to 36px. `accessibility.md › Mobility`: “Offer sufficiently sized controls.” Browser CSS pixels and measured web hit regions are tested separately.
 - **Medium:** many controls and secondary data use 9–12px text, while guide paragraphs use 14px and shrink further on compact screens. Establish a rem-based scale, retaining legible hierarchy at larger text sizes. `typography.md › Ensuring legibility`: “Use font sizes that most people can read easily.”
 - **Medium:** repeated nested borders and promotional accessories compete with documentation. Keep the content opaque, group related controls, and remove the decorative developer-status line and repeated TOC promotion. `layout.md › Visual hierarchy`: “Group related items to clearly express related information or functions.” The assessment of excess decoration is design judgment.
 - **High:** custom translucency has no explicit reduced-transparency treatment, and Studio is fixed to a light palette. Add opaque fallbacks, increased-contrast/forced-color treatment and system dark appearance for Studio. `color.md › Best practices`: “Make sure all your app’s colors work well in light, dark, and increased contrast contexts.”

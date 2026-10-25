@@ -2366,7 +2366,7 @@ h3 {
   }
 }
 
-/* Scalar-inspired method, server, target, copy and send controls in one bar. */
+/* Unified method, server, target, copy and send controls in one bar. */
 .playground-heading .request-url-bar {
   padding: 3px 4px 3px 8px;
   gap: 4px;

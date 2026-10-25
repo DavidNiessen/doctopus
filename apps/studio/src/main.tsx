@@ -17,7 +17,7 @@ import { createRoot } from 'react-dom/client';
 import type { Project, Publication } from '@davidniessen/doctopus-domain';
 import '../../shared/design-tokens.css';
 import './styles.css';
-import './island-layout.css';
+import './workspace-layout.css';
 import '../../shared/scrollbars.css';
 import '../../shared/accessibility.css';
 const Builds = lazy(() => import('./Builds.js'));
@@ -28,6 +28,23 @@ const navigationIcons: Record<string, string> = {
   'Access control': 'M5 10h14v11H5zM8 10V6a4 4 0 0 1 8 0v4',
   'Audit log': 'M4 6h16M4 12h16M4 18h16',
 };
+function ExternalLinkIcon() {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.65"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M14 3h7v7m0-7L10 14M10 3H4a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-6" />
+    </svg>
+  );
+}
 function WorkspaceMark() {
   return (
     <img
@@ -355,7 +372,6 @@ function Studio() {
           <div className="login-mark">
             <WorkspaceMark />
           </div>
-          <p className="eyebrow">YOUR DOCUMENTATION, YOUR INFRASTRUCTURE</p>
           <h1>Welcome to your workspace</h1>
           <p>Publish beautiful documentation. Keep complete control.</p>
           {oidc && (
@@ -487,7 +503,7 @@ function Studio() {
           <main className="workspace-main" key={`${selected}:${tab}`}>
             <div className="workspace-heading">
               <div>
-                <p className="eyebrow">
+                <p className="workspace-context">
                   Workspace / {project?.name ?? 'Projects'}
                 </p>
                 <h1>{tab}</h1>
@@ -515,7 +531,7 @@ function Studio() {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  View documentation ↗
+                  View documentation <ExternalLinkIcon />
                 </a>
               )}
             </div>
@@ -772,7 +788,12 @@ function Studio() {
                   {!publications.length ? (
                     <p>No publications yet. Your first release starts here.</p>
                   ) : (
-                    <div className="table-scroll">
+                    <div
+                      className="table-scroll"
+                      tabIndex={0}
+                      role="region"
+                      aria-label="Scrollable publication history"
+                    >
                       <table>
                         <thead>
                           <tr>
@@ -828,7 +849,7 @@ function Studio() {
                                         );
                                     }}
                                   >
-                                    Roll back ↗
+                                    Roll back <ExternalLinkIcon />
                                   </button>
                                 )}
                               </td>
@@ -1021,7 +1042,12 @@ function Studio() {
               <section className="panel">
                 <h2>Recent events</h2>
                 {audit.length ? (
-                  <div className="table-scroll">
+                  <div
+                    className="table-scroll"
+                    tabIndex={0}
+                    role="region"
+                    aria-label="Scrollable audit events"
+                  >
                     <table>
                       <thead>
                         <tr>

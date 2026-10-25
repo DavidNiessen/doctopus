@@ -11,6 +11,7 @@ export function Icon({
   style?: CSSProperties;
 }) {
   const paths: Record<string, string> = {
+    play: 'm8 5 11 7-11 7V5Z',
     plus: 'M12 5v14M5 12h14',
     maximize: 'M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5',
     minimize: 'M3 8h5V3m8 0v5h5M8 21v-5H3m13 5v-5h5',

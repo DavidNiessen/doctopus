@@ -208,7 +208,7 @@ test('demo search, presets and mobile playground remain accessible', async ({
     .click();
   await expect(page.locator('.monaco-editor')).toHaveCSS(
     'background-color',
-    'rgb(24, 24, 27)',
+    'rgb(9, 13, 13)',
   );
   await page.setViewportSize({ width: 390, height: 844 });
   expect(

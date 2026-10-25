@@ -78,7 +78,17 @@ function SchemaMetadata({
   const t = useUi();
   const keys = constraintKeys.filter(
     (key) =>
-      schema[key] !== undefined && !(hideDeprecated && key === 'deprecated'),
+      schema[key] !== undefined &&
+      !(hideDeprecated && key === 'deprecated') &&
+      !(
+        key === 'required' &&
+        Array.isArray(schema.required) &&
+        schema.required.every(
+          (name) =>
+            typeof name === 'string' &&
+            Object.hasOwn(object(schema.properties), name),
+        )
+      ),
   );
   return (
     <>

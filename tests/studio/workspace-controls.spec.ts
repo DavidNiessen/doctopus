@@ -31,13 +31,13 @@ test('appearance overrides the system, survives reloads and synchronizes across 
   await appearance.selectOption('dark');
   await expect(page.locator('.workspace-main')).toHaveCSS(
     'background-color',
-    'rgb(24, 24, 27)',
+    'rgb(9, 13, 13)',
   );
   await page.reload();
   await expect(appearance).toHaveValue('dark');
   await expect(page.locator('.workspace-main')).toHaveCSS(
     'background-color',
-    'rgb(24, 24, 27)',
+    'rgb(9, 13, 13)',
   );
   const other = await context.newPage();
   await other.route('**/api/**', (route) =>
@@ -59,7 +59,7 @@ test('appearance overrides the system, survives reloads and synchronizes across 
   await page.emulateMedia({ colorScheme: 'dark' });
   await expect(page.locator('.workspace-main')).toHaveCSS(
     'background-color',
-    'rgb(24, 24, 27)',
+    'rgb(9, 13, 13)',
   );
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   await other.close();
@@ -136,7 +136,7 @@ test('blocked storage preserves usable appearance and sizing controls, including
   await appearance.selectOption('dark');
   await expect(page.locator('.workspace-main')).toHaveCSS(
     'background-color',
-    'rgb(24, 24, 27)',
+    'rgb(9, 13, 13)',
   );
   await page.setViewportSize({ width: 640, height: 900 });
   await page.evaluate(() => window.scrollTo(0, 120));
@@ -148,7 +148,7 @@ test('blocked storage preserves usable appearance and sizing controls, including
         .boundingBox())!;
       return navigation.y - (header.y + header.height);
     })
-    .toBeGreaterThanOrEqual(10);
+    .toBeGreaterThanOrEqual(0);
   await page.setViewportSize({ width: 360, height: 900 });
   await page.evaluate(() => window.scrollTo(0, 0));
   await page.evaluate(() => {
@@ -164,4 +164,84 @@ test('blocked storage preserves usable appearance and sizing controls, including
     body: await page.screenshot(),
     contentType: 'image/png',
   });
+});
+
+test('mobile publication and audit tables retain readable columns with keyboard scrolling', async ({
+  page,
+}) => {
+  const id = '12345678-1234-1234-1234-123456789abc';
+  await page.unroute('**/api/**');
+  await page.route('**/api/**', (route) => {
+    const path = new URL(route.request().url()).pathname;
+    const json =
+      path === '/api/me'
+        ? { subject: 'docs-admin', operator: true, oidc: false }
+        : path === '/api/projects'
+          ? [
+              {
+                id,
+                name: 'Orbit API',
+                slug: 'orbit',
+                visibility: 'public',
+                activePublicationId: 'publication-live',
+              },
+            ]
+          : path.endsWith('/capabilities')
+            ? {
+                projectId: id,
+                publish: true,
+                manageAccess: true,
+                readAudit: true,
+              }
+            : path.endsWith('/publications')
+              ? [
+                  {
+                    id: 'publication-live',
+                    artifactId: 'a'.repeat(64),
+                    subject: 'docs-admin',
+                    createdAt: '2026-10-24T12:00:00Z',
+                  },
+                ]
+              : [
+                  {
+                    id: 'event-1',
+                    action: 'publication.activate',
+                    actor: 'docs-admin',
+                    created_at: '2026-10-24 12:00:00',
+                    metadata: { publication: 'publication-live' },
+                  },
+                ];
+    return route.fulfill({ json });
+  });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/admin/');
+  for (const appearance of ['light', 'dark']) {
+    await page
+      .getByRole('combobox', { name: 'Appearance' })
+      .selectOption(appearance);
+    for (const [tab, label] of [
+      ['Publications', 'Scrollable publication history'],
+      ['Audit log', 'Scrollable audit events'],
+    ] as const) {
+      await page.getByRole('button', { name: tab, exact: true }).click();
+      const region = page.getByRole('region', { name: label, exact: true });
+      await expect(region).toBeVisible();
+      expect(
+        await region.evaluate(
+          (element) => element.scrollWidth > element.clientWidth,
+        ),
+      ).toBe(true);
+      for (const header of await region.getByRole('columnheader').all())
+        expect((await header.boundingBox())!.height).toBeLessThan(48);
+      await region.focus();
+      await region.press('ArrowRight');
+      await expect
+        .poll(() => region.evaluate((element) => element.scrollLeft))
+        .toBeGreaterThan(0);
+      expect(
+        await page.evaluate(() => document.documentElement.scrollWidth),
+      ).toBeLessThanOrEqual(390);
+      expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+    }
+  }
 });

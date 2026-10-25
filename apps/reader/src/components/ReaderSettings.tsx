@@ -44,7 +44,6 @@ export default function ReaderSettings({
     >
       <div className="reader-settings-heading">
         <div>
-          <small>{t('appearance.workspace')}</small>
           <h2 id="reader-settings-title">{t('appearance.title')}</h2>
         </div>
         <button

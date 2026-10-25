@@ -1,24 +1,39 @@
+/* Locally hosted, OFL-licensed web subsets shared by docs and Studio. */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('./fonts/inter-latin-variable.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 100 800;
+  font-display: swap;
+  src: url('./fonts/jetbrains-mono-latin-variable.woff2') format('woff2');
+}
 /* Shared scale; palette roles are resolved by each app and reader configuration. */
 :root {
   --ui-font:
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', ui-sans-serif, system-ui,
-    sans-serif;
-  --ui-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', ui-sans-serif,
+    system-ui, sans-serif;
+  --ui-mono: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
   --ui-text-xs: 0.75rem;
   --ui-text-sm: 0.8125rem;
   --ui-text-md: 0.875rem;
   --ui-text-body: 1rem;
   --ui-text-lead: 1.0625rem;
   --ui-control-height: 36px;
-  --ui-control-radius: 10px;
-  --ui-panel-radius: 18px;
+  --ui-control-radius: 8px;
+  --ui-panel-radius: 16px;
 }
 .docs-shell,
 .studio {
   --ui-border: var(--border);
-  --ui-field-border: color-mix(in srgb, var(--muted) 85%, var(--bg));
+  --ui-field-border: color-mix(in srgb, var(--muted) 55%, var(--bg));
   --ui-chrome: color-mix(in srgb, var(--bg) 90%, transparent);
-  --ui-shadow: 0 1px 3px #00000006, 0 8px 24px #00000003;
+  --ui-shadow: 0 1px 2px #00000005;
 }
 @media (pointer: coarse), (max-width: 760px) {
   :root {

@@ -90,28 +90,28 @@ function computeReadableAccent(
 }
 
 export const themePresets = {
-  mint: '#16a076',
+  mint: '#07c983',
   ocean: '#2563eb',
   violet: '#7c3aed',
   neutral: '#526071',
 } as const;
 const light: Palette = {
   background: '#ffffff',
-  surface: '#f5f5f7',
-  subtle: '#eeeff2',
-  border: '#e0e0e4',
-  text: '#343438',
-  muted: '#61616b',
-  heading: '#1d1d20',
+  surface: '#f8faf9',
+  subtle: '#f0f4f2',
+  border: '#e5e9e7',
+  text: '#3f4945',
+  muted: '#626e68',
+  heading: '#17211c',
 };
 const dark: Palette = {
-  background: '#18181b',
-  surface: '#202024',
-  subtle: '#28282c',
-  border: '#36363c',
-  text: '#dedee4',
-  muted: '#aaaab4',
-  heading: '#f5f5f7',
+  background: '#090d0d',
+  surface: '#171b19',
+  subtle: '#0d1712',
+  border: '#262a27',
+  text: '#ced3d0',
+  muted: '#9fa3a0',
+  heading: '#dfe3e0',
 };
 export function resolvePalette(
   theme: {

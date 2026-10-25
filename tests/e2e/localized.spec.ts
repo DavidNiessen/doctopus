@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 const root = 'http://127.0.0.1:4177/localized';
-test('translated labels preserve search, theme, modal focus, Scalar URL copying and Monaco controls', async ({
+test('translated labels preserve search, theme, modal focus, Request URL copying and Monaco controls', async ({
   page,
 }) => {
   const errors: string[] = [];

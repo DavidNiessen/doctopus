@@ -5,7 +5,7 @@ const api = 'http://127.0.0.1:4174/gallery/api/gallery/v1/serializeparameters/';
 const width = async (locator: import('@playwright/test').Locator) =>
   (await locator.boundingBox())!.width;
 
-test('island navigation and inspectors resize with pointer and keyboard, persist and reset', async ({
+test('workspace navigation and inspectors resize with pointer and keyboard, persist and reset', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1600, height: 1000 });
@@ -60,7 +60,7 @@ test('island navigation and inspectors resize with pointer and keyboard, persist
   await page.screenshot({ path: '.doctopus/island-layout-dark.png' });
 });
 
-test('playground islands resize independently and stack without overflow on touch screens', async ({
+test('playground panels resize independently and stack without overflow on touch screens', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1440, height: 1000 });
@@ -112,7 +112,7 @@ test('playground islands resize independently and stack without overflow on touc
   ).toBeVisible();
 });
 
-test('islands remain usable without stored layout preferences and without JavaScript', async ({
+test('panels remain usable without stored layout preferences and without JavaScript', async ({
   browser,
 }) => {
   const context = await browser.newContext();
@@ -151,7 +151,7 @@ test('islands remain usable without stored layout preferences and without JavaSc
   await offline.close();
 });
 
-test('Studio uses responsive islands with a persistent accessible navigation width', async ({
+test('Studio uses a responsive workspace with a persistent accessible navigation width', async ({
   page,
 }) => {
   const { readFile } = await import('node:fs/promises');
@@ -159,14 +159,18 @@ test('Studio uses responsive islands with a persistent accessible navigation wid
     const path = new URL(route.request().url()).pathname.slice(
       '/admin/'.length,
     );
-    if (path && !/^assets\/[A-Za-z0-9_.-]+\.(js|css)$/.test(path))
+    if (path && !/^assets\/[A-Za-z0-9_.-]+\.(js|css|woff2|webp)$/.test(path))
       return route.abort();
     await route.fulfill({
       contentType: path.endsWith('.js')
         ? 'text/javascript'
         : path.endsWith('.css')
           ? 'text/css'
-          : 'text/html',
+          : path.endsWith('.woff2')
+            ? 'font/woff2'
+            : path.endsWith('.webp')
+              ? 'image/webp'
+              : 'text/html',
       body: await readFile('apps/studio/dist/client/' + (path || 'index.html')),
     });
   });

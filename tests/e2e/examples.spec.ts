@@ -25,11 +25,22 @@ test('named examples, explicit null, media types and custom request values are u
     page.getByText('Authentication is optional.', { exact: false }),
   ).toBeVisible();
   const response = page.locator('#responses');
+  await response.locator('.inline-response-example > summary').click();
   await expect(response.locator('pre')).toHaveText('null');
   await response
     .getByRole('combobox', { name: 'Response example', exact: true })
     .selectOption('named:zero');
   await expect(response.locator('pre')).toHaveText('0');
+  const preview = page.getByRole('complementary', {
+    name: 'Example response',
+    exact: true,
+  });
+  await expect(preview.locator('pre')).toHaveText('0');
+  await preview
+    .getByRole('button', { name: 'Response 200', exact: true })
+    .click();
+  await expect(preview.locator('pre')).toHaveText('null');
+  await expect(response.locator('pre')).toHaveText('null');
   await response
     .getByRole('combobox', { name: 'Response content type', exact: true })
     .selectOption('text/plain');
@@ -40,9 +51,15 @@ test('named examples, explicit null, media types and custom request values are u
   await expect(response.locator('.schema-view > .type-label')).toHaveText(
     'string',
   );
-  await response.getByRole('button', { name: '204', exact: true }).click();
+  await preview
+    .getByRole('button', { name: 'Response 204', exact: true })
+    .click();
+  await expect(
+    response.getByRole('button', { name: '204', exact: true }),
+  ).toHaveAttribute('aria-pressed', 'true');
   await expect(response.locator('pre')).toHaveCount(0);
   await response.getByRole('button', { name: '200', exact: true }).click();
+  await response.locator('.inline-response-example > summary').click();
   await expect(response.locator('pre')).toHaveText('null');
   await page.getByRole('button', { name: 'Try now', exact: true }).click();
   const playground = page.getByLabel('API playground');

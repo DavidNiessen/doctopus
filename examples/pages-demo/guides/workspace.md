@@ -13,7 +13,7 @@ Your preferences stay in this browser for this documentation site. They synchron
 
 ## Choose a layout
 
-**Modern islands** keeps navigation, documentation and examples in separate panels. Drag the gutters to resize them, or focus a divider and use the arrow keys. Home and End select its minimum and maximum widths.
+**Modern documentation** keeps navigation, documentation and examples in adjustable columns. Drag the gutters to resize them, or focus a divider and use the arrow keys. Home and End select its minimum and maximum widths.
 
 **Classic API reference** shows collapsed, method-colored endpoints in the main page. Expand a row for details, then open the same mock playground. Guides retain their navigation.
 
