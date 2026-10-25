@@ -249,6 +249,8 @@ Borders are generally one pixel. The reading article and workspace rails have no
 
 Primary actions pair the action background with white text; hover darkens the same role. Secondary buttons use the background, text and border roles and hover to surface. Studio primary/secondary padding and minimum height are recorded in frontmatter; use minimum height rather than a fixed height when text wraps. Buttons expose disabled state and retain a visible focus outline. Active buttons apply the shipped brightness treatment.
 
+The endpoint address bar follows the published corner radius, with a 1px border and 6px padding. Its Try now action stretches to the available control height and derives its corners from the outer radius minus that inset and border, clamped at zero. This keeps the corners concentric on compact and wide screens.
+
 ### Inputs / Fields
 
 Inputs, selects and textareas use resolved background/text, a field-border role and the shared control radius. Credential prefixes and inputs form one bordered control with a shared focus ring; the input does not draw a second inner ring. Focus changes the border and adds an accent outline/ring. The search field uses 8px vertical and 12px horizontal padding so the caret and placeholder sit inside the focus boundary. Search result icon columns accommodate full method names without shrinking. Request forms group labels, descriptions, type metadata, required state and controls in real sections; advanced controls use native disclosure. Studio forms use consistent label spacing and stacked mobile columns. Preserve error, permission and disabled states rather than relying on color alone.
