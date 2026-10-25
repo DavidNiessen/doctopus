@@ -6,6 +6,8 @@
 
 An open source, self-hosted API documentation platform: polished documentation, interactive API references, and framework integrations without a required hosted service.
 
+Start with the [complete installation and usage guide](docs/installation.md) for a first site, live API requests, Spring Boot/Node integration, static hosting, or the optional Studio and Server setup.
+
 **Status: prerelease development.** Doctopus is the new name of this project. The renamed source includes the OpenAPI compiler, React reader, worker-based search, interactive API explorer, CLI, optional publication server and Studio, plus Java/Spring Boot/Node integrations. The last published prerelease, [0.2.0-candidate.7](docs/release-acceptance.md), uses legacy coordinates and predates this rename. Renamed packages have not yet been published. See the [rename and migration guide](docs/migration-doctopus.md).
 
 The owner has [deferred independent launch reviews and pilots for prereleases](docs/adr/0002-deferred-prerelease-reviews.md). Those reviews remain unfinished; automated checks and protected registry installation acceptance remain required. This deferral is not a stable production release approval.

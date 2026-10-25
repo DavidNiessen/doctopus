@@ -59,7 +59,7 @@ Configure the host framework's trusted proxies narrowly so its client IP represe
 
 ## Spring Boot
 
-Use the [explicit snapshot importer](remote-import.md#spring-boot-and-other-local-generators) with an existing springdoc `/v3/doctopus` endpoint before building your static publication. Private-network and cleartext destinations require explicit options; protected sources can use a bearer environment variable.
+Use the [explicit snapshot importer](remote-import.md#spring-boot-and-other-local-generators) with an existing springdoc `/v3/api-docs` endpoint before building your static publication. Private-network and cleartext destinations require explicit options; protected sources can use a bearer environment variable.
 
 Build and install the Java development artifacts with a JDK and Maven:
 

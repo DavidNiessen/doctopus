@@ -19,7 +19,7 @@ explorer:
   mode: mock
 ```
 
-This mode prevents the reader's Send action from reaching live fetch/relay transport. Authentication controls and relay selection are unavailable. The displayed URL is read-only; even a changed published server cannot enable live requests. No credentials, backend or database are required. Mock generation ignores request inputs and does not create, update or delete resources. The illustrative `demo.orbit.invalid` address has no live service. Static page, asset and search requests still load from GitHub Pages.
+This mode prevents the reader's Send action from reaching live fetch/relay transport. Credentials are not required for local mock generation; its Send action never uses live fetch or relay transport. The displayed URL is read-only; even a changed published server cannot enable live requests. No credentials, backend or database are required. Mock generation ignores request inputs and does not create, update or delete resources. The illustrative `demo.orbit.invalid` address has no live service. Static page, asset and search requests still load from GitHub Pages.
 
 Ordinary projects retain live sending by default; `explorer.mode: live` makes that choice explicit. Local mock-preview controls remain available alongside live sending. Mock mode is a demonstration feature, not a browser network sandbox for arbitrary custom scripts or styles.
 
@@ -37,7 +37,7 @@ The verified static root is `.doctopus/pages-demo/`. The build copies only the d
 
 To inspect the default build interactively, run `node scripts/pages-demo-browser-fixture.mjs` and open `http://127.0.0.1:4180/doctopus/`. This preview serves plain generated files and directory indexes, with no SPA fallback or API routes.
 
-The dedicated browser suite blocks external requests and fails if one is attempted. It exercises direct/reloaded subpath links, 404s, local GET/POST/DELETE responses, error previews, server edits, classic playgrounds, exact response copy, fullscreen/folding, local search, theme matching, mobile accessibility and reading without JavaScript.
+The dedicated browser suite blocks external requests and fails if one is attempted. It exercises direct/reloaded subpath links, 404s, local GET/POST/DELETE responses, error previews, published-server changes, classic playgrounds, exact response copy, fullscreen/folding, local search, theme matching, mobile accessibility and reading without JavaScript.
 
 ## Deployment pipeline
 
@@ -45,7 +45,7 @@ The **Repository quality** workflow builds and tests the static demo on branch p
 
 After a successful quality run for a **push to master**, **Deploy public demo** downloads that exact run's artifact and deploys it to the `github-pages` environment. Artifact preparation and deployment do not rebuild or execute downloaded repository code. Pull requests, forks, failed runs and manual quality dispatches cannot deploy. Actions are pinned by SHA. Only the deployment job receives Pages write and OIDC permissions; artifact preparation uses read permissions.
 
-A separate **Verify hosted mock demo** job checks out the exact tested source with read-only permissions and no persisted checkout credentials. It waits for the public URL and runs the same five browser journeys against that deployed site, without rebuilding it or starting a local server. It checks direct guide/endpoint routes, mock-only GET/POST/DELETE behavior, complete response copying/folding/fullscreen, classic layout, search, prepared themes, mobile accessibility and content without JavaScript. Browser requests to other origins are rejected and reported. Ubuntu 24.04 hosted runners supply the shared browser libraries; CI downloads the Chromium revision pinned by Playwright without upgrading OS packages or installing extra font bundles. A missing runtime library still fails browser launch. Reports/screenshots are retained for seven days; a failed hosted check makes the deployment workflow fail even if Pages accepted the artifact.
+A separate **Verify hosted mock demo** job checks out the exact tested source with read-only permissions and no persisted checkout credentials. It waits for the public URL and runs the same mock-demo browser suite against that deployed site, without rebuilding it or starting a local server. It checks direct guide/endpoint routes, mock-only GET/POST/DELETE behavior, complete response copying/folding/fullscreen, classic layout, search, prepared themes, mobile accessibility and content without JavaScript. Browser requests to other origins are rejected and reported. Ubuntu 24.04 hosted runners supply the shared browser libraries; CI downloads the Chromium revision pinned by Playwright without upgrading OS packages or installing extra font bundles. A missing runtime library still fails browser launch. Reports/screenshots are retained for seven days; a failed hosted check makes the deployment workflow fail even if Pages accepted the artifact.
 
 To repeat those checks against the public site after installing the pinned dependencies and Playwright Chromium:
 

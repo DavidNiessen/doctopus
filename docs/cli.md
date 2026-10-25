@@ -75,7 +75,7 @@ Publish again with the same key and artifact to safely retry. A stale expected p
 
 Use `doctopus stage <directory> --store <artifact-root>` to verify and atomically stage a build; retries are idempotent. Then set `DOCS_PUBLISH_TOKEN` securely and use `doctopus publish <artifact-id> --server <https-origin> --project <slug-or-id>`. For loopback testing only, add `--insecure-development`. An optional `DOCS_IDEMPOTENCY_KEY` makes CI retries reuse the same publication request.
 
-The protocol stages through operator-controlled storage rather than accepting arbitrary archives from the browser. Isolated upload/build workers are further roadmap work.
+The protocol stages through operator-controlled storage rather than accepting arbitrary archives from the browser. Queued builds use the [separate Worker](build-worker.md); remote source uploads and automatic artifact transfer remain future work.
 
 ## Trusted guide execution
 
