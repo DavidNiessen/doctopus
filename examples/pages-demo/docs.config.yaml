@@ -11,6 +11,3 @@ explorer:
 theme:
   preset: violet
   radius: 14
-links:
-  - label: Source on GitHub
-    href: https://github.com/DavidNiessen/doctopus

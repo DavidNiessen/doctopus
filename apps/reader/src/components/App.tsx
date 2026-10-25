@@ -856,7 +856,12 @@ export function App({
               })}
             </button>
           )}
-          <div className="sidebar-bottom">
+          <a
+            className="sidebar-bottom"
+            href="https://github.com/DavidNiessen/doctopus"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <span className="brand-mark small">
               <img
                 src={href('/assets/doctopus-icon.svg')}
@@ -868,8 +873,7 @@ export function App({
             <span>
               Powered by <strong>Doctopus</strong>
             </span>
-            <span className="open-source-label">Open source</span>
-          </div>
+          </a>
         </aside>
         <div
           className="navigation-resize-controls"
