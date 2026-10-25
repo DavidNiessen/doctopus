@@ -22,7 +22,7 @@ Update package dependencies, Java imports and Spring configuration together when
 
 ## Rebuild generated documentation
 
-The authored `docs.config.yaml`, guides and OpenAPI source files remain your source of truth. Rebuild them with Doctopus instead of copying a legacy output directory to the new path. The CLI now writes `.doctopus/site`; update static-host build commands, CI caches, volume mounts and deployment paths accordingly. Existing static documentation continues to work until you replace it.
+For compiled sites, the authored `docs.config.yaml`, guides and OpenAPI source files remain your source of truth. Rebuild them with Doctopus instead of copying a legacy output directory to the new path. The CLI now writes `.doctopus/site`; update static-host build commands, CI caches, volume mounts and deployment paths accordingly. Existing static documentation continues to work until you replace it.
 
 Doctopus-specific OpenAPI extensions use the `x-doctopus-` prefix. Rename the product-specific extension keys in your own specs; standard OpenAPI fields are unchanged. Update any custom plugin hooks, client-event names, browser-storage integrations or automation that used product-specific identifiers. Browser preferences stored by the legacy UI are separate from the new Doctopus preferences; select your preferred appearance and layout again after upgrading.
 
@@ -37,3 +37,7 @@ The ordinary Java/Spring Boot integration still serves a built documentation pub
 Historical package receipts, release tags, hashes and archived installation commands retain their original identifiers so they remain verifiable. New Doctopus releases require fresh signed candidate, package-consumer and container acceptance; a branding update does not reissue the previous release.
 
 Use the [brand guide](branding.md) and [asset kit](../assets/brand/) for the Doctopus identity. Configured project logos and prepared reader themes remain supported.
+
+## Direct framework setup
+
+The current Spring and Node adapters can also load a spec URL directly. Set `doctopus.url` and branding in Spring properties, or `url` and branding in Node options. Omit `directory`; this setup needs no documentation project configuration or CLI build. Existing directory-based integrations retain their verified publication workflow. Do not combine direct options with a prebuilt directory. See the [direct integration guide](direct-integrations.md).

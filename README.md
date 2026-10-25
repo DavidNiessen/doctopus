@@ -6,7 +6,7 @@
 
 An open source, self-hosted API documentation platform: polished documentation, interactive API references, and framework integrations without a required hosted service.
 
-Start with the [complete installation and usage guide](docs/installation.md) for a first site, live API requests, Spring Boot/Node integration, static hosting, or the optional Studio and Server setup.
+Start with the [application quickstart](docs/direct-integrations.md) for Spring Boot/Node integration, or the [installation and usage guide](docs/installation.md) for a standalone site, static hosting and the optional management platform.
 
 **Status: prerelease development.** Doctopus is the new name of this project. The renamed source includes the OpenAPI compiler, React reader, worker-based search, interactive API explorer, CLI, optional publication server and Studio, plus Java/Spring Boot/Node integrations. The last published prerelease, [0.2.0-candidate.7](docs/release-acceptance.md), uses legacy coordinates and predates this rename. Renamed packages have not yet been published. See the [rename and migration guide](docs/migration-doctopus.md).
 
@@ -31,6 +31,32 @@ Build Doctopus from source using the commands below, or consult [GitHub Packages
 3. [Delivery and open source launch](docs/planning/03-delivery-and-launch.md): phased implementation, CI/CD, release gates, risks, and the launch checklist.
 4. [Implementation progress](docs/planning/04-progress.md): current estimate, completed capabilities, validation and remaining launch work.
 
+## Add API docs to your application
+
+For Spring Boot, Express and Fastify, direct mode bundles the Reader and loads your specification URL in the browser. **No `docs.config.yaml`, documentation CLI build, publication directory, Studio or database is required.** See the [application integration quickstart](docs/direct-integrations.md), including source installation while renamed packages remain unpublished.
+
+Spring Boot (`application.yml`):
+
+```yaml
+doctopus:
+  url: /v3/api-docs
+  title: My API
+  path: /docs
+  theme: violet
+```
+
+Express:
+
+```js
+const docs = await createExpressDocs({
+  url: '/openapi.json',
+  title: 'My API',
+});
+app.use(docs.mountPath, docs.router);
+```
+
+Fastify accepts the same settings through `app.register(doctopusPlugin, options)`. Your application or an existing generator supplies the spec endpoint. Open `/docs/` after starting the application. Titles, logos, prepared themes, initial layout and appearance use application settings. Java consumers of the bundled artifacts need no Node installation.
+
 ## Run the example
 
 Use Node.js from `.node-version` and pnpm 11.25.0 (`npm install --global pnpm@11.25.0`):
@@ -44,7 +70,7 @@ pnpm run demo:serve
 
 The documentation server listens on port 3000. In a second terminal, run `npm run demo:api` to start the local API on port 4010. Use the public fixture token `demo-token` in the playground. These are local demonstration services.
 
-## Document your own API
+## Build an optional standalone site
 
 ```sh
 node packages/cli/dist/main.js init my-docs

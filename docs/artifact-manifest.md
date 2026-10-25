@@ -1,5 +1,7 @@
 # Publication manifest and integrity
 
+This publication manifest applies when selecting a prebuilt `directory` or deploying a standalone site. [Direct integrations](direct-integrations.md) use the bundled Reader's asset inventory and a spec URL, without a publication manifest or project configuration in the consuming application.
+
 Each publication contains `manifest.json`, SHA-256 digests for its files, an input-model digest, routes, diagnostics and plugin provenance. The artifact digest identifies that metadata, including the complete file-digest map. Digest verification establishes content integrity. Obtain approved digests through trusted build/release procedures when authenticating what should be deployed.
 
 ## Manifest version 2

@@ -20,12 +20,12 @@ Doctopus turns API specifications into beautiful, self-hosted documentation. Orb
 
 ## Built for your stack
 
-Doctopus builds static sites from YAML or JSON API specifications. Java and Spring Boot adapters and Node.js integrations can serve the same exported assets. Static hosting needs no database. The optional management server adds access control and publication workflows.
+Add the bundled API reference to Spring Boot, Express or Fastify with an OpenAPI URL and runtime settings. No documentation project file or site build is needed. For authored guides and advanced publishing, Doctopus also builds static sites from YAML or JSON API specifications. Neither setup needs a database; the optional management server adds access control and publication workflows.
 
 Start with the [playground tour](quickstart.md), explore [workspace customization](workspace.md), or browse the API Reference tab.
 
 ## Bring your own specification
 
-Ready to use your own API? [Install Doctopus](installation/overview.md) to choose between static hosting, Spring Boot, Node.js and the optional management platform. The **Documentation** tab includes the complete installation walkthrough, framework integration guides, authoring reference and operational handbook.
+Ready to use your own API? [Add Doctopus to your application](integrations/get-started.md), or [Install Doctopus](installation/overview.md) to choose between static hosting, Spring Boot, Node.js and the optional management platform. The **Documentation** tab includes the complete installation walkthrough, framework integration guides, authoring reference and operational handbook.
 
 This demo showcases a pre-release open source project. Visit the [repository](https://github.com/DavidNiessen/doctopus) for source code and launch progress.

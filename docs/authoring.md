@@ -1,5 +1,7 @@
 # Authoring guides and reusable components
 
+This guide covers optional compiled documentation sites with authored guides. A basic [Spring or Node direct integration](direct-integrations.md) loads its API spec without a Markdown directory or project config file.
+
 Put `.md` files under the configured `guides` directory. Subdirectories produce nested URLs; `guides/setup/java.md` becomes `/guides/setup/java/`. Markdown supports tables, task lists, code fences, stable heading links and sanitized content. The search index contains rendered text, so removed scripts and MDX source code are not indexed.
 
 Enable an optional [page feedback link](feedback.md) to send readers to your configured issue tracker from guides and API pages. It also works without JavaScript; canonical page context is opt-in.

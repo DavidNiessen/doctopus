@@ -31,7 +31,11 @@ Pin exact dependency versions and container/action digests when implementation s
 
 ```mermaid
 flowchart LR
-  Source[OpenAPI YAML/JSON + guides + config] --> Compiler[Validated compiler pipeline]
+  Framework[Spring or Node runtime settings] --> Bundled[Bundled Reader shell and assets]
+  Bundled --> DirectBrowser[Browser spec fetch and worker normalization]
+  SpecURL[Public OpenAPI URL] --> DirectBrowser
+  DirectBrowser --> Reader[Browser reader]
+  Source[OpenAPI YAML/JSON + guides + project config] --> Compiler[Validated compiler pipeline]
   BuildPlugins[Trusted build plugins] --> Compiler
   Compiler --> IR[Versioned document graph]
   IR --> Renderer[React prerender + search + snippets]
@@ -45,7 +49,9 @@ flowchart LR
   Reader -. optional configured relay .-> Server
 ```
 
-The compiler runs at build time. The reader consumes prepared content and lazy modules; it does not parse an entire large OpenAPI document on every page load. A small development preview may compile on demand, but uses the same normalization and rendering code.
+Direct framework mode serves the bundled shell and assets, then fetches and normalizes one bounded self-contained specification in a browser worker. Runtime Spring properties or Node options configure it without a documentation project file or CLI build.
+
+For optional compiled publications, the compiler runs at build time. The reader consumes prepared content and lazy modules; that mode does not parse an entire large OpenAPI document on every page load. A small development preview may compile on demand, but uses the same normalization and rendering code.
 
 The optional server manages projects, authorization, build scheduling, publication pointers, and audit records. It serves completed artifacts. A failed or cancelled build cannot replace the currently published artifact.
 
@@ -144,26 +150,15 @@ A registry/catalog is optional discovery metadata, not a required runtime servic
 
 ## 6. Java and Spring integration
 
-Publish a runtime-independent static asset distribution and a Spring Boot starter. Build assets in the documentation project's CI; bundle a verified distribution with the Java artifact or point the starter at a local publication directory. No Node process is required in the Java application at runtime.
+The default simple setup is direct mode: the core JAR bundles Reader assets and their SHA-256 inventory; Spring binds a browser-visible spec URL and branding from `application.yml` or properties. MVC and WebFlux serve the shell, assets and deep-link routes using the active context path and existing host security. The browser parses self-contained OpenAPI in a bounded worker and uses the shared Reader without a documentation build, project config file, Node runtime or database in the Java application.
 
-The starter offers validated properties for route prefix, title/theme, spec source, exposed versions, allowed hosts, and Spring Security integration. Reuse an existing `/v3/doctopus` source when springdoc is installed; do not claim the starter discovers arbitrary Java APIs without an OpenAPI generator.
-
-Support two explicit modes:
-
-- **Prebuilt publication:** preferred for production, full static rendering/search/guide capabilities, generated before packaging.
-- **Live spec preview:** development-only by default, reads a configured framework spec endpoint with bounded caching; document which build-dependent features are unavailable until publication.
-
-Test servlet and reactive stacks separately. Respect application context paths, reverse-proxy prefixes, cache headers, conditional requests, and authorization for every asset/spec endpoint. Avoid exposing internal schemas through a public route when the API requires authentication.
-
-Use a Maven multi-module build with Gradle consumer examples. Determine whether Spring Boot 3 and 4 need distinct starter artifacts during the spike; do not promise binary compatibility across different Spring Framework baselines. Document Java bytecode baseline, supported framework ranges, BOM alignment, checksums, and Maven Central publishing requirements.
+Optional publication mode accepts a verified filesystem directory and optional trusted artifact digest. It preserves compiled guides, versioned documents, reviewed build extensions and immutable publication guarantees. Directory mode and direct branding/spec settings are mutually exclusive. Publisher configuration files remain specific to this advanced build workflow.
 
 ## 7. JavaScript and other framework integrations
 
-Express middleware and a Fastify plugin mount built artifacts and optionally locate an existing OpenAPI endpoint during development. They support root/subpath hosting, ETags, compression ownership, auth middleware ordering, and immutable asset caching. They do not generate a spec from application source unless a dedicated generator plugin is installed.
+Express and Fastify expose the same direct-mode URL, title, description, prepared theme, initial layout/appearance and branding URL options. Assets come from the installed Reader package. Authentication and request quotas apply to the UI tree; the application owns the raw spec endpoint and API routes. Fastify registration prefixes and explicit proxy paths feed the public mount. Direct-mode hosts never fetch the spec server-side.
 
-A portable CLI plus a language-neutral publication manifest is the baseline integration for every runtime. Python, Go, .NET, Ruby, and PHP can serve the same artifact without a language-specific renderer. Later adapters primarily improve configuration and lifecycle ergonomics.
-
-A Next.js adapter should expose supported route/asset integration without forcing consumers to change router mode. NestJS integrates with its OpenAPI generator; FastAPI and ASP.NET adapters consume their established schemas. Publish integration recipes and support boundaries rather than claiming universal automatic discovery.
+Both Node adapters retain the verified-directory option for full compiled sites. Other runtimes can serve static publications today; additional native adapters remain future work. Direct configuration is validated in shared TypeScript contracts and equivalent Java configuration, with cross-framework and installed-consumer checks.
 
 ## 8. Server domain, storage, and publication
 

@@ -2,6 +2,14 @@
 
 The compiler accepts OpenAPI 3.0.0–3.0.4 and 3.1.0–3.1.2 in YAML or JSON. Equivalent files produce equivalent operation models. The API version used in documentation URLs is independently configured with `specs[].version`.
 
+## Direct framework mode
+
+[Direct Spring and Node integrations](direct-integrations.md) load one self-contained OpenAPI 3.0/3.1 YAML or JSON document in the browser. They reuse the portable parser, semantic normalizer and compiled JSON Schema meta-validator, with local `#/...` references. They do not run the compiler's full structural OpenAPI validation, file bundling or `doctor` checks. Bundle external references before serving the document. Relative or omitted server URLs resolve against the specification URL; operation URLs and version routes come from the normalized specification.
+
+The fetch is limited to 16 MiB and 30 seconds overall. Parsing and normalization run in a terminable worker with a ten-second deadline. The same YAML alias, node and depth bounds apply. Browser credentials, CORS and JavaScript requirements are explained in the setup guide.
+
+The sections below describe the optional compiled-publication workflow and its additional validation tools.
+
 ## Validation and references
 
 Inputs are structurally validated against the OpenAPI schemas. OpenAPI 3.1 schemas exposed in the compiled API graph are additionally checked against the JSON Schema 2020-12 meta-schema. The default OpenAPI 3.1 dialect and explicit 2020-12 dialect are supported; custom dialects in those schemas produce an error. This validates the schema's structure, not every authored example or its business meaning.

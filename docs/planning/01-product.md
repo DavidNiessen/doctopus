@@ -2,6 +2,8 @@
 
 Status: proposed product contract. All capabilities are planned unless the repository explicitly marks them implemented. Working name: **doctopus**; final naming and trademark checks precede public launch.
 
+Framework integration is a first-class entry point: an existing Spring Boot, Express or Fastify application serves the bundled Reader and configures a browser-visible OpenAPI URL and branding through normal runtime settings. That path needs no documentation project file, CLI build, publication directory or management service. A project YAML/JSON file remains part of the optional authored-guide/static-publication workflow. See the [application quickstart](../direct-integrations.md).
+
 ## 1. Mission and position
 
 Build the most compelling self-hosted API documentation experience for teams that want excellent presentation, complete ownership, and reliable integration with their existing development workflow. Compete through measurable usability, correctness, speed, customization, and operational quality. “Best on the market” is an ambition to validate through comparative research and user testing, not a launch claim.

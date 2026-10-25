@@ -1,5 +1,7 @@
 # Importing remote OpenAPI snapshots
 
+The importer is for optional compiled publications. A [direct framework integration](direct-integrations.md) instead points at the existing OpenAPI endpoint and fetches it in the browser on a fresh page load; it needs no import snapshot or docs build.
+
 `doctopus import-spec` explicitly downloads a self-contained OpenAPI 3.0/3.1 YAML or JSON document, validates it, and saves its original bytes inside a project. Builds, doctor and preview continue using local files; they never fetch a configured URL automatically. For relative or remote external references, use [pinned reference snapshots](reference-snapshots.md) or bundle the document first. Local fragment references, including recursive schemas, are supported.
 
 Create the destination parent directory, then import from an exact allowed origin:

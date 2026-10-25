@@ -1,5 +1,7 @@
 # CLI reference
 
+These commands build and operate optional standalone or managed publications. A basic [Spring Boot, Express or Fastify integration](direct-integrations.md) uses a spec URL and application settings, with no CLI or `docs.config.yaml`.
+
 Use the [lifecycle inventory](lifecycle.md) to report deprecations, resolve migration targets and enforce explicit deadline policies in CI.
 
 Build the repository with `npm ci && npm run build`. Commands below use `node packages/cli/dist/main.js`; the packaged executable is named `doctopus`.
