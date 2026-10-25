@@ -26,4 +26,6 @@ Start with the [playground tour](quickstart.md), explore [workspace customizatio
 
 ## Bring your own specification
 
-This demo showcases a pre-release open source project. Visit the [repository](https://github.com/DavidNiessen/doctopus) for installation, supported integrations, deployment guidance, compatibility limits and launch progress.
+Ready to use your own API? [Install Doctopus](installation/overview.md) to choose between static hosting, Spring Boot, Node.js and the optional management platform. The **Documentation** tab includes the complete installation walkthrough, framework integration guides, authoring reference and operational handbook.
+
+This demo showcases a pre-release open source project. Visit the [repository](https://github.com/DavidNiessen/doctopus) for source code and launch progress.

@@ -3,8 +3,12 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildSite } from '@davidniessen/doctopus-cli';
-import { verifyArtifact } from '@davidniessen/doctopus-compiler';
+import {
+  auditDocumentation,
+  verifyArtifact,
+} from '@davidniessen/doctopus-compiler';
 import { parseConfig, parseSource } from '@davidniessen/doctopus-spec';
+import { stageDemoHandbook } from './lib/demo-handbook.mjs';
 
 const repository = fileURLToPath(new URL('../', import.meta.url));
 const [owner, name] = (
@@ -27,6 +31,7 @@ try {
   await cp(join(repository, 'examples/pages-demo'), staging, {
     recursive: true,
   });
+  await stageDemoHandbook(repository, staging);
   const config = parseConfig({
     ...parseSource(
       await readFile(join(staging, 'docs.config.yaml'), 'utf8'),
@@ -46,6 +51,17 @@ try {
     );
   await writeFile(join(staging, 'docs.config.json'), JSON.stringify(config));
   const built = await buildSite(staging, { config: 'docs.config.json' });
+  const brokenLinks = (await auditDocumentation(built.site)).filter(
+    (diagnostic) =>
+      ['broken-link', 'broken-anchor', 'invalid-link'].includes(
+        diagnostic.code,
+      ),
+  );
+  if (brokenLinks.length)
+    throw new Error(
+      'Demo handbook has invalid local links:\n' +
+        brokenLinks.map(({ source, code }) => `${source}: ${code}`).join('\n'),
+    );
   await verifyArtifact(built.directory);
   const output = join(repository, '.doctopus/pages-demo');
   await mkdir(join(repository, '.doctopus'), { recursive: true });

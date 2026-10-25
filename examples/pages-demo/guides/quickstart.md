@@ -20,6 +20,6 @@ Try **Create a project** to inspect a JSON request body, or **Delete a project**
 
 ## Request examples
 
-Switch between cURL, JavaScript, TypeScript, Python and Java, then copy an example. The `https://demo.orbit.invalid/v1` address is illustrative and deliberately has no live service. Changing the server field cannot enable live requests in this demo.
+Switch between cURL, JavaScript, TypeScript, Python and Java, then copy an example. The `https://demo.orbit.invalid/v1` address is illustrative and deliberately has no live service. The URL is read-only, and this demo always generates responses locally.
 
 For your own documentation, the default playground mode sends real requests to your API. The demo explicitly enables `explorer.mode: mock` in its YAML configuration.
