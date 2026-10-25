@@ -1,4 +1,4 @@
-import type { Locator, Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
 
 export async function addParameter(
   playground: Locator,
@@ -60,8 +60,9 @@ export async function changePublishedServer(
   await playground
     .getByRole('button', { name: 'Close playground', exact: true })
     .click();
+  const pageDataUrl = new URL(path + 'page-data.json', page.url()).href;
   await page.route(
-    new URL(path + 'page-data.json', page.url()).href,
+    pageDataUrl,
     async (route) => {
       const response = await route.fetch();
       const data = await response.json();
@@ -71,6 +72,13 @@ export async function changePublishedServer(
     },
     { times: 1 },
   );
+  const navigationResponse = page.waitForResponse(
+    (response) =>
+      response.url() === pageDataUrl && response.request().method() === 'GET',
+  );
   await page.locator(`a[data-doc-route][href="${path}"]`).first().click();
+  await (await navigationResponse).finished();
+  await expect(page.locator('main')).toHaveAttribute('aria-busy', 'false');
   await page.getByRole('button', { name: 'Try now', exact: true }).click();
+  await expect(playground).toBeVisible();
 }
