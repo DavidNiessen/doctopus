@@ -2922,3 +2922,41 @@ label:has(input[type='radio']) {
 .request-parameter-row .parameter-remove:focus-visible {
   outline-offset: -3px;
 }
+.body-table-value {
+  display: grid;
+  min-width: 0;
+  border-left: 1px solid var(--ui-border, var(--border));
+}
+.body-table-value > input,
+.body-table-value > select {
+  min-width: 0;
+  width: 100%;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  padding: 9px 8px;
+  min-height: var(--ui-control-height);
+  color: var(--text);
+  background: transparent;
+  font: var(--ui-text-md) var(--ui-mono);
+}
+.body-table-value > select {
+  font-family: inherit;
+  color: var(--muted);
+  border-top: 1px solid var(--ui-border, var(--border));
+}
+.body-table-value > :focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: -2px;
+}
+.body-table-error {
+  padding: 8px 12px;
+  overflow-wrap: anywhere;
+}
+@media (pointer: coarse), (max-width: 760px) {
+  .body-table-value > input,
+  .body-table-value > select {
+    min-height: 44px;
+    font-size: 1rem;
+  }
+}
