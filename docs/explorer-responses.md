@@ -16,10 +16,12 @@ Monaco, its worker, syntax definitions and icon font are self-hosted with the re
 
 ## Inspect and copy the destination
 
-The Unified bar combines the HTTP method, host, resolved path, encoded query, URL copy action and Send button. Changing the API server or parameter fields updates it. URL resolution does not depend on whether a request body or selected upload is complete. Invalid destinations or unresolved parameters disable URL copying and sending until corrected.
+The Unified bar combines the HTTP method, host, resolved path, encoded query, URL copy action and Send button. The published server and the current parameter values determine it. URL resolution does not depend on whether a request body or selected upload is complete. Invalid destinations or unresolved parameters disable URL copying and sending until corrected.
 
-**Copy request URL** copies the complete displayed URL. Authentication values use placeholders in displayed/copied URLs; sending uses the credentials entered in the authentication fields. Ordinary path/query values retain the specification's serialization and URL encoding. The HTTP method comes from the documented operation. Change the server and parameter fields to configure the destination.
+**Copy request URL** copies the complete displayed URL. Authentication values use placeholders in displayed/copied URLs; sending uses the credentials entered in the authentication fields. Ordinary path/query values retain the specification's serialization and URL encoding. The HTTP method comes from the documented operation. Edit path and query parameter fields to update the resolved URL; its server comes from the published specification.
 
 ## Browser build dependencies
 
 Monaco and DOMPurify are pinned development dependencies because their browser code is compiled into reader assets; installed server consumers do not compile the editor. The Vite build replaces Monaco's vendored sanitizer with the separately pinned, patched DOMPurify. The notices collector refuses a build containing the vendored copy or missing the patched dependency and includes both libraries' license text. Dependency audits and installed-package checks remain release gates; the reader's initial bundle and the lazy editor have separate performance costs.
+
+The request URL bar is read-only. It resolves the published server, path and currently included query parameters; copying preserves the complete displayed URL. The playground does not expose a destination editor. Change the API specification to publish a different server.

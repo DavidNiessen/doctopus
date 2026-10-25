@@ -1,3 +1,4 @@
+import { openSchemaControls } from '../helpers/request-forms.js';
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
@@ -19,7 +20,7 @@ test('body fields retain exact numbers, protect snippet secrets and send the edi
     .getByRole('button', { name: 'JSON', exact: true })
     .click();
   await playground.getByLabel('Request body', { exact: true }).fill(raw);
-  await playground.getByRole('button', { name: 'Fields', exact: true }).click();
+  await openSchemaControls(playground);
   await expect(
     playground.getByLabel('Body enabled', { exact: true }),
   ).toHaveValue('false');
@@ -103,7 +104,7 @@ test('body fields retain exact numbers, protect snippet secrets and send the edi
     options: ['cat', 'dog'],
     responseOnly: 'retained-read-only-value',
   });
-  await playground.getByRole('button', { name: 'Fields', exact: true }).click();
+  await openSchemaControls(playground);
   await playground
     .getByLabel('Body name', { exact: true })
     .scrollIntoViewIfNeeded();
@@ -126,7 +127,7 @@ test('body fields retain exact numbers, protect snippet secrets and send the edi
   await playground
     .getByLabel('bearer credential', { exact: true })
     .fill('demo-token');
-  await playground.getByRole('button', { name: 'Fields', exact: true }).click();
+  await openSchemaControls(playground);
   expect(
     (
       await new AxeBuilder({ page })
@@ -159,7 +160,7 @@ test('invalid drafts can return to JSON without changing the last valid body', a
   await page.getByRole('button', { name: 'Try now', exact: true }).click();
   const playground = page.getByLabel('API playground');
   await playground.locator('.playground-request-example > summary').click();
-  await playground.getByRole('button', { name: 'Fields', exact: true }).click();
+  await openSchemaControls(playground);
   await playground.getByLabel('Body count', { exact: true }).fill('-');
   await expect(
     playground.getByRole('button', { name: 'Send request' }),
@@ -181,7 +182,7 @@ test('invalid drafts can return to JSON without changing the last valid body', a
     .getByLabel('Request body', { exact: true })
     .fill('{"name":"a","name":"b"}');
   await expect(
-    playground.getByRole('button', { name: 'Fields', exact: true }),
+    playground.getByRole('button', { name: 'Form', exact: true }),
   ).toBeDisabled();
   await expect(
     playground.getByText('Duplicate JSON properties require the raw editor.'),

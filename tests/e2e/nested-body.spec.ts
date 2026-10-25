@@ -1,3 +1,4 @@
+import { openSchemaControls } from '../helpers/request-forms.js';
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 const route = 'http://127.0.0.1:4174/gallery/api/gallery/v1/editrequestfields/';
@@ -16,7 +17,7 @@ test('allOf object controls retain precise and unknown values, mask secrets and 
     .getByRole('button', { name: 'JSON', exact: true })
     .click();
   await playground.getByLabel('Request body', { exact: true }).fill(raw);
-  await playground.getByRole('button', { name: 'Fields', exact: true }).click();
+  await openSchemaControls(playground);
   await expect(
     playground.getByLabel('Body profile.id', { exact: true }),
   ).toHaveValue('9007199254740993');
@@ -122,9 +123,7 @@ test('allOf object controls retain precise and unknown values, mask secrets and 
         .getByRole('button', { name: 'JSON', exact: true })
         .click();
       await playground.getByLabel('Request body', { exact: true }).fill(sent);
-      await playground
-        .getByRole('button', { name: 'Fields', exact: true })
-        .click();
+      await openSchemaControls(playground);
     }
     await playground
       .getByLabel('Body profile.address.city', { exact: true })
@@ -160,7 +159,7 @@ test('nested JSON/fields switches, omission and null toggles clear discarded err
     .getByRole('button', { name: 'JSON', exact: true })
     .click();
   await playground.getByLabel('Request body', { exact: true }).fill(raw);
-  await playground.getByRole('button', { name: 'Fields', exact: true }).click();
+  await openSchemaControls(playground);
   await playground.getByLabel('Body profile.id', { exact: true }).fill('-');
   await expect(
     playground.getByRole('button', { name: 'Send request' }),

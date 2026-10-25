@@ -69,7 +69,13 @@ test('body forms preserve exact JSON, omitted drafts, nested values and secrets 
   await playground
     .getByLabel('Request body', { exact: true })
     .fill('{"":"retained"}');
+  await playground.getByRole('button', { name: 'Form', exact: true }).click();
+  await expect(playground.locator('.body-schema-fields')).toHaveAttribute(
+    'open',
+    '',
+  );
+  await playground.getByRole('button', { name: 'JSON', exact: true }).click();
   await expect(
-    playground.getByRole('button', { name: 'Form', exact: true }),
-  ).toBeDisabled();
+    playground.getByLabel('Request body', { exact: true }),
+  ).toHaveValue('{"":"retained"}');
 });

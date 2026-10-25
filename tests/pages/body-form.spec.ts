@@ -12,6 +12,14 @@ test('request forms show schema metadata and optional fields, preserve exact JSO
   await page.goto('api/orbit/v1/create-project/?playground=open');
   const playground = page.getByLabel('API playground', { exact: true });
   await expect(
+    playground
+      .getByRole('group', { name: 'Request body editor', exact: true })
+      .getByRole('button'),
+  ).toHaveCount(2);
+  await expect(
+    playground.getByLabel('API server', { exact: true }),
+  ).toHaveCount(0);
+  await expect(
     playground.getByRole('button', { name: 'Form', exact: true }),
   ).toHaveAttribute('aria-pressed', 'true');
   await expect(

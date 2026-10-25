@@ -1,4 +1,7 @@
-import { addParameter, openRequestSettings } from '../helpers/request-forms.js';
+import {
+  changePublishedServer,
+  addParameter,
+} from '../helpers/request-forms.js';
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
@@ -95,10 +98,7 @@ test('custom credential fields stay out of copied examples and custom rows clear
   expect(await page.evaluate(() => JSON.stringify(localStorage))).not.toContain(
     'private-custom-credential',
   );
-  await openRequestSettings(playground);
-  await playground
-    .getByLabel('API server', { exact: true })
-    .fill('https://other.example.test');
+  await changePublishedServer(page, playground, 'https://other.example.test');
   await expect(
     playground.getByLabel('query parameter name 1', { exact: true }),
   ).toHaveCount(0);
@@ -164,7 +164,7 @@ test('classic endpoint cards retain Try now and no longer show endpoint permalin
   const row = page.locator('#classic-0-list-projects');
   await row.locator('summary').first().click();
   await expect(
-    row.getByRole('button', { name: 'Try now', exact: true }),
+    row.locator('..').getByRole('button', { name: 'Try now', exact: true }),
   ).toBeVisible();
   await expect(
     page.getByRole('link', { name: 'Endpoint permalink', exact: true }),

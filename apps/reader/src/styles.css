@@ -335,7 +335,7 @@ kbd {
   min-width: 2.75rem;
   padding: 0 0.5rem;
   border-radius: 0.375rem;
-  font-family: var(--ui-font);
+  font-family: var(--ui-mono);
   font-size: 0.75rem;
   line-height: 1;
   font-weight: 700;
@@ -1692,18 +1692,40 @@ h3 {
   color: #f19b8d;
 }
 
-.page-loading {
-  position: fixed;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 200;
-  padding: 7px 16px;
-  border-radius: 0 0 6px 6px;
-  background: var(--accent-text);
-  color: var(--bg);
-  font-size: var(--ui-text-sm);
-  box-shadow: 0 3px 15px #0002;
+.page-skeleton {
+  grid-column: 1 / -1;
+  width: min(100%, 72ch);
+  padding-block: 12px 48px;
+}
+.page-skeleton [aria-hidden] > div {
+  background: color-mix(in srgb, var(--muted) 14%, var(--bg));
+  border-radius: 6px;
+}
+.skeleton-title {
+  width: 55%;
+  height: 40px;
+  margin-bottom: 20px;
+}
+.skeleton-description {
+  width: 85%;
+  height: 20px;
+  margin-bottom: 30px;
+}
+.skeleton-endpoint {
+  height: 50px;
+  margin-bottom: 60px;
+}
+.skeleton-section {
+  width: 35%;
+  height: 24px;
+  margin-bottom: 24px;
+}
+.page-skeleton .skeleton-line {
+  height: 16px;
+  margin-bottom: 16px;
+}
+.page-skeleton .skeleton-line:last-child {
+  width: 70%;
 }
 
 .nav-search-more {
@@ -3066,7 +3088,7 @@ label:has(input[type='radio']) {
   position: relative;
 }
 .body-editor > summary {
-  padding-right: 170px;
+  padding-right: 130px;
 }
 .body-editor > .body-editor-modes {
   position: absolute;
@@ -3095,11 +3117,13 @@ label:has(input[type='radio']) {
   background: var(--bg);
   color: var(--text);
 }
-.body-editor > .body-editor-modes > .body-advanced-fields {
-  width: 28px;
-  padding: 4px;
-  display: grid;
-  place-items: center;
+.body-schema-fields {
+  margin: 16px;
+}
+.body-schema-fields > summary {
+  cursor: pointer;
+  font-size: var(--ui-text-sm);
+  color: var(--muted);
 }
 .body-editor > label,
 .body-editor > .body-variant-selector,

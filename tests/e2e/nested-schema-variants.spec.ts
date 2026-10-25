@@ -1,4 +1,7 @@
-import { openRequestSettings } from '../helpers/request-forms.js';
+import {
+  openSchemaControls,
+  openRequestSettings,
+} from '../helpers/request-forms.js';
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import type { Page } from '@playwright/test';
@@ -11,7 +14,7 @@ async function open(page: Page) {
   await playground
     .getByRole('combobox', { name: 'Content type', exact: true })
     .selectOption('application/vnd.doctopus.nested+json');
-  await playground.getByRole('button', { name: 'Fields', exact: true }).click();
+  await openSchemaControls(playground);
   return playground;
 }
 
@@ -32,7 +35,7 @@ test('nested choices preserve other drafts, numeric tokens and hidden values, an
     .fill(
       '{"counter":3,"payload":{"kind":"person","name":"Ada","id":9007199254740993,"extra":1.234567890123456789,"token":"private-payload-token"},"payload.name":42,"items":[],"privatePayload":{"kind":"person","name":"private-inherited","token":"private-nested-token"},"lists":["Ada"]}',
     );
-  await playground.getByRole('button', { name: 'Fields', exact: true }).click();
+  await openSchemaControls(playground);
   const branch = playground.getByRole('combobox', {
     name: 'Schema branch for body payload',
     exact: true,
@@ -211,7 +214,7 @@ test('array structural edits clear item choices and drafts without changing unre
   expect(raw).toContain('Second');
   expect(raw).toContain('New item');
   expect(raw).not.toContain('First');
-  await playground.getByRole('button', { name: 'Fields', exact: true }).click();
+  await openSchemaControls(playground);
   await expect(first).toHaveValue('');
   await expect(second).toHaveValue('');
 });
@@ -283,7 +286,7 @@ test('nested JSON and omission reset descendant choices while preserving the con
   await playground
     .getByRole('combobox', { name: 'Content type', exact: true })
     .selectOption('application/vnd.doctopus.nested+json');
-  await playground.getByRole('button', { name: 'Fields', exact: true }).click();
+  await openSchemaControls(playground);
   await playground
     .getByRole('combobox', {
       name: 'Schema branch for body payload',

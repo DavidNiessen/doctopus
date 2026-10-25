@@ -44,7 +44,9 @@ test('classic reference lists collapsed endpoints in the main page and lazily op
   expect(dataRequests).toEqual([
     root + '/api/gallery/v1/serializeparameters/page-data.json',
   ]);
-  const trigger = row.getByRole('button', { name: 'Try now', exact: true });
+  const trigger = row
+    .locator('..')
+    .getByRole('button', { name: 'Try now', exact: true });
   await trigger.click();
   const dialog = page.getByLabel('API playground');
   await expect(dialog).toBeVisible();
@@ -397,4 +399,42 @@ test('closed endpoint actions recover from metadata errors and discard results a
   await page.waitForLoadState('networkidle');
   await expect(page.getByLabel('API playground')).toHaveCount(0);
   expect(new URL(page.url()).searchParams.has('playground')).toBe(false);
+});
+
+test('endpoint Try now stays in its header in both disclosure states at every layout width', async ({
+  page,
+}) => {
+  await classic(page);
+  const row = page.locator('#classic-0-serializeparameters');
+  const button = row
+    .locator('..')
+    .getByRole('button', { name: 'Try now', exact: true });
+  for (const width of [1850, 855, 360]) {
+    await page.setViewportSize({ width, height: 908 });
+    for (const open of [false, true]) {
+      if (
+        (await row.evaluate((el) => (el as HTMLDetailsElement).open)) !== open
+      )
+        await row.locator(':scope > summary').click();
+      await expect(row).toHaveJSProperty('open', open);
+      const bounds = await button.evaluate((el) => {
+        const action = el.getBoundingClientRect();
+        const header = el
+          .parentElement!.querySelector('summary')!
+          .getBoundingClientRect();
+        return {
+          top: action.top - header.top,
+          bottom: header.bottom - action.bottom,
+          left: action.left - header.left,
+          right: header.right - action.right,
+        };
+      });
+      expect(bounds.top).toBeGreaterThanOrEqual(0);
+      expect(bounds.bottom).toBeGreaterThanOrEqual(0);
+      expect(bounds.left).toBeGreaterThanOrEqual(0);
+      expect(bounds.right).toBeGreaterThanOrEqual(0);
+      await expect(button).toBeEnabled();
+    }
+    await row.locator(':scope > summary').click();
+  }
 });

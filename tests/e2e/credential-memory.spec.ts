@@ -1,4 +1,4 @@
-import { openRequestSettings } from '../helpers/request-forms.js';
+import { changePublishedServer } from '../helpers/request-forms.js';
 import { test, expect, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 const base = 'http://127.0.0.1:4174';
@@ -83,10 +83,7 @@ test('credential reuse is opt-in, destination-bound, clearable and absent from p
     'http://127.0.0.1:4010/v2',
     'https://127.0.0.1:4010/v1',
   ]) {
-    await openRequestSettings(playground);
-    await playground
-      .getByLabel('API server', { exact: true })
-      .fill(destination);
+    await changePublishedServer(page, playground, destination);
     await expect(
       playground.getByLabel('bearer credential', { exact: true }),
     ).toHaveValue('');
@@ -96,10 +93,7 @@ test('credential reuse is opt-in, destination-bound, clearable and absent from p
       }),
     ).not.toBeChecked();
   }
-  await openRequestSettings(playground);
-  await playground
-    .getByLabel('API server', { exact: true })
-    .fill('http://127.0.0.1:4010/v1');
+  await changePublishedServer(page, playground, 'http://127.0.0.1:4010/v1');
   await expect(
     playground.getByLabel('bearer credential', { exact: true }),
   ).toHaveValue('demo-token');

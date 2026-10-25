@@ -1,4 +1,4 @@
-import type { Locator } from '@playwright/test';
+import type { Locator, Page } from '@playwright/test';
 
 export async function addParameter(
   playground: Locator,
@@ -36,4 +36,41 @@ export async function openRequestSettings(playground: Locator) {
     !(await section.evaluate((element) => (element as HTMLDetailsElement).open))
   )
     await section.locator('summary').click();
+}
+
+export async function openSchemaControls(playground: Locator) {
+  await playground
+    .getByRole('group', { name: 'Request body editor', exact: true })
+    .getByRole('button', { name: 'Form', exact: true })
+    .click();
+  const section = playground.locator('.body-schema-fields');
+  if (
+    !(await section.evaluate((element) => (element as HTMLDetailsElement).open))
+  )
+    await section.locator('summary').click();
+}
+
+/** Simulate a changed published specification without exposing a destination editor in the UI. */
+export async function changePublishedServer(
+  page: Page,
+  playground: Locator,
+  server: string,
+) {
+  const path = new URL(page.url()).pathname;
+  await playground
+    .getByRole('button', { name: 'Close playground', exact: true })
+    .click();
+  await page.route(
+    new URL(path + 'page-data.json', page.url()).href,
+    async (route) => {
+      const response = await route.fetch();
+      const data = await response.json();
+      for (const api of data.apis)
+        for (const operation of api.operations) operation.servers = [server];
+      await route.fulfill({ response, json: data });
+    },
+    { times: 1 },
+  );
+  await page.locator(`a[data-doc-route][href="${path}"]`).first().click();
+  await page.getByRole('button', { name: 'Try now', exact: true }).click();
 }

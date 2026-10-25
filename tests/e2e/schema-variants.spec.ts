@@ -1,4 +1,7 @@
-import { openRequestSettings } from '../helpers/request-forms.js';
+import {
+  openSchemaControls,
+  openRequestSettings,
+} from '../helpers/request-forms.js';
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 const route =
@@ -17,7 +20,7 @@ test('oneOf controls require explicit selection and preserve values, privacy and
     name: 'Request body schema branch',
   });
   const fields = playground.getByRole('button', {
-    name: 'Fields',
+    name: 'Form',
     exact: true,
   });
   await expect(fields).toBeDisabled();
@@ -30,7 +33,7 @@ test('oneOf controls require explicit selection and preserve values, privacy and
   await expect(
     playground.getByLabel('Request body', { exact: true }),
   ).toHaveValue(raw);
-  await fields.click();
+  await openSchemaControls(playground);
   await expect(playground.getByLabel('Body id', { exact: true })).toHaveValue(
     '9007199254740993',
   );
@@ -73,7 +76,7 @@ test('oneOf controls require explicit selection and preserve values, privacy and
   await expect(
     playground.getByLabel('Request body', { exact: true }),
   ).toHaveValue(/"kind":\s*"person"/);
-  await fields.click();
+  await openSchemaControls(playground);
   await playground
     .getByRole('button', { name: 'Use fixed value for body kind', exact: true })
     .click();
@@ -140,7 +143,7 @@ test('anyOf array branches retain existing items, allow explicit additions and d
     name: 'Request body schema branch',
   });
   await branch.selectOption('0');
-  await playground.getByRole('button', { name: 'Fields', exact: true }).click();
+  await openSchemaControls(playground);
   await playground
     .getByLabel('Body [0].company', { exact: true })
     .fill('Retained company');
@@ -178,13 +181,13 @@ test('anyOf array branches retain existing items, allow explicit additions and d
   expect(retained).toContain('"kind": "organization"');
   await branch.selectOption('');
   await expect(
-    playground.getByRole('button', { name: 'Fields', exact: true }),
+    playground.getByRole('button', { name: 'Form', exact: true }),
   ).toBeDisabled();
   await expect(
     playground.getByLabel('Request body', { exact: true }),
   ).toHaveValue(retained);
   await branch.selectOption('0');
-  await playground.getByRole('button', { name: 'Fields', exact: true }).click();
+  await openSchemaControls(playground);
   await playground.getByRole('button', { name: 'Close playground' }).click();
   await page.getByRole('button', { name: 'Switch to dark theme' }).click();
   await page.getByRole('button', { name: 'Try this endpoint' }).click();
@@ -193,7 +196,7 @@ test('anyOf array branches retain existing items, allow explicit additions and d
     .getByRole('combobox', { name: 'Content type', exact: true })
     .selectOption('application/vnd.doctopus.variants+json');
   await branch.selectOption('0');
-  await playground.getByRole('button', { name: 'Fields', exact: true }).click();
+  await openSchemaControls(playground);
   await page.setViewportSize({ width: 390, height: 844 });
   await playground
     .getByLabel('Body [0].company', { exact: true })
@@ -235,7 +238,7 @@ test('unsupported sibling constraints retain JSON and example/media resets clear
   for (const choice of ['0', '1']) {
     await branch.selectOption(choice);
     await expect(
-      playground.getByRole('button', { name: 'Fields', exact: true }),
+      playground.getByRole('button', { name: 'Form', exact: true }),
     ).toBeDisabled();
     await expect(
       playground.getByLabel('Request body', { exact: true }),
@@ -250,6 +253,6 @@ test('unsupported sibling constraints retain JSON and example/media resets clear
     .selectOption('application/json');
   await expect(branch).toHaveValue('');
   await expect(
-    playground.getByRole('button', { name: 'Fields', exact: true }),
+    playground.getByRole('button', { name: 'Form', exact: true }),
   ).toBeDisabled();
 });

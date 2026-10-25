@@ -105,21 +105,24 @@ export default function ClassicApiReference({
       openingRequest.current = null;
     };
   }, [api.id, api.version, operationBase, activeOperation.slug, page]);
-  async function openClosed(row: OperationRow, trigger: HTMLButtonElement) {
+  async function openRow(row: OperationRow, trigger: HTMLButtonElement) {
     openingRequest.current?.abort();
     const controller = new AbortController();
     openingRequest.current = controller;
     setOpening(row.slug);
     setTryError(null);
     try {
-      const next = await loadOperation(
-        row.slug,
-        api,
-        activeOperation,
-        operationBase,
-        basePath,
-        controller.signal,
-      );
+      const next =
+        details?.operation.slug === row.slug
+          ? details
+          : await loadOperation(
+              row.slug,
+              api,
+              activeOperation,
+              operationBase,
+              basePath,
+              controller.signal,
+            );
       if (next.operation.kind && next.operation.kind !== 'endpoint')
         throw new Error('This operation does not accept outbound requests');
       if (!controller.signal.aborted && openingRequest.current === controller)
@@ -422,24 +425,6 @@ export default function ClassicApiReference({
                       )}
                       {details && details.operation.slug === row.slug && (
                         <>
-                          <div className="classic-endpoint-actions">
-                            {(!details.operation.kind ||
-                              details.operation.kind === 'endpoint') && (
-                              <button
-                                ref={tryButton}
-                                className="button-primary"
-                                type="button"
-                                onClick={(event) =>
-                                  setSelection({
-                                    ...details,
-                                    trigger: event.currentTarget,
-                                  })
-                                }
-                              >
-                                {t('playground.try')}
-                              </button>
-                            )}
-                          </div>
                           <p>{details.operation.description}</p>
                           {renderDetails(
                             details.api,
@@ -451,33 +436,31 @@ export default function ClassicApiReference({
                     </div>
                   )}
                 </details>
-                {expanded !== row.slug &&
-                  (!row.kind || row.kind === 'endpoint') && (
-                    <button
-                      className="button-primary classic-closed-try"
-                      type="button"
-                      aria-haspopup="dialog"
-                      aria-describedby={`classic-${page}-${row.slug}-summary`}
-                      aria-busy={opening === row.slug}
-                      aria-label={t('playground.try')}
-                      disabled={opening === row.slug}
-                      onClick={(event) =>
-                        void openClosed(row, event.currentTarget)
-                      }
-                    >
-                      {t(
-                        opening === row.slug
-                          ? 'classic.opening'
-                          : 'playground.try',
-                      )}
-                    </button>
-                  )}
+                {(!row.kind || row.kind === 'endpoint') && (
+                  <button
+                    ref={expanded === row.slug ? tryButton : undefined}
+                    className="button-primary classic-header-try"
+                    type="button"
+                    aria-haspopup="dialog"
+                    aria-describedby={`classic-${page}-${row.slug}-summary`}
+                    aria-busy={opening === row.slug}
+                    aria-label={t('playground.try')}
+                    disabled={opening === row.slug}
+                    onClick={(event) => void openRow(row, event.currentTarget)}
+                  >
+                    {t(
+                      opening === row.slug
+                        ? 'classic.opening'
+                        : 'playground.try',
+                    )}
+                  </button>
+                )}
                 {tryError?.slug === row.slug && (
                   <div className="classic-try-error" role="alert">
                     <p>{t('classic.detailsError')}</p>
                     <button
                       type="button"
-                      onClick={() => void openClosed(row, tryError.trigger)}
+                      onClick={() => void openRow(row, tryError.trigger)}
                     >
                       {t('classic.detailsRetry')}
                     </button>
