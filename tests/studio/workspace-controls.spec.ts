@@ -31,13 +31,13 @@ test('appearance overrides the system, survives reloads and synchronizes across 
   await appearance.selectOption('dark');
   await expect(page.locator('.workspace-main')).toHaveCSS(
     'background-color',
-    'rgb(24, 24, 27)',
+    'rgb(9, 13, 13)',
   );
   await page.reload();
   await expect(appearance).toHaveValue('dark');
   await expect(page.locator('.workspace-main')).toHaveCSS(
     'background-color',
-    'rgb(24, 24, 27)',
+    'rgb(9, 13, 13)',
   );
   const other = await context.newPage();
   await other.route('**/api/**', (route) =>
@@ -59,7 +59,7 @@ test('appearance overrides the system, survives reloads and synchronizes across 
   await page.emulateMedia({ colorScheme: 'dark' });
   await expect(page.locator('.workspace-main')).toHaveCSS(
     'background-color',
-    'rgb(24, 24, 27)',
+    'rgb(9, 13, 13)',
   );
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   await other.close();
@@ -136,7 +136,7 @@ test('blocked storage preserves usable appearance and sizing controls, including
   await appearance.selectOption('dark');
   await expect(page.locator('.workspace-main')).toHaveCSS(
     'background-color',
-    'rgb(24, 24, 27)',
+    'rgb(9, 13, 13)',
   );
   await page.setViewportSize({ width: 640, height: 900 });
   await page.evaluate(() => window.scrollTo(0, 120));

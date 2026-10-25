@@ -1,14 +1,14 @@
 :root {
-  --bg: light-dark(#ffffff, #18181b);
-  --surface: light-dark(#f5f5f7, #202024);
-  --subtle: light-dark(#eeeff2, #28282c);
-  --border: light-dark(#e0e0e4, #36363c);
-  --text: light-dark(#343438, #dedee4);
-  --muted: light-dark(#61616b, #aaaab4);
-  --heading: light-dark(#1d1d20, #f5f5f7);
-  --accent-text: light-dark(#6d28d9, #c4b5fd);
-  --action-bg: #6d28d9;
-  --accent-surface: light-dark(#f3edff, #302044);
+  --bg: light-dark(#ffffff, #090d0d);
+  --surface: light-dark(#f8faf9, #171b19);
+  --subtle: light-dark(#f0f4f2, #0d1712);
+  --border: light-dark(#e5e9e7, #262a27);
+  --text: light-dark(#3f4945, #ced3d0);
+  --muted: light-dark(#626e68, #9fa3a0);
+  --heading: light-dark(#17211c, #f8faf9);
+  --accent-text: light-dark(#087a50, #07c983);
+  --action-bg: #087a50;
+  --accent-surface: light-dark(#eaf8f0, #0b261b);
   --success-surface: light-dark(#eaf7ef, #1e332b);
   --success-text: light-dark(#12654c, #95e1bc);
   --error-surface: light-dark(#fff0ee, #3b2429);
