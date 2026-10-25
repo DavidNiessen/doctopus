@@ -66,7 +66,7 @@ pnpm run test:e2e
 
 Prettier, ESLint, and Markdown linting run on feature branch pushes, pull requests, merge queue candidates, and `master`. PR titles use conventional commit format. Strict TypeScript checks, compiler/security unit tests, deterministic publication checks, browser workflows, and automated accessibility checks also run in CI. See [CONTRIBUTING](CONTRIBUTING.md).
 
-See the [Doctopus brand guide and logo kit](docs/branding.md).
+See the [interface tour](docs/design/interface.md) and the [Doctopus brand guide and logo kit](docs/branding.md).
 
 ## Project principles
 
@@ -74,7 +74,7 @@ The documentation must work without an account with the project maintainers. Dep
 
 Doctopus uses its own components, branding, assets, and copy to create a cohesive documentation experience.
 
-Readers can choose modern islands or a classic API layout, select prepared theme presets with matching response-editor colors, and filter the sidebar with All, Documentation and API Reference. See [reader settings and layouts](docs/reader-layout.md#personal-reader-settings).
+Readers can choose modern documentation or a classic API layout, select prepared theme presets with matching response-editor colors, and filter the sidebar with All, Documentation and API Reference. See [reader settings and layouts](docs/reader-layout.md#personal-reader-settings).
 
 ## Self hosting and project policy
 
