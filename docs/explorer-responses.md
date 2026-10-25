@@ -16,7 +16,7 @@ Monaco, its worker, syntax definitions and icon font are self-hosted with the re
 
 ## Inspect and copy the destination
 
-The Scalar-inspired bar combines the HTTP method, host, resolved path, encoded query, URL copy action and Send button. Changing the API server or parameter fields updates it. URL resolution does not depend on whether a request body or selected upload is complete. Invalid destinations or unresolved parameters disable URL copying and sending until corrected.
+The Unified bar combines the HTTP method, host, resolved path, encoded query, URL copy action and Send button. Changing the API server or parameter fields updates it. URL resolution does not depend on whether a request body or selected upload is complete. Invalid destinations or unresolved parameters disable URL copying and sending until corrected.
 
 **Copy request URL** copies the complete displayed URL. Authentication values use placeholders in displayed/copied URLs; sending uses the credentials entered in the authentication fields. Ordinary path/query values retain the specification's serialization and URL encoding. The HTTP method comes from the documented operation. Change the server and parameter fields to configure the destination.
 

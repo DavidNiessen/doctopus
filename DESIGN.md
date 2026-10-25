@@ -2,7 +2,7 @@
 
 ## Visual authority
 
-Follow the owner's Mintlify reference across the reader, playground, search, preferences, classic reference and Studio. This replaces the former floating-island shell. Doctopus remains the product name and keeps its octopus assets.
+Use one cohesive Doctopus design system across the reader, playground, search, preferences, classic reference and Studio. This replaces the former floating-island shell. Doctopus remains the product name and keeps its octopus assets.
 
 Impeccable guidance is applied in **Read** mode for documentation and **Operate** mode for the playground and Studio. The target is familiar, precise documentation software, with restrained surfaces and working controls. No decorative dashboard charts, invented product claims or nonfunctional assistant controls.
 

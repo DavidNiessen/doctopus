@@ -36,7 +36,7 @@ Unsupported constructs must produce actionable diagnostics rather than silently 
 
 ## 3. Visual and interaction direction
 
-The UI should feel very close to Mintlify in information density, spacing, typography, navigation, and treatment of API examples. Use independently created components and design assets; no copied source, logos, proprietary illustrations, or misleading affiliation.
+The UI should provide clear information density, generous spacing, precise typography, intuitive navigation, and readable API examples. Use independently created components and design assets; no copied source, logos, proprietary illustrations, or misleading affiliation.
 
 ### Desktop composition
 
@@ -62,7 +62,7 @@ Offer production-ready presets and validated design tokens for brand colors, typ
 
 Allow configuration overrides, scoped CSS, component slots, and fully custom React themes at progressively higher trust levels. Document token precedence, supported extension points, schema migration, and compatibility guarantees. Default themes must remain attractive without tuning.
 
-Visual acceptance: review representative guide, endpoint, schema, search, and mobile pages in both themes at 360, 768, 1280, and 1920 px widths. Use screenshot baselines, automated accessibility checks, and human review. Inspiration is evaluated as a design brief, not a requirement to reproduce every Mintlify pixel.
+Visual acceptance: review representative guide, endpoint, schema, search, and mobile pages in both themes at 360, 768, 1280, and 1920 px widths. Use screenshot baselines, automated accessibility checks, and human review. Evaluate visual consistency, readability, and working interactions across the product.
 
 ## 4. API specification and reference experience
 

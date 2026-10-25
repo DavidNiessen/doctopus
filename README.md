@@ -17,7 +17,7 @@ Build Doctopus from source using the commands below, or consult [GitHub Packages
 ## Product direction
 
 - Import OpenAPI in YAML or JSON and combine generated reference pages with authored guides.
-- Deliver a refined, Mintlify-inspired reading experience with extensive branding, accessible components, and fast navigation.
+- Deliver a refined reading experience with extensive branding, accessible components, and fast navigation.
 - Publish to static hosting or run a self-hosted server for authentication, editing, publishing, and team workflows.
 - Integrate through versioned plugins, including Java/Spring Boot and JavaScript/TypeScript frameworks.
 - Keep core authoring, hosting, search, authentication, and customization available in the open source product.
@@ -72,7 +72,7 @@ See the [Doctopus brand guide and logo kit](docs/branding.md).
 
 The documentation must work without an account with the project maintainers. Deployments own their content, credentials, configuration, and artifacts. Public documentation should remain readable when optional services fail. Accessibility, security, upgrade safety, and performance are release requirements.
 
-The visual direction takes inspiration from Mintlify's layout and interaction quality while using original implementation, branding, assets, and copy.
+Doctopus uses its own components, branding, assets, and copy to create a cohesive documentation experience.
 
 Readers can choose modern islands or a classic API layout, select prepared theme presets with matching response-editor colors, and filter the sidebar with All, Documentation and API Reference. See [reader settings and layouts](docs/reader-layout.md#personal-reader-settings).
 

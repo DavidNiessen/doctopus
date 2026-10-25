@@ -18,7 +18,7 @@ Keep prepared appearance themes, system/light/dark modes, the classic reference 
 
 ## Current design brief
 
-The owner requests a comprehensive Mintlify-like overhaul of every application surface, including Studio. The visual reference is <https://mint.mintlify.app/api-reference/endpoint/> and the supplied Create Plant screenshot. Preserve Doctopus product identity and existing functionality while closely matching the reference's layout and craft.
+The owner requests a comprehensive overhaul of every application surface, including Studio: a centered documentation canvas, flat navigation, clear typography, restrained colors, and separate request/response examples. Preserve Doctopus product identity and existing functionality. Project text and repository metadata must use Doctopus terminology without naming external design inspirations.
 
 The owner also requests Impeccable for this work. Its published design guidance informs the redesign, visual review and accessibility/responsive checks. The supplied visual target takes precedence over generic style preferences.
 
