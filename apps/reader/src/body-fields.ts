@@ -34,6 +34,7 @@ export type BodyFieldModel =
       available: true;
       value: ObjectBodyValue;
       fields: (ChildEditors & { name: string; schema: Schema })[];
+      tableFields: { name: string; schema: Schema }[];
       required: unknown[];
     }
   | Unavailable;
@@ -61,6 +62,7 @@ export function bodyFieldModel(
   options: {
     variants?: boolean;
     selections?: ReadonlyMap<string, number>;
+    table?: boolean;
   } = {},
 ): BodyFieldModel | BodyArrayModel {
   const budget = { remaining: 100 };
@@ -229,16 +231,18 @@ export function bodyFieldModel(
         throw new Error(
           'Use JSON for requests with more than 100 declared fields.',
         );
-      const fields = properties
+      const tableFields = properties
         .filter(([, property]) => property !== false)
         .map(([name, property]) => {
           return {
             name,
             ...select(object(property), [...path, name], sensitive),
           };
-        })
-        .filter((field) => field.schema.readOnly !== true || field.variants);
-      if (!fields.length)
+        });
+      const fields = tableFields.filter(
+        (field) => field.schema.readOnly !== true || field.variants,
+      );
+      if (!fields.length && !options.table)
         throw new Error('No editable fields are defined. Use JSON.');
       if (fields.length > budget.remaining)
         throw new Error('Use JSON when nested editing exceeds 100 controls.');
@@ -246,6 +250,7 @@ export function bodyFieldModel(
       return {
         available: true,
         value,
+        tableFields,
         required: Array.isArray(actual.required) ? actual.required : [],
         fields: fields.map((field) => {
           const child = value.entries.find(([key]) => key === field.name)?.[1];

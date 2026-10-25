@@ -7,6 +7,7 @@ import {
 } from '@davidniessen/doctopus-contracts';
 import type { JsonValueNode, Schema } from '@davidniessen/doctopus-contracts';
 import type { ReactNode } from 'react';
+import { BodyTable } from './BodyTable.js';
 import {
   BodyBranchContext as BranchContext,
   BodyBranchSelector as BranchSelector,
@@ -668,7 +669,7 @@ export function BodyEditor({
   initialMode?: 'json' | 'fields';
   allowVariants?: boolean;
 }) {
-  const [mode, setMode] = useState<'json' | 'fields'>(initialMode);
+  const [mode, setMode] = useState<'json' | 'fields' | 'table'>(initialMode);
   const [variant, setVariant] = useState<number | undefined>();
   const [revision, setRevision] = useState(0);
   const [selections, setSelections] = useState<ReadonlyMap<string, number>>(
@@ -692,6 +693,7 @@ export function BodyEditor({
       bodyFieldModel(body, selectedSchema, schemas, legacy, {
         variants: allowVariants,
         selections,
+        table: true,
       }),
     [body, selectedSchema, schemas, legacy, allowVariants, selections],
   );
@@ -791,8 +793,21 @@ export function BodyEditor({
           </button>
           <button
             type="button"
+            aria-pressed={shownMode === 'table'}
+            disabled={
+              !available ||
+              !('fields' in model) ||
+              model.value.entries.length > 100 ||
+              model.value.entries.some(([name]) => !name)
+            }
+            onClick={() => setMode('table')}
+          >
+            Table
+          </button>
+          <button
+            type="button"
             aria-pressed={shownMode === 'fields'}
-            disabled={!available}
+            disabled={!available || ('fields' in model && !model.fields.length)}
             onClick={() => setMode('fields')}
           >
             Fields
@@ -812,6 +827,14 @@ export function BodyEditor({
             </label>
             {!available && <p className="subtle">{model.error}</p>}
           </>
+        ) : shownMode === 'table' && 'fields' in model ? (
+          <BodyTable
+            key={revision}
+            value={model.value}
+            fields={model.tableFields}
+            onChange={onChange}
+            onError={(error) => fieldError('table', error)}
+          />
         ) : (
           <fieldset className="body-fields" key={revision}>
             <legend>Request fields</legend>

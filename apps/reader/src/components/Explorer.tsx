@@ -1056,16 +1056,16 @@ export function Explorer({
               </label>
             )}
           </div>
+          <details className="playground-request-example">
+            <summary>Request example</summary>
+            {snippet}
+          </details>
           <MockResponseControls
             api={api}
             operation={operation}
             busy={busy}
             onGenerate={showMockResponse}
           />
-          <details className="playground-request-example">
-            <summary>Request example</summary>
-            {snippet}
-          </details>
           {error && (
             <p role="alert" className="request-error">
               {error}
