@@ -11,6 +11,10 @@ test('allOf object controls retain precise and unknown values, mask secrets and 
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto(route + '?playground=open');
   const playground = page.getByLabel('API playground');
+  await playground
+    .getByRole('group', { name: 'Request body editor', exact: true })
+    .getByRole('button', { name: 'JSON', exact: true })
+    .click();
   await playground.getByLabel('Request body', { exact: true }).fill(raw);
   await playground.getByRole('button', { name: 'Fields', exact: true }).click();
   await expect(
@@ -113,6 +117,10 @@ test('allOf object controls retain precise and unknown values, mask secrets and 
         .click();
       await page.getByRole('button', { name: 'Switch to dark theme' }).click();
       await page.getByRole('button', { name: 'Try this endpoint' }).click();
+      await playground
+        .getByRole('group', { name: 'Request body editor', exact: true })
+        .getByRole('button', { name: 'JSON', exact: true })
+        .click();
       await playground.getByLabel('Request body', { exact: true }).fill(sent);
       await playground
         .getByRole('button', { name: 'Fields', exact: true })
@@ -147,6 +155,10 @@ test('nested JSON/fields switches, omission and null toggles clear discarded err
 }) => {
   await page.goto(route + '?playground=open');
   const playground = page.getByLabel('API playground');
+  await playground
+    .getByRole('group', { name: 'Request body editor', exact: true })
+    .getByRole('button', { name: 'JSON', exact: true })
+    .click();
   await playground.getByLabel('Request body', { exact: true }).fill(raw);
   await playground.getByRole('button', { name: 'Fields', exact: true }).click();
   await playground.getByLabel('Body profile.id', { exact: true }).fill('-');

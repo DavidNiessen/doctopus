@@ -1,3 +1,4 @@
+import { openRequestSettings } from '../helpers/request-forms.js';
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
@@ -218,6 +219,7 @@ test('the URL bar resolves and copies the same complete host, path and query use
     .toBe(expected);
   await playground.getByLabel('payload parameter').fill('"Updated + query"');
   await expect(url).toContainText('payload=%22Updated%20%2B%20query%22');
+  await openRequestSettings(playground);
   await playground
     .getByLabel('API server')
     .fill('http://127.0.0.1:4010/another-base');
@@ -230,6 +232,7 @@ test('the URL bar resolves and copies the same complete host, path and query use
       page.evaluate(() => (window as unknown as { copied: string }).copied),
     )
     .toBe(await url.textContent());
+  await openRequestSettings(playground);
   await playground.getByLabel('API server').fill('invalid-server');
   await expect(
     playground.getByRole('button', { name: 'Copy request URL' }),

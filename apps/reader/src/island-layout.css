@@ -210,7 +210,7 @@
 }
 .playground-panels {
   grid-template-columns:
-    minmax(280px, min(var(--request-panel-width, 540px), calc(100% - 272px)))
+    minmax(280px, min(var(--request-panel-width, 740px), calc(100% - 272px)))
     12px minmax(260px, 1fr);
 }
 .playground-inputs,
@@ -274,7 +274,7 @@
   min-height: 0;
 }
 .playground-inputs > .mock-response-controls {
-  margin: 0 24px 24px;
+  margin: 0 16px 12px;
 }
 .response-editor-toolbar > button {
   min-height: var(--ui-control-height);

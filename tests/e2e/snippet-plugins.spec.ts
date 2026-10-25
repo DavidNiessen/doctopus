@@ -1,3 +1,4 @@
+import { openRequestSettings } from '../helpers/request-forms.js';
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
@@ -55,6 +56,7 @@ test('build-time plugin samples copy as text and stay distinct from live playgro
   await modal
     .getByLabel('Code language')
     .selectOption({ label: 'Go net/http (build-time)' });
+  await openRequestSettings(modal);
   await modal.getByLabel('API server').fill('http://127.0.0.1:4010/v1');
   await expect(modal.locator('.code-block pre code')).toHaveText(code);
   await expect(

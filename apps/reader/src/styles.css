@@ -978,12 +978,6 @@ h3 {
   flex: none;
   accent-color: var(--accent-text);
 }
-.parameter-presence-hint {
-  color: var(--muted);
-  font-size: var(--ui-text-sm);
-  line-height: 1.6;
-  margin: 6px 0 0;
-}
 .request-fields label > span {
   display: flex;
   justify-content: space-between;
@@ -2786,171 +2780,439 @@ label:has(input[type='radio']) {
   height: 20px;
 }
 
-/* Compact, native form rows retain OpenAPI validation and keyboard controls. */
-.request-parameter-section {
+/* Request forms share one section rhythm and responsive field layout. */
+.playground-inputs {
+  container-type: inline-size;
+  container-name: request-pane;
+}
+.playground-intro {
+  padding: 18px 16px 0;
+}
+.playground-intro h2 {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  clip-path: inset(50%);
+  overflow: hidden;
+}
+.playground-intro p {
+  font-size: var(--ui-text-md);
+  line-height: 1.6;
+}
+.playground-inputs .request-fields {
+  padding: 16px 16px 12px;
+  gap: 12px;
+}
+.request-fields [hidden] {
+  display: none !important;
+}
+.request-form-section,
+.playground-request-example,
+.mock-response-controls {
   min-width: 0;
   border: 1px solid var(--ui-border, var(--border));
-  border-radius: 10px;
+  border-radius: 14px;
+  background: var(--bg);
   overflow: clip;
+  padding: 0;
 }
-.request-parameter-section > summary {
-  padding: 10px 12px;
-  background: var(--surface);
-  font-weight: 600;
+.request-form-section > summary,
+.playground-request-example > summary,
+.mock-response-controls > summary {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  list-style: none;
+  min-height: 42px;
+  padding: 10px 16px;
+  margin: 0;
+  color: var(--text);
   font-size: var(--ui-text-md);
+  font-weight: 600;
+  line-height: 20px;
   cursor: pointer;
 }
-.request-parameter-columns,
-.request-parameter-row {
+.request-form-section > summary::-webkit-details-marker,
+.playground-request-example > summary::-webkit-details-marker,
+.mock-response-controls > summary::-webkit-details-marker {
+  display: none;
+}
+.request-form-section > summary::before,
+.playground-request-example > summary::before,
+.mock-response-controls > summary::before {
+  content: '';
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-right: 1.5px solid var(--muted);
+  border-bottom: 1.5px solid var(--muted);
+  transform: rotate(-45deg);
+  margin-right: 2px;
+}
+.request-form-section[open] > summary::before,
+.playground-request-example[open] > summary::before,
+.mock-response-controls[open] > summary::before {
+  transform: rotate(45deg);
+}
+.request-form-section > summary:focus-visible,
+.playground-request-example > summary:focus-visible,
+.mock-response-controls > summary:focus-visible {
+  outline-offset: -3px;
+}
+.request-form-field {
   display: grid;
-  grid-template-columns: 32px minmax(0, 1fr) minmax(0, 1.4fr) 32px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   align-items: center;
   min-width: 0;
+  gap: 24px;
+  padding: 20px 16px;
   border-top: 1px solid var(--ui-border, var(--border));
 }
-.request-parameter-columns {
+.request-field-meta,
+.request-field-control {
+  min-width: 0;
+}
+.request-fields .request-field-meta {
+  display: block;
+  margin: 0;
+}
+.request-fields .request-field-meta > .parameter-name {
+  display: grid;
+  justify-content: start;
+  gap: 8px;
+}
+.request-field-heading,
+.request-fields .request-field-heading {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+}
+.request-field-heading code,
+.request-field-heading label {
+  font-family: var(--ui-font);
+  font-size: var(--ui-text-md);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.request-fields .request-field-description,
+.auth-fields .request-field-description {
+  display: block;
+  margin: 8px 0 0;
+  font-size: var(--ui-text-md);
+  font-weight: 400;
   color: var(--muted);
-  font-size: var(--ui-text-sm);
+  line-height: 1.6;
+  overflow-wrap: anywhere;
 }
-.request-parameter-columns > span {
-  padding: 6px;
+.request-type-badge,
+.request-required-badge,
+.request-fields .request-type-badge,
+.request-fields .request-required-badge {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  padding: 2px 6px;
+  border-radius: 5px;
+  background: var(--surface);
+  color: var(--muted);
+  font: 600 var(--ui-text-xs)/1.3 var(--ui-mono);
+  overflow-wrap: anywhere;
 }
-.request-parameter-row > input,
-.request-parameter-row > label:not(.parameter-presence) {
+.request-required-badge,
+.request-fields .request-required-badge {
+  color: var(--error-text);
+  background: color-mix(in srgb, var(--error-text) 12%, var(--bg));
+}
+.request-field-control {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 6px;
+}
+.request-field-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.request-fields .request-field-control > input,
+.request-fields .request-field-control > textarea,
+.request-fields .auth-primary-field input {
   min-width: 0;
   width: 100%;
+  min-height: 36px;
   margin: 0;
-  padding: 9px 8px;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  font-size: var(--ui-text-md);
+  padding: 8px 10px;
+  border: 1px solid var(--ui-border, var(--border));
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text);
+  font: var(--ui-text-md)/1.4 var(--ui-font);
 }
-.request-parameter-row > input {
-  border-left: 1px solid var(--ui-border, var(--border));
-  min-height: var(--ui-control-height);
+.request-fields .request-field-control > textarea {
   font-family: var(--ui-mono);
+  line-height: 1.5;
 }
-.request-parameter-row > input:focus-visible {
+.request-field-control > :focus-visible,
+.request-fields .additional-parameter-name:focus-visible,
+.request-fields .body-form-key:focus-visible,
+.request-fields .request-type-select:focus-visible {
   outline: 2px solid var(--accent-text);
-  outline-offset: -2px;
+  outline-offset: 2px;
 }
-.request-parameter-row > .parameter-presence {
+.request-fields .request-field-actions .parameter-presence {
   display: grid;
   place-items: center;
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
   margin: 0;
   padding: 0;
-  min-width: 0;
-  width: 32px;
 }
+.playground-inputs .request-fields .parameter-presence input {
+  width: 14px;
+  height: 14px;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+}
+.parameter-remove,
 .parameter-required {
   display: grid;
   place-items: center;
-  color: var(--muted);
-}
-.request-parameter-row .parameter-name {
-  display: grid;
-  gap: 3px;
-  overflow-wrap: anywhere;
-}
-.request-parameter-row .parameter-name small {
-  color: var(--muted);
-  font-size: var(--ui-text-xs);
-}
-.request-parameter-row .parameter-remove {
-  display: grid;
-  place-items: center;
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
   border: 0;
-  padding: 0;
-  width: 32px;
-  min-height: var(--ui-control-height);
+  border-radius: 6px;
   color: var(--muted);
   background: transparent;
-  border-radius: 6px;
+  padding: 0;
 }
 .parameter-remove:hover:not(:disabled) {
   color: var(--text);
   background: var(--surface);
 }
-.request-parameter-row > .parameter-presence-hint {
-  grid-column: 2 / -1;
-  margin: 0;
-  padding: 0 8px 8px;
-  font-size: var(--ui-text-xs);
-  overflow-wrap: anywhere;
-}
-.parameter-row-actions {
+.request-form-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  padding: 8px;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
   border-top: 1px solid var(--ui-border, var(--border));
+  background: var(--surface);
 }
-.parameter-row-actions button {
-  color: var(--text);
-  background: transparent;
+.request-form-actions button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 36px;
   border: 0;
   border-radius: 6px;
   padding: 6px 8px;
-  font-size: var(--ui-text-sm);
+  background: transparent;
+  color: var(--text);
+  font: var(--ui-text-sm)/1.4 var(--ui-font);
 }
-@media (pointer: coarse), (max-width: 760px) {
-  .request-parameter-columns,
-  .request-parameter-row {
-    grid-template-columns: 44px minmax(0, 1fr) minmax(0, 1.3fr) 44px;
-  }
-  .request-parameter-row > .parameter-presence,
-  .request-parameter-row .parameter-remove {
-    width: 44px;
-    min-height: 44px;
-  }
-  .request-parameter-row > input {
-    font-size: 1rem;
-    min-height: 44px;
-  }
-  .parameter-row-actions button {
-    min-height: 44px;
-  }
-}
-.request-parameter-section > summary:focus-visible,
-.request-parameter-row .parameter-remove:focus-visible {
-  outline-offset: -3px;
-}
-.body-table-value {
-  display: grid;
-  min-width: 0;
-  border-left: 1px solid var(--ui-border, var(--border));
-}
-.body-table-value > input,
-.body-table-value > select {
+.request-fields .additional-parameter-name,
+.request-fields .body-form-key {
   min-width: 0;
   width: 100%;
+  border: 1px solid var(--ui-border, var(--border));
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text);
+  font: 600 var(--ui-text-md)/1.4 var(--ui-font);
+  padding: 8px 10px;
+}
+.request-custom-field .request-field-meta {
+  display: grid;
+  gap: 8px;
+  justify-items: start;
+}
+.request-fields .request-type-select {
+  width: auto;
+  max-width: 100%;
+  min-height: 28px;
+  padding: 3px 6px;
   margin: 0;
   border: 0;
-  border-radius: 0;
-  padding: 9px 8px;
-  min-height: var(--ui-control-height);
+  border-radius: 5px;
   color: var(--text);
-  background: transparent;
-  font: var(--ui-text-md) var(--ui-mono);
+  background: var(--surface);
+  font: var(--ui-text-xs)/1.4 var(--ui-mono);
 }
-.body-table-value > select {
-  font-family: inherit;
+.auth-fields {
+  padding: 0;
+}
+.request-fields .auth-primary-field {
+  margin: 0;
+  padding: 20px 16px;
+  font-weight: 400;
+}
+.auth-field + .auth-field {
+  margin-top: 0;
+  border: 0;
+  padding-top: 0;
+}
+.auth-field > .auth-action,
+.auth-field > .oauth-settings,
+.auth-field > p,
+.auth-fields > .credential-memory-controls {
+  margin: 8px 16px 12px;
+}
+.auth-field > .oauth-settings {
+  padding: 12px;
+}
+.request-fields .credential-memory-controls {
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+.body-editor {
+  display: block;
+  position: relative;
+}
+.body-editor > summary {
+  padding-right: 170px;
+}
+.body-editor > .body-editor-modes {
+  position: absolute;
+  top: 6px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px;
+  background: var(--surface);
+  border: 0;
+  border-radius: 20px;
+}
+.body-editor > .body-editor-modes > button {
+  min-height: 26px;
+  padding: 3px 10px;
+  border: 0;
+  border-radius: 16px;
   color: var(--muted);
+  font-size: var(--ui-text-xs);
+}
+.body-editor > .body-editor-modes > button:nth-child(2) {
+  order: -1;
+}
+.body-editor > .body-editor-modes > button[aria-pressed='true'] {
+  background: var(--bg);
+  color: var(--text);
+}
+.body-editor > .body-editor-modes > .body-advanced-fields {
+  width: 28px;
+  padding: 4px;
+  display: grid;
+  place-items: center;
+}
+.body-editor > label,
+.body-editor > .body-variant-selector,
+.body-editor > .subtle {
+  margin: 16px;
+}
+.body-editor > .body-fields {
+  margin: 0;
+  border: 0;
+  border-top: 1px solid var(--ui-border, var(--border));
+  border-radius: 0;
+  padding: 16px;
+}
+.body-form {
+  min-width: 0;
+}
+.body-form > .request-form-field:first-child {
   border-top: 1px solid var(--ui-border, var(--border));
 }
-.body-table-value > :focus-visible {
-  outline: 2px solid var(--accent-text);
-  outline-offset: -2px;
-}
-.body-table-error {
-  padding: 8px 12px;
+.request-form-error {
+  padding: 10px 16px;
+  margin: 0;
+  color: var(--error-text);
+  font-size: var(--ui-text-sm);
   overflow-wrap: anywhere;
 }
+.request-settings-fields {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border-top: 1px solid var(--ui-border, var(--border));
+}
+.playground-request-example,
+.mock-response-controls {
+  margin: 0 16px 12px;
+}
+.mock-response-controls > :not(summary) {
+  margin-left: 16px;
+  margin-right: 16px;
+}
+.mock-response-controls > button {
+  margin-bottom: 16px;
+}
+.request-note {
+  padding: 0 16px 16px;
+  margin: 0;
+  font-size: var(--ui-text-xs);
+}
+@container request-pane (max-width: 520px) {
+  .request-form-field {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    padding: 16px;
+  }
+}
 @media (pointer: coarse), (max-width: 760px) {
-  .body-table-value > input,
-  .body-table-value > select {
+  .request-fields .request-field-control > input,
+  .request-fields .request-field-control > textarea,
+  .request-fields .auth-primary-field input,
+  .request-fields .additional-parameter-name,
+  .request-fields .body-form-key {
     min-height: 44px;
     font-size: 1rem;
   }
+  .request-fields .request-field-actions .parameter-presence,
+  .parameter-remove,
+  .parameter-required {
+    min-width: 44px;
+    width: 44px;
+    height: 44px;
+  }
+  .request-form-actions button {
+    min-height: 44px;
+  }
+  .body-editor > .body-editor-modes {
+    top: 3px;
+  }
+  .body-editor > .body-editor-modes > button {
+    min-height: 32px;
+  }
+}
+
+.request-fields .auth-credential-control {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  min-width: 0;
+  border: 1px solid var(--ui-border, var(--border));
+  border-radius: 8px;
+  padding-left: 10px;
+}
+.request-fields .auth-primary-field .auth-credential-control input {
+  border: 0;
+  background: transparent;
+  padding-left: 0;
+}
+.auth-credential-prefix {
+  flex: none;
+  color: var(--muted);
+  font-size: var(--ui-text-md);
+}
+.request-field-control:not(:has(.request-field-actions)) {
+  grid-template-columns: minmax(0, 1fr);
 }

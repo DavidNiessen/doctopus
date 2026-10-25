@@ -1,7 +1,8 @@
+import { addParameter } from '../helpers/request-forms.js';
 import { test, expect } from '@playwright/test';
 
 // Inspect real browser requests to the local API, including CORS preflight.
-test('custom query/header rows reach the actual API and deleted or disabled fields do not', async ({
+test('custom query/header form fields reach the actual API and deleted or disabled fields do not', async ({
   page,
 }) => {
   await page.goto('/api/orbit/v1/list-projects/?playground=open');
@@ -9,18 +10,21 @@ test('custom query/header rows reach the actual API and deleted or disabled fiel
   await playground
     .getByLabel('bearerAuth credential', { exact: true })
     .fill('demo-token');
+  await addParameter(playground, 'query');
   await playground
     .getByLabel('query parameter name 1', { exact: true })
     .fill('tag');
   await playground
     .getByLabel('query parameter value 1', { exact: true })
     .fill('blue & violet');
+  await addParameter(playground, 'query');
   await playground
     .getByLabel('query parameter name 2', { exact: true })
     .fill('tag');
   await playground
     .getByLabel('query parameter value 2', { exact: true })
     .fill('');
+  await addParameter(playground, 'header');
   await playground
     .getByLabel('header parameter name 1', { exact: true })
     .fill('trace');

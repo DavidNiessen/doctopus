@@ -1,3 +1,4 @@
+import { openRequestSettings } from '../helpers/request-forms.js';
 import { test, expect } from '@playwright/test';
 import type { Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
@@ -86,8 +87,12 @@ test('Send mock stays local after server edits and supports highlighted, folded 
   await page.goto('api/orbit/v1/list-projects/?playground=open');
   const playground = page.getByLabel('API playground');
   await expect(playground).toContainText('No API requests are sent');
-  await expect(playground.locator('.auth-fields')).toHaveCount(0);
+  await expect(playground.locator('.auth-fields')).toHaveCount(1);
+  await expect(
+    playground.getByLabel('bearerAuth credential', { exact: true }),
+  ).toBeVisible();
   await expect(playground.locator('.relay-controls')).toHaveCount(0);
+  await openRequestSettings(playground);
   await playground
     .getByLabel('API server', { exact: true })
     .fill('https://example.com/never-call-this');

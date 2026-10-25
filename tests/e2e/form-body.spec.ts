@@ -1,3 +1,4 @@
+import { openRequestSettings } from '../helpers/request-forms.js';
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
@@ -81,6 +82,7 @@ test('form values, literal encoded drafts and example selection send the active 
   await playground.getByRole('button', { name: 'Send request' }).click();
   response = await result;
   expect(response.request().postData()).toBe(expected);
+  await openRequestSettings(playground);
   await playground
     .getByRole('combobox', { name: 'Request example', exact: true })
     .selectOption('named:encoded');
@@ -93,6 +95,7 @@ test('form values, literal encoded drafts and example selection send the active 
   await expect(
     playground.getByLabel('Include body name', { exact: true }),
   ).not.toBeChecked();
+  await openRequestSettings(playground);
   await playground
     .getByRole('combobox', { name: 'Request example', exact: true })
     .selectOption('named:values');

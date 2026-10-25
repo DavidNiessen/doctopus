@@ -36,7 +36,7 @@ import { CopyButton } from './CopyButton.js';
 import { PanelResizeHandle } from './PanelResizeHandle.js';
 import { RequestUrlBar } from './RequestUrlBar.js';
 import { ParameterInput } from './ParameterInput.js';
-import { ParameterRows } from './ParameterRows.js';
+import { ParameterForm } from './ParameterForm.js';
 import {
   createParameterDrafts,
   editParameterDraft,
@@ -682,67 +682,131 @@ export function Explorer({
                 }}
               />
             )}
-            <label>
-              {t('playground.server')}
-              <input
-                aria-label={t('playground.serverLabel')}
-                value={server}
-                onChange={(event) => {
-                  setServer(event.target.value);
-                  auth.clearLocal();
-                  setParameterDrafts(createParameterDrafts());
-                  controller.current?.abort();
-                  controller.current = null;
-                  setBusy(false);
-                  setResponse(undefined);
-                  setError('');
-                  if (isMultipartMediaType(contentType)) {
-                    setFiles({});
-                    setPartHeaders({});
-                    setBodyRevision((current) => current + 1);
-                  }
-                }}
-                spellCheck={false}
-              />
-            </label>
-            {!operation.servers.length && (
-              <p className="subtle">{t('playground.noServer')}</p>
-            )}
-            {operation.parameters
-              .filter(
-                (parameter) =>
-                  parameter.in !== 'query' && parameter.in !== 'header',
-              )
-              .map((parameter) => {
-                const key = `${parameter.in}:${parameter.name}`;
-                return (
-                  <ParameterInput
-                    key={key}
-                    parameter={parameter}
-                    value={parameters[key] ?? ''}
-                    presence={parameterPresence[key]}
-                    allowEmpty={emptyParameters.has(key)}
-                    qualified={qualifiedParameterNames.has(parameter.name)}
-                    onChange={(value) =>
-                      setParameters((previous) => ({
-                        ...previous,
-                        [key]: value,
-                      }))
+            {authNames.length > 0 && (
+              <details className="auth-fields request-form-section" open>
+                <summary>{t('api.authorization')}</summary>
+                {!mockOnly && credentialSession && (
+                  <div className="credential-memory-controls">
+                    <label className="body-checkbox">
+                      <input
+                        type="checkbox"
+                        checked={auth.remembered}
+                        disabled={!authScope.group}
+                        onChange={(event) =>
+                          auth.remember(event.target.checked)
+                        }
+                      />
+                      <span>{t('auth.remember')}</span>
+                    </label>
+                    {credentialSession.hasRemembered() && (
+                      <button
+                        type="button"
+                        className="auth-action"
+                        onClick={(event) => {
+                          const fields =
+                            event.currentTarget.closest('.auth-fields');
+                          auth.clearAll();
+                          requestAnimationFrame(() => {
+                            if (fields?.isConnected)
+                              fields
+                                .querySelector<HTMLInputElement>(
+                                  '.auth-field input',
+                                )
+                                ?.focus();
+                          });
+                        }}
+                      >
+                        {t('auth.clearAll')}
+                      </button>
+                    )}
+                    {auth.notice.text && (
+                      <p role={auth.notice.error ? 'alert' : 'status'}>
+                        {auth.notice.text}
+                      </p>
+                    )}
+                  </div>
+                )}
+                {authNames.map((name) => (
+                  <AuthField
+                    key={JSON.stringify([
+                      server,
+                      name,
+                      auth.resetEpoch,
+                      !!credentialSession,
+                      authScope.keys.get(name),
+                    ])}
+                    name={name}
+                    mockOnly={mockOnly}
+                    required={
+                      authNames.length === 1 &&
+                      !operation.security.some(
+                        (alternative) => Object.keys(alternative).length === 0,
+                      )
                     }
-                    onPresence={(value) =>
-                      setParameterPresence((previous) => {
-                        const next = { ...previous };
-                        if (value === undefined) delete next[key];
-                        else next[key] = value;
-                        return next;
-                      })
+                    scheme={api.securitySchemes[name]}
+                    credential={credentials[name] ?? ''}
+                    credentialExpiresAt={auth.entries[name]?.expiresAt}
+                    onChange={(value, expiresAt) =>
+                      auth.change(name, value, expiresAt)
+                    }
+                    scopes={
+                      operation.security.find((alternative) =>
+                        Object.hasOwn(alternative, name),
+                      )?.[name] ?? []
+                    }
+                    client={oauthClients?.[name]}
+                    server={server}
+                    redirectUri={
+                      origin ? `${origin}${basePath}/oauth/callback/` : ''
                     }
                   />
-                );
-              })}
+                ))}
+              </details>
+            )}
+            {operation.parameters.some(
+              (parameter) =>
+                parameter.in !== 'query' && parameter.in !== 'header',
+            ) && (
+              <details className="request-form-section" open>
+                <summary>Path parameters</summary>
+                {operation.parameters
+                  .filter(
+                    (parameter) =>
+                      parameter.in !== 'query' && parameter.in !== 'header',
+                  )
+                  .map((parameter) => {
+                    const key = `${parameter.in}:${parameter.name}`;
+                    return (
+                      <ParameterInput
+                        key={key}
+                        compact
+                        parameter={parameter}
+                        value={parameters[key] ?? ''}
+                        presence={parameterPresence[key]}
+                        allowEmpty={emptyParameters.has(key)}
+                        qualified={qualifiedParameterNames.has(parameter.name)}
+                        onChange={(value) =>
+                          setParameters((previous) => ({
+                            ...previous,
+                            [key]: value,
+                          }))
+                        }
+                        onPresence={(value) =>
+                          setParameterPresence((previous) => {
+                            const next = { ...previous };
+                            if (value === undefined) delete next[key];
+                            else next[key] = value;
+                            return next;
+                          })
+                        }
+                      />
+                    );
+                  })}
+              </details>
+            )}
             {(['header', 'query'] as const).map((location) => (
-              <ParameterRows
-                key={location}
+              <ParameterForm
+                key={JSON.stringify([location, server])}
                 location={location}
                 declared={operation.parameters.filter(
                   (parameter) =>
@@ -809,171 +873,8 @@ export function Explorer({
                 }
               />
             ))}
-            {!mockOnly && authNames.length > 0 && (
-              <details className="auth-fields" open>
-                <summary>
-                  <Icon name="lock" size={14} />
-                  {t('auth.heading')}
-                </summary>
-                <p>{t('auth.help')}</p>
-                {credentialSession && (
-                  <div className="credential-memory-controls">
-                    <label className="body-checkbox">
-                      <input
-                        type="checkbox"
-                        checked={auth.remembered}
-                        disabled={!authScope.group}
-                        onChange={(event) =>
-                          auth.remember(event.target.checked)
-                        }
-                      />
-                      <span>{t('auth.remember')}</span>
-                    </label>
-                    {credentialSession.hasRemembered() && (
-                      <button
-                        type="button"
-                        className="auth-action"
-                        onClick={(event) => {
-                          const fields =
-                            event.currentTarget.closest('.auth-fields');
-                          auth.clearAll();
-                          requestAnimationFrame(() => {
-                            if (fields?.isConnected)
-                              fields
-                                .querySelector<HTMLInputElement>(
-                                  '.auth-field input',
-                                )
-                                ?.focus();
-                          });
-                        }}
-                      >
-                        {t('auth.clearAll')}
-                      </button>
-                    )}
-                    {auth.notice.text && (
-                      <p role={auth.notice.error ? 'alert' : 'status'}>
-                        {auth.notice.text}
-                      </p>
-                    )}
-                  </div>
-                )}
-                {authNames.map((name) => (
-                  <AuthField
-                    key={JSON.stringify([
-                      server,
-                      name,
-                      auth.resetEpoch,
-                      !!credentialSession,
-                      authScope.keys.get(name),
-                    ])}
-                    name={name}
-                    scheme={api.securitySchemes[name]}
-                    credential={credentials[name] ?? ''}
-                    credentialExpiresAt={auth.entries[name]?.expiresAt}
-                    onChange={(value, expiresAt) =>
-                      auth.change(name, value, expiresAt)
-                    }
-                    scopes={
-                      operation.security.find((alternative) =>
-                        Object.hasOwn(alternative, name),
-                      )?.[name] ?? []
-                    }
-                    client={oauthClients?.[name]}
-                    server={server}
-                    redirectUri={
-                      origin ? `${origin}${basePath}/oauth/callback/` : ''
-                    }
-                  />
-                ))}
-              </details>
-            )}
             {operation.requestBody && (
               <>
-                <label>
-                  Content type
-                  <select
-                    value={contentType}
-                    onChange={(event) => {
-                      setContentType(event.target.value);
-                      const media =
-                        operation.requestBody?.content[event.target.value];
-                      const choices = media
-                        ? exampleChoices(media, api.schemas)
-                        : [];
-                      setRequestExample(choices[0]?.id ?? '');
-                      setBodyFormat(
-                        bodyInputFormat(event.target.value, choices[0]?.value),
-                      );
-                      setBodyRevision((current) => current + 1);
-                      setBodyFormError('');
-                      setFiles({});
-                      setPartHeaders({});
-                      setBody(
-                        choices.length
-                          ? exampleBody(
-                              choices[0]!.value,
-                              event.target.value,
-                              media,
-                              api,
-                            )
-                          : '',
-                      );
-                    }}
-                  >
-                    {mediaTypes.map((type) => (
-                      <option key={type}>{type}</option>
-                    ))}
-                  </select>
-                </label>
-                {requestChoices.length > 0 &&
-                  (requestChoices.length > 1 ||
-                    requestChoices[0]!.id.startsWith('named:') ||
-                    !requestExample) && (
-                    <label>
-                      Request example
-                      <select
-                        value={requestExample}
-                        onChange={(event) => {
-                          const choice = requestChoices.find(
-                            (item) => item.id === event.target.value,
-                          );
-                          if (choice) {
-                            setRequestExample(choice.id);
-                            setBodyFormat(
-                              bodyInputFormat(contentType, choice.value),
-                            );
-                            setBodyRevision((current) => current + 1);
-                            setBodyFormError('');
-                            setFiles({});
-                            setPartHeaders({});
-                            setBody(
-                              exampleBody(
-                                choice.value,
-                                contentType,
-                                requestMedia,
-                                api,
-                              ),
-                            );
-                          }
-                        }}
-                      >
-                        {!requestExample && (
-                          <option value="">Custom request</option>
-                        )}
-                        {requestChoices.map((choice) => (
-                          <option key={choice.id} value={choice.id}>
-                            {choice.label}
-                          </option>
-                        ))}
-                      </select>
-                    </label>
-                  )}
-                {requestMedia && hasExternalExamples(requestMedia) && (
-                  <p className="example-note">
-                    External examples are not loaded. Local values are shown
-                    here.
-                  </p>
-                )}
                 {isMultipartMediaType(contentType) && requestMedia ? (
                   <MultipartBodyEditor
                     key={JSON.stringify([contentType, bodyRevision])}
@@ -1042,19 +943,142 @@ export function Explorer({
                 )}
               </>
             )}
-            {responseTypes.length > 1 && (
-              <label>
-                Requested response format
-                <select
-                  value={accept}
-                  onChange={(event) => setAccept(event.target.value)}
-                >
-                  {responseTypes.map((type) => (
-                    <option key={type}>{type}</option>
-                  ))}
-                </select>
-              </label>
-            )}
+            <details className="request-form-section request-settings">
+              <summary>Request settings</summary>
+              <div className="request-settings-fields">
+                {operation.requestBody && (
+                  <>
+                    <label hidden={mediaTypes.length === 1}>
+                      Content type
+                      <select
+                        value={contentType}
+                        onChange={(event) => {
+                          setContentType(event.target.value);
+                          const media =
+                            operation.requestBody?.content[event.target.value];
+                          const choices = media
+                            ? exampleChoices(media, api.schemas)
+                            : [];
+                          setRequestExample(choices[0]?.id ?? '');
+                          setBodyFormat(
+                            bodyInputFormat(
+                              event.target.value,
+                              choices[0]?.value,
+                            ),
+                          );
+                          setBodyRevision((current) => current + 1);
+                          setBodyFormError('');
+                          setFiles({});
+                          setPartHeaders({});
+                          setBody(
+                            choices.length
+                              ? exampleBody(
+                                  choices[0]!.value,
+                                  event.target.value,
+                                  media,
+                                  api,
+                                )
+                              : '',
+                          );
+                        }}
+                      >
+                        {mediaTypes.map((type) => (
+                          <option key={type}>{type}</option>
+                        ))}
+                      </select>
+                    </label>
+                    {requestChoices.length > 0 &&
+                      (requestChoices.length > 1 ||
+                        requestChoices[0]!.id.startsWith('named:') ||
+                        !requestExample) && (
+                        <label>
+                          Request example
+                          <select
+                            value={requestExample}
+                            onChange={(event) => {
+                              const choice = requestChoices.find(
+                                (item) => item.id === event.target.value,
+                              );
+                              if (choice) {
+                                setRequestExample(choice.id);
+                                setBodyFormat(
+                                  bodyInputFormat(contentType, choice.value),
+                                );
+                                setBodyRevision((current) => current + 1);
+                                setBodyFormError('');
+                                setFiles({});
+                                setPartHeaders({});
+                                setBody(
+                                  exampleBody(
+                                    choice.value,
+                                    contentType,
+                                    requestMedia,
+                                    api,
+                                  ),
+                                );
+                              }
+                            }}
+                          >
+                            {!requestExample && (
+                              <option value="">Custom request</option>
+                            )}
+                            {requestChoices.map((choice) => (
+                              <option key={choice.id} value={choice.id}>
+                                {choice.label}
+                              </option>
+                            ))}
+                          </select>
+                        </label>
+                      )}
+                    {requestMedia && hasExternalExamples(requestMedia) && (
+                      <p className="example-note">
+                        External examples are not loaded. Local values are shown
+                        here.
+                      </p>
+                    )}
+                  </>
+                )}
+                {responseTypes.length > 1 && (
+                  <label>
+                    Requested response format
+                    <select
+                      value={accept}
+                      onChange={(event) => setAccept(event.target.value)}
+                    >
+                      {responseTypes.map((type) => (
+                        <option key={type}>{type}</option>
+                      ))}
+                    </select>
+                  </label>
+                )}
+                <label>
+                  {t('playground.server')}
+                  <input
+                    aria-label={t('playground.serverLabel')}
+                    value={server}
+                    onChange={(event) => {
+                      setServer(event.target.value);
+                      auth.clearLocal();
+                      setParameterDrafts(createParameterDrafts());
+                      controller.current?.abort();
+                      controller.current = null;
+                      setBusy(false);
+                      setResponse(undefined);
+                      setError('');
+                      if (isMultipartMediaType(contentType)) {
+                        setFiles({});
+                        setPartHeaders({});
+                        setBodyRevision((current) => current + 1);
+                      }
+                    }}
+                    spellCheck={false}
+                  />
+                </label>
+                {!operation.servers.length && (
+                  <p className="subtle">{t('playground.noServer')}</p>
+                )}
+              </div>
+            </details>
           </div>
           <details className="playground-request-example">
             <summary>Request example</summary>
@@ -1082,9 +1106,9 @@ export function Explorer({
         <PanelResizeHandle
           target={panels}
           property="--request-panel-width"
-          initial={540}
+          initial={740}
           min={280}
-          max={850}
+          max={1100}
           label={t('layout.playground')}
           controls="playground-request-inputs"
           storageKey={basePath}

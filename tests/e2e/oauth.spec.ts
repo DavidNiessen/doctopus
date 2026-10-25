@@ -1,3 +1,4 @@
+import { openRequestSettings } from '../helpers/request-forms.js';
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
@@ -136,6 +137,7 @@ test('provider denial, wrong state and cancellation cannot install credentials',
   await playground
     .getByLabel('oauth credential', { exact: true })
     .fill('fixture-manual-token');
+  await openRequestSettings(playground);
   await playground
     .getByLabel('API server', { exact: true })
     .fill('http://127.0.0.1:4010/v2');

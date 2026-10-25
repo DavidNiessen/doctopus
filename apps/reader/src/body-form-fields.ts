@@ -4,7 +4,7 @@ import {
   type JsonValueNode,
 } from '@davidniessen/doctopus-contracts';
 
-export type BodyTableRow = {
+export type BodyFormField = {
   id: number;
   name: string;
   value: string;
@@ -12,9 +12,9 @@ export type BodyTableRow = {
   enabled: boolean;
 };
 
-export function bodyTableRows(
+export function bodyFormFields(
   value: Extract<JsonValueNode, { kind: 'object' }>,
-): BodyTableRow[] {
+): BodyFormField[] {
   return value.entries.map(([name, node], id) => ({
     id,
     name,
@@ -25,7 +25,7 @@ export function bodyTableRows(
 }
 
 /** Rebuild the lossless syntax tree; never round numeric tokens via JS numbers. */
-export function bodyTableValue(rows: readonly BodyTableRow[]): string {
+export function bodyFormValue(rows: readonly BodyFormField[]): string {
   const entries: [string, JsonValueNode][] = [];
   const names = new Set<string>();
   for (const row of rows) {
@@ -47,7 +47,7 @@ export function bodyTableValue(rows: readonly BodyTableRow[]): string {
       throw new Error(`Enter a valid ${row.type} value for ${row.name}.`);
     entries.push([row.name, node]);
     if (entries.length > 100)
-      throw new Error('Use JSON for bodies with more than 100 table fields.');
+      throw new Error('Use JSON for bodies with more than 100 form fields.');
   }
   return serializeJsonValue({ kind: 'object', entries }, true);
 }

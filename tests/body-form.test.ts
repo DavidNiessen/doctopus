@@ -1,33 +1,33 @@
 import { describe, expect, it } from 'vitest';
 import { parseJsonValue } from '@davidniessen/doctopus-contracts';
 import {
-  bodyTableRows,
-  bodyTableValue,
-  type BodyTableRow,
-} from '../apps/reader/src/body-table.js';
+  bodyFormFields,
+  bodyFormValue,
+  type BodyFormField,
+} from '../apps/reader/src/body-form-fields.js';
 import { bodyFieldModel } from '../apps/reader/src/body-fields.js';
 
-function rows(json: string): BodyTableRow[] {
+function rows(json: string): BodyFormField[] {
   const node = parseJsonValue(json);
   if (node.kind !== 'object') throw new Error('Expected object');
-  return bodyTableRows(node);
+  return bodyFormFields(node);
 }
 
-describe('request body table serialization', () => {
+describe('request body form serialization', () => {
   it('supports empty and dictionary objects without enabling schema field controls', () => {
     const schema = { type: 'object', additionalProperties: { type: 'string' } };
     expect(bodyFieldModel('{}', schema, {}, false).available).toBe(false);
-    const model = bodyFieldModel('{}', schema, {}, false, { table: true });
+    const model = bodyFieldModel('{}', schema, {}, false, { form: true });
     expect(model.available).toBe(true);
     if (!model.available || !('fields' in model))
       throw new Error('Expected object');
     expect(model.fields).toEqual([]);
-    expect(bodyTableValue(bodyTableRows(model.value))).toBe('{}');
+    expect(bodyFormValue(bodyFormFields(model.value))).toBe('{}');
   });
   it('preserves nested JSON, exact numbers, empty strings and special keys', () => {
     const body =
       '{"name":"","count":900719925474099312345,"ratio":1.2300e-40,"nested":{"a":[true,null]},"__proto__":"safe"}';
-    expect(bodyTableValue(rows(body)).replace(/\s/g, '')).toBe(body);
+    expect(bodyFormValue(rows(body)).replace(/\s/g, '')).toBe(body);
   });
   it('adds and removes fields without serializing disabled drafts', () => {
     const draft = rows('{"keep":true,"omit":42}');
@@ -40,39 +40,39 @@ describe('request body table serialization', () => {
       type: 'string',
       enabled: true,
     });
-    expect(JSON.parse(bodyTableValue(draft))).toEqual({
+    expect(JSON.parse(bodyFormValue(draft))).toEqual({
       keep: true,
       new: 'hello & café',
     });
     expect(
-      JSON.parse(bodyTableValue(draft.filter((row) => row.name !== 'keep'))),
+      JSON.parse(bodyFormValue(draft.filter((row) => row.name !== 'keep'))),
     ).toEqual({ new: 'hello & café' });
   });
   it('ignores the empty insertion row but rejects missing or duplicate keys', () => {
     expect(
-      bodyTableValue([
+      bodyFormValue([
         { id: 0, name: '', value: '', type: 'string', enabled: true },
       ]),
     ).toBe('{}');
     expect(() =>
-      bodyTableValue([
+      bodyFormValue([
         { id: 0, name: '', value: 'orphan', type: 'string', enabled: true },
       ]),
     ).toThrow('Enter a key');
     expect(() =>
-      bodyTableValue([...rows('{"name":"one"}'), ...rows('{"name":"two"}')]),
+      bodyFormValue([...rows('{"name":"one"}'), ...rows('{"name":"two"}')]),
     ).toThrow('Duplicate body field');
   });
   it.each(['number', 'boolean', 'null', 'array', 'object'] as const)(
     'rejects invalid or mismatched %s drafts',
     (type) => {
       expect(() =>
-        bodyTableValue([
+        bodyFormValue([
           { id: 0, name: 'field', value: '"text"', type, enabled: true },
         ]),
       ).toThrow(`valid ${type}`);
       expect(() =>
-        bodyTableValue([
+        bodyFormValue([
           { id: 0, name: 'field', value: 'unfinished', type, enabled: true },
         ]),
       ).toThrow(`valid ${type}`);

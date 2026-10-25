@@ -142,7 +142,7 @@ it('server-renders endpoint headings with language fallback and literal API iden
   expect(english).not.toContain('<h2>Abfrageparameter</h2>');
 });
 
-it('localizes parameter identities and presence hints without treating source names as markup', () => {
+it('localizes parameter identities without boilerplate hints or treating source names as markup', () => {
   const html = render(
     createElement(ParameterInput, {
       parameter: {
@@ -162,7 +162,7 @@ it('localizes parameter identities and presence hints without treating source na
   );
   expect(html).toContain('aria-label="query: Parameter &lt;img src=x&gt;"');
   expect(html).toContain('aria-label="&lt;img src=x&gt; (query): Mitsenden"');
-  expect(html).toContain('Als Entwurf behalten.');
+  expect(html).not.toContain('Als Entwurf behalten.');
   expect(html).toContain('value="draft"');
   expect(html).not.toContain('<img');
 });
@@ -186,9 +186,9 @@ it('retains empty-value presence and localized required guidance', () => {
     }),
   );
   expect(html).toContain('Parameter id');
-  expect(html).toContain('path · erforderlich');
+  expect(html).toContain('request-required-badge">erforderlich');
   expect(html).toContain('id (path): Leer erlauben');
-  expect(html).toContain('Leerer Wert wird gesendet.');
+  expect(html).not.toContain('Leerer Wert wird gesendet.');
   expect(html).toContain('placeholder="Wert eingeben"');
   expect(html).toContain('checked=""');
 });
