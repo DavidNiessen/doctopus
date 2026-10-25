@@ -61,19 +61,19 @@ async function dependencyDirectory(name) {
   } catch (error) {
     if (error.code !== 'ERR_MODULE_NOT_FOUND') throw error;
     const repository = fileURLToPath(new URL('../', import.meta.url));
-    for (const pkg of await readWorkspacePackages(repository)) {
-      if (
-        !['dependencies', 'devDependencies', 'optionalDependencies'].some(
-          (section) => Object.hasOwn(pkg.metadata[section] ?? {}, name),
-        )
-      )
-        continue;
+    const owners = (await readWorkspacePackages(repository)).map((pkg) => ({
+      directory: join(repository, pkg.path),
+      metadata: pkg.metadata,
+    }));
+    const seen = new Set(owners.map((owner) => owner.directory));
+    // Follow installed, declared dependency edges. This also finds bundled
+    // transitive helpers without assuming that pnpm exposes them at the root.
+    for (let index = 0; index < owners.length; index++) {
+      assert(owners.length <= 2000, 'Bundled dependency graph exceeds limit');
+      const owner = owners[index];
+      const require = createRequire(join(owner.directory, 'package.json'));
       try {
-        return dirname(
-          createRequire(join(repository, pkg.path, 'package.json')).resolve(
-            name,
-          ),
-        );
+        return dirname(require.resolve(name));
       } catch (failure) {
         if (
           !['MODULE_NOT_FOUND', 'ERR_PACKAGE_PATH_NOT_EXPORTED'].includes(
@@ -82,12 +82,59 @@ async function dependencyDirectory(name) {
         )
           throw failure;
       }
+      for (const dependency of Object.keys({
+        ...owner.metadata.dependencies,
+        ...owner.metadata.optionalDependencies,
+        ...(index === 0 ? owner.metadata.devDependencies : {}),
+      })) {
+        let directory;
+        try {
+          directory = dirname(require.resolve(dependency + '/package.json'));
+        } catch (failure) {
+          if (
+            !['MODULE_NOT_FOUND', 'ERR_PACKAGE_PATH_NOT_EXPORTED'].includes(
+              failure.code,
+            )
+          )
+            throw failure;
+          try {
+            directory = dirname(require.resolve(dependency));
+          } catch (missing) {
+            if (
+              !['MODULE_NOT_FOUND', 'ERR_PACKAGE_PATH_NOT_EXPORTED'].includes(
+                missing.code,
+              )
+            )
+              throw missing;
+            continue;
+          }
+        }
+        for (;;) {
+          if (seen.has(directory)) break;
+          try {
+            const metadata = JSON.parse(
+              await readFile(join(directory, 'package.json'), 'utf8'),
+            );
+            if (metadata.name === dependency) {
+              seen.add(directory);
+              owners.push({ directory, metadata });
+              break;
+            }
+          } catch (missing) {
+            if (missing.code !== 'ENOENT') throw missing;
+          }
+          const parent = dirname(directory);
+          if (parent === directory) break;
+          directory = parent;
+        }
+      }
     }
     throw new Error(`${name}: cannot resolve bundled dependency metadata`, {
       cause: error,
     });
   }
 }
+
 const components = [];
 const sections = [
   'Third-party notices for the bundled browser code.\nProject code is licensed under Apache-2.0. Dependencies retain their own licenses.\n',
