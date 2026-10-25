@@ -25,8 +25,14 @@ async function loadOperation(
   operationBase: string,
   basePath: string,
   signal: AbortSignal,
+  direct = false,
 ): Promise<Expanded> {
   if (slug === activeOperation.slug) return { api, operation: activeOperation };
+  if (direct) {
+    const operation = api.operations.find((item) => item.slug === slug);
+    if (!operation) throw new Error('Unknown operation');
+    return { api, operation };
+  }
   return readExpandedOperation(
     await referenceJson(
       `${operationBase}${slug}/page-data.json`,
@@ -54,11 +60,13 @@ export default function ClassicApiReference({
   mockOnly = false,
   credentialSession,
   oauthClients,
+  direct = false,
 }: {
   api: ApiDocument;
   activeOperation: Operation;
   apis: ApiDocument[];
   basePath: string;
+  direct?: boolean;
   operationBase: string;
   onChooseApi: (api: ApiDocument) => void;
   renderDetails: (
@@ -122,6 +130,7 @@ export default function ClassicApiReference({
               operationBase,
               basePath,
               controller.signal,
+              direct,
             );
       if (next.operation.kind && next.operation.kind !== 'endpoint')
         throw new Error('This operation does not accept outbound requests');
@@ -158,6 +167,21 @@ export default function ClassicApiReference({
     setError('');
     setLoading(true);
     void (async () => {
+      if (direct) {
+        const total = api.operations.length;
+        const pages = Math.ceil(total / 100);
+        setPage(Math.min(fragment()?.page ?? 0, Math.max(0, pages - 1)));
+        setCatalog({
+          schemaVersion: 1,
+          apiId: api.id,
+          version: api.version,
+          total,
+          pageSize: 100,
+          pages,
+        });
+        if (!pages) setLoading(false);
+        return;
+      }
       if (!index || !/^api-index\/\d+\/catalog\.json$/.test(index))
         throw new Error('Endpoint index unavailable');
       const next = readOperationCatalog(
@@ -177,7 +201,7 @@ export default function ClassicApiReference({
     return () => controller.abort();
   }, [api.id, api.version, index, basePath, catalogRevision]);
   useEffect(() => {
-    if (!catalog?.pages || !indexRoot) return;
+    if (!catalog?.pages || (!direct && !indexRoot)) return;
     const controller = new AbortController();
     setLoading(true);
     setRows([]);
@@ -185,6 +209,25 @@ export default function ClassicApiReference({
     setDetails(null);
     setError('');
     void (async () => {
+      if (direct) {
+        setRows(
+          api.operations
+            .slice(page * 100, (page + 1) * 100)
+            .map((operation) => ({
+              slug: operation.slug,
+              method: operation.method,
+              path: operation.path,
+              summary: operation.summary,
+              tag: operation.tags[0] ?? 'Endpoints',
+              deprecated: operation.deprecated,
+              ...(operation.kind ? { kind: operation.kind } : {}),
+            })),
+        );
+        setLoading(false);
+        const target = fragment();
+        if (target?.page === page) setExpanded(target.slug);
+        return;
+      }
       const next = readOperationRows(
         await referenceJson(
           `${basePath}/${indexRoot}${page}.json`,
@@ -224,6 +267,7 @@ export default function ClassicApiReference({
         operationBase,
         basePath,
         controller.signal,
+        direct,
       );
       if (!controller.signal.aborted) setDetails(next);
     })().catch(() => {

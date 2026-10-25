@@ -163,6 +163,9 @@ importers:
       '@davidniessen/doctopus-search':
         specifier: 0.2.0-candidate.7
         version: link:../../packages/search
+      '@davidniessen/doctopus-spec':
+        specifier: 0.2.0-candidate.7
+        version: link:../../packages/spec
       dompurify:
         specifier: 3.4.17
         version: 3.4.17
@@ -256,6 +259,9 @@ importers:
       '@davidniessen/doctopus-contracts':
         specifier: 0.2.0-candidate.7
         version: link:../../packages/contracts
+      '@davidniessen/doctopus-reader':
+        specifier: 0.2.0-candidate.7
+        version: link:../../apps/reader
       '@fastify/static':
         specifier: 10.1.7
         version: 10.1.7

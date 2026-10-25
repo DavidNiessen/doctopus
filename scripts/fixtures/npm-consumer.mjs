@@ -898,6 +898,57 @@ try {
 } finally {
   await fastify.close();
 }
+// Direct consumers use the bundled UI without generating a documentation project.
+const directApp = express();
+const directDocs = await createExpressDocs({
+  url: '/openapi.json',
+  title: 'Installed direct API',
+});
+directApp.use(directDocs.mountPath, directDocs.router);
+const directListener = directApp.listen(0, '127.0.0.1');
+await new Promise((resolve) => directListener.once('listening', resolve));
+try {
+  const base = 'http://127.0.0.1:' + directListener.address().port;
+  const page = await fetch(base + '/docs/');
+  assert.equal(page.status, 200);
+  const html = await page.text();
+  assert(html.includes('Installed direct API'));
+  assert(html.includes('doctopus-direct-config'));
+  for (const path of [
+    '/docs/assets/reader.js',
+    '/docs/assets/reader.css',
+    '/docs/assets/BROWSER_SBOM.cdx.json',
+  ]) {
+    const response = await fetch(base + path);
+    assert.equal(response.status, 200);
+    await response.arrayBuffer();
+  }
+  assert.equal((await fetch(base + '/docs/private.json')).status, 404);
+} finally {
+  directListener.closeAllConnections();
+  await new Promise((resolve) => directListener.close(resolve));
+}
+const directFastify = Fastify();
+try {
+  await directFastify.register(doctopusPlugin, {
+    prefix: '/gateway',
+    url: '/openapi.yaml',
+    title: 'Installed Fastify API',
+  });
+  const page = await directFastify.inject('/gateway/docs/');
+  assert.equal(page.statusCode, 200);
+  assert(page.body.includes('/gateway/docs/assets/reader.js'));
+  assert.equal(
+    (await directFastify.inject('/gateway/docs/assets/reader.css')).statusCode,
+    200,
+  );
+  assert.equal(
+    (await directFastify.inject('/gateway/docs/direct-assets.json')).statusCode,
+    404,
+  );
+} finally {
+  await directFastify.close();
+}
 console.log(
-  'Installed types, CLI, MDX/plugin workers, doctor, artifact checks and authenticated Express/Fastify subpaths passed.',
+  'Installed types, CLI, MDX/plugin workers, doctor, artifact checks and authenticated Express/Fastify subpaths and bundled direct-mode references passed.',
 );

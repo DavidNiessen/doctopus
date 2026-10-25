@@ -8,6 +8,7 @@ export default defineConfig([
     '**/coverage/',
     '**/dist/',
     '**/target/',
+    'integrations/java/.reader-resources/',
     'playwright-report/',
     'playwright-pages-report/',
     'playwright-studio-report/',

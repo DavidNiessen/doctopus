@@ -18,6 +18,9 @@
     },
     {
       "path": "../../packages/plugin-sdk"
+    },
+    {
+      "path": "../../packages/spec"
     }
   ]
 }

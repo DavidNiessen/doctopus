@@ -13,3 +13,5 @@ playwright-pages-report/
 playwright-studio-report/
 
 .api-docs/
+
+integrations/java/.reader-resources/

@@ -51,6 +51,7 @@ assert(
   packages.has('react') && packages.has('react-dom'),
   'Expected React browser bundle source maps',
 );
+const components = [];
 const sections = [
   'Third-party notices for the bundled browser code.\nProject code is licensed under Apache-2.0. Dependencies retain their own licenses.\n',
 ];
@@ -74,6 +75,15 @@ for (const name of [...packages.keys()].sort()) {
     directory = parent;
   }
   const metadata = JSON.parse(await readFile(file, 'utf8'));
+  components.push({
+    type: 'library',
+    name,
+    version: metadata.version,
+    purl: `pkg:npm/${name.replace('@', '%40')}@${metadata.version}`,
+    ...(typeof metadata.license === 'string'
+      ? { licenses: [{ expression: metadata.license }] }
+      : {}),
+  });
   const files = await readdir(dirname(file));
   const license = files.find((name) =>
     /^licen[cs]e(?:\.(?:md|txt))?$/i.test(name),
@@ -103,6 +113,15 @@ for (const name of ['INTER-LICENSE.txt', 'JETBRAINS-MONO-LICENSE.txt']) {
 await writeFile(
   join(output, 'assets/THIRD_PARTY_NOTICES.txt'),
   sections.join('\n\n' + '='.repeat(72) + '\n\n'),
+);
+await writeFile(
+  join(output, 'assets/BROWSER_SBOM.cdx.json'),
+  JSON.stringify({
+    bomFormat: 'CycloneDX',
+    specVersion: '1.6',
+    version: 1,
+    components,
+  }) + '\n',
 );
 console.log(
   `Browser notices include ${packages.size} bundled dependencies/helpers.`,

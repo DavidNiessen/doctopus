@@ -3,22 +3,20 @@ import type { RequestHandler, Router } from 'express';
 import { rateLimit } from 'express-rate-limit';
 import { headers, prepare } from './shared.js';
 import { DocumentationRateLimiter, rateLimitMessage } from './rate-limit.js';
+import { isDirectDocumentationRoute } from '@davidniessen/doctopus-contracts';
+import type { DocumentationOptions } from './shared.js';
 import type { DocumentationRateLimitOptions } from './rate-limit.js';
 export type { DocumentationRateLimitOptions } from './rate-limit.js';
-export interface ExpressDocsOptions {
-  directory: string;
-  mountPath?: string;
+export interface ExpressDocsOptions extends DocumentationOptions {
   authenticate?: RequestHandler;
   rateLimit?: DocumentationRateLimitOptions;
 }
 export async function createExpressDocs(
-  options: ExpressDocsOptions,
+  options: ExpressDocsOptions = {},
 ): Promise<{ router: Router; mountPath: string; root: string }> {
   const limiter = new DocumentationRateLimiter(options.rateLimit);
-  const { root, basePath, allowsPath, hasNotFoundPage } = await prepare(
-    options.directory,
-    options.mountPath,
-  );
+  const { root, basePath, allowsPath, hasNotFoundPage, html } =
+    await prepare(options);
   const router = express.Router();
   router.use(
     rateLimit({
@@ -50,6 +48,14 @@ export async function createExpressDocs(
       path = decodeURIComponent(request.path);
     } catch {
       return notFound(request, response, next);
+    }
+    if (
+      html &&
+      ['GET', 'HEAD'].includes(request.method) &&
+      isDirectDocumentationRoute(path)
+    ) {
+      response.type('html').send(html);
+      return;
     }
     if (!allowsPath(path)) return notFound(request, response, next);
     next();

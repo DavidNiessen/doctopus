@@ -11,7 +11,17 @@ import '../../shared/scrollbars.css';
 import '../../shared/accessibility.css';
 const data = document.getElementById('docs-data');
 const root = document.getElementById('root');
-if (data && root) {
+const direct = document.getElementById('doctopus-direct-config');
+if (direct && root) {
+  void import('./direct.js')
+    .then(({ startDirectReference }) =>
+      startDirectReference(root, direct.textContent ?? ''),
+    )
+    .catch(() => {
+      root.textContent =
+        'The API reference could not start. Reload the page to retry.';
+    });
+} else if (data && root) {
   const site = JSON.parse(data.textContent ?? '') as SiteData;
   const path =
     site.pagePath === '/not-found/'

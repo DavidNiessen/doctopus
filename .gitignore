@@ -23,3 +23,5 @@ playwright-studio-report/
 
 # Local Impeccable screenshots; design tokens stay versioned.
 .impeccable/review/
+
+integrations/java/.reader-resources/

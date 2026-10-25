@@ -137,8 +137,16 @@ export async function packNpmCandidates() {
           files.has('dist/client/assets/reader.js') &&
             files.has('dist/client/assets/reader.css') &&
             files.has('dist/client/assets/oauth-callback.js') &&
-            files.has('dist/client/assets/THIRD_PARTY_NOTICES.txt'),
+            files.has('dist/client/assets/THIRD_PARTY_NOTICES.txt') &&
+            files.has('dist/client/assets/BROWSER_SBOM.cdx.json') &&
+            files.has('dist/client/direct.html') &&
+            files.has('dist/client/direct-assets.json'),
           'Missing built reader assets',
+        );
+      if (metadata.name === '@davidniessen/doctopus-spec')
+        assert(
+          files.has('dist/schema-meta-validator.cjs'),
+          'Missing precompiled browser schema validator',
         );
       const bytes = await readFile(join(destination, packed.filename));
       assert.equal(
