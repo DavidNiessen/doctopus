@@ -277,14 +277,16 @@
   border-left-width: 1px;
 }
 .endpoint-address {
+  --endpoint-address-radius: var(--radius, 16px);
+  --endpoint-address-inset: 6px;
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 6px;
+  padding: var(--endpoint-address-inset);
   margin: 0 0 60px;
   min-width: 0;
   border: 1px solid var(--ui-border);
-  border-radius: 16px;
+  border-radius: var(--endpoint-address-radius);
   background: transparent;
 }
 .endpoint-address code {
@@ -299,7 +301,11 @@
 }
 .endpoint-address > .try-now {
   margin-left: 0;
-  border-radius: 12px;
+  align-self: stretch;
+  border-radius: max(
+    0px,
+    calc(var(--endpoint-address-radius) - var(--endpoint-address-inset) - 1px)
+  );
 }
 .try-now,
 .request-url-bar .url-send {
