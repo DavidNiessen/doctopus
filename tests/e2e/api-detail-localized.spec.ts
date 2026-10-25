@@ -60,7 +60,7 @@ test('localized endpoint details and parameter presence keep wire values and cop
     dialog.getByText(
       'Nicht enthalten; der eingegebene Text bleibt als Entwurf erhalten.',
     ),
-  ).toBeVisible();
+  ).toHaveCount(0);
   await expect(limit).toHaveValue('4');
   await dialog
     .getByRole('button', { name: 'Anfrage-URL kopieren', exact: true })
