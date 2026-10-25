@@ -18,7 +18,7 @@ The **Documentation** tab also contains the Doctopus installation and usage hand
 
 The [setup chooser](../examples/pages-demo/guides/installation/overview.md) is authored in the demo. The remaining handbook pages are staged as ordinary Markdown from the canonical files in `docs/` by [the handbook manifest](../scripts/lib/demo-handbook.mjs). Each entry defines its route, title, description, group and reading order. Update the canonical guide once; the next demo build includes it automatically. Add a manifest entry to publish another user-facing guide. Internal planning and release-evidence files are not included in the handbook.
 
-The staging step rewrites links between published guides to their nested demo routes and adapts heading fragments to the Reader. Related repository files and guides outside the handbook retain GitHub links. Fenced and inline code examples remain literal. The demo build checks all local links and fragments before publishing, and search includes the complete rendered handbook. Direct static routes and Markdown content remain readable without JavaScript.
+The staging step rewrites links between published guides to their nested demo routes and adapts heading fragments to the Reader. Related repository files and guides outside the handbook retain GitHub links. Fenced and inline code examples remain literal. The demo build runs the full documentation doctor on the assembled publication and fails on warnings as well as errors, including broken local links and fragments. Search includes the complete rendered handbook. Direct static routes and Markdown content remain readable without JavaScript.
 
 The demonstration explicitly configures:
 

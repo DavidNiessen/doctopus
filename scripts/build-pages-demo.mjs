@@ -51,16 +51,11 @@ try {
     );
   await writeFile(join(staging, 'docs.config.json'), JSON.stringify(config));
   const built = await buildSite(staging, { config: 'docs.config.json' });
-  const brokenLinks = (await auditDocumentation(built.site)).filter(
-    (diagnostic) =>
-      ['broken-link', 'broken-anchor', 'invalid-link'].includes(
-        diagnostic.code,
-      ),
-  );
-  if (brokenLinks.length)
+  const diagnostics = await auditDocumentation(built.site);
+  if (diagnostics.length)
     throw new Error(
-      'Demo handbook has invalid local links:\n' +
-        brokenLinks.map(({ source, code }) => `${source}: ${code}`).join('\n'),
+      'The assembled demo failed its strict documentation audit:\n' +
+        diagnostics.map(({ source, code }) => `${source}: ${code}`).join('\n'),
     );
   await verifyArtifact(built.directory);
   const output = join(repository, '.doctopus/pages-demo');
