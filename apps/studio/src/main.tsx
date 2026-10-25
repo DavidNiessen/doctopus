@@ -788,7 +788,12 @@ function Studio() {
                   {!publications.length ? (
                     <p>No publications yet. Your first release starts here.</p>
                   ) : (
-                    <div className="table-scroll">
+                    <div
+                      className="table-scroll"
+                      tabIndex={0}
+                      role="region"
+                      aria-label="Scrollable publication history"
+                    >
                       <table>
                         <thead>
                           <tr>
@@ -1037,7 +1042,12 @@ function Studio() {
               <section className="panel">
                 <h2>Recent events</h2>
                 {audit.length ? (
-                  <div className="table-scroll">
+                  <div
+                    className="table-scroll"
+                    tabIndex={0}
+                    role="region"
+                    aria-label="Scrollable audit events"
+                  >
                     <table>
                       <thead>
                         <tr>
