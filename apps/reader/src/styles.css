@@ -3037,7 +3037,14 @@ label:has(input[type='radio']) {
   background: var(--bg);
   color: var(--text);
   font: 600 var(--ui-text-md)/1.4 var(--ui-font);
+}
+.playground-inputs .request-fields .additional-parameter-name,
+.playground-inputs .request-fields .body-form-key {
   padding: 8px 10px;
+  margin: 0;
+}
+.request-custom-field {
+  align-items: start;
 }
 .request-custom-field .request-field-meta {
   display: grid;
