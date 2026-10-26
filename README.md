@@ -102,7 +102,7 @@ The documentation must work without an account with the project maintainers. Dep
 
 Doctopus uses its own components, branding, assets, and copy to create a cohesive documentation experience.
 
-Readers can choose modern documentation or a classic API layout, select prepared theme presets with matching response-editor colors, and filter the sidebar with All, Documentation and API Reference. See [reader settings and layouts](docs/reader-layout.md#personal-reader-settings).
+Readers can choose modern documentation or a classic API layout, choose complete light/dark palettes with matching response-editor colors, and filter the sidebar with All, Documentation and API Reference. See [reader settings and layouts](docs/reader-layout.md#personal-reader-settings).
 
 ## Self hosting and project policy
 

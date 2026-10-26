@@ -39,7 +39,7 @@ for (const width of [360, 768, 1280, 1920]) {
       expect(bounds!.x).toBeGreaterThanOrEqual(0);
       expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(width + 1);
       await expect(
-        settings.getByRole('combobox', { name: 'Preset', exact: true }),
+        settings.getByRole('group', { name: 'Theme', exact: true }),
       ).toBeVisible();
       await page.keyboard.press('Escape');
       await expect(trigger).toBeFocused();

@@ -1,3 +1,4 @@
+import { enterBodyField } from '../helpers/request-forms.js';
 import {
   openSchemaControls,
   openRequestSettings,
@@ -16,6 +17,11 @@ test('oneOf controls require explicit selection and preserve values, privacy and
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto(route);
   const playground = page.getByLabel('API playground');
+  await expect(playground).toBeVisible();
+  if (await playground.getByLabel('bearer credential', { exact: true }).count())
+    await playground
+      .getByLabel('bearer credential', { exact: true })
+      .fill('demo-token');
   const branch = playground.getByRole('combobox', {
     name: 'Request body schema branch',
   });
@@ -80,7 +86,7 @@ test('oneOf controls require explicit selection and preserve values, privacy and
   await playground
     .getByRole('button', { name: 'Use fixed value for body kind', exact: true })
     .click();
-  await playground.getByLabel('Include body company', { exact: true }).check();
+  await enterBodyField(playground, 'company');
   await playground.getByLabel('Body company', { exact: true }).fill('New Lab');
   await playground.getByRole('button', { name: 'JSON', exact: true }).click();
   const sent = await playground
@@ -135,6 +141,11 @@ test('anyOf array branches retain existing items, allow explicit additions and d
 }) => {
   await page.goto(route);
   const playground = page.getByLabel('API playground');
+  await expect(playground).toBeVisible();
+  if (await playground.getByLabel('bearer credential', { exact: true }).count())
+    await playground
+      .getByLabel('bearer credential', { exact: true })
+      .fill('demo-token');
   await openRequestSettings(playground);
   await playground
     .getByRole('combobox', { name: 'Content type', exact: true })
@@ -165,10 +176,8 @@ test('anyOf array branches retain existing items, allow explicit additions and d
   await playground
     .getByRole('button', { name: 'Add item to body $', exact: true })
     .click();
-  await playground.getByLabel('Include body [1].kind', { exact: true }).check();
-  await playground
-    .getByLabel('Include body [1].company', { exact: true })
-    .check();
+  await enterBodyField(playground, '[1].kind');
+  await enterBodyField(playground, '[1].company');
   await playground
     .getByLabel('Body [1].company', { exact: true })
     .fill('Second company');
@@ -225,6 +234,11 @@ test('unsupported sibling constraints retain JSON and example/media resets clear
 }) => {
   await page.goto(route);
   const playground = page.getByLabel('API playground');
+  await expect(playground).toBeVisible();
+  if (await playground.getByLabel('bearer credential', { exact: true }).count())
+    await playground
+      .getByLabel('bearer credential', { exact: true })
+      .fill('demo-token');
   await openRequestSettings(playground);
   await playground
     .getByRole('combobox', { name: 'Content type', exact: true })

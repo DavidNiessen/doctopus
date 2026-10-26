@@ -24,10 +24,8 @@ test('localized prepared themes retain portable choices across languages and fit
   await dialog
     .getByRole('combobox', { name: 'Darstellungsmodus', exact: true })
     .selectOption('dark');
-  await dialog
-    .getByRole('combobox', { name: 'Voreinstellung', exact: true })
-    .selectOption('ocean');
-  await expect(dialog.locator('input')).toHaveCount(0);
+  await dialog.locator('input[type="radio"][value="ocean"]').check();
+  await expect(dialog.locator('input:not([type=radio])')).toHaveCount(0);
   await expect(dialog.locator('option[value=custom]')).toHaveCount(0);
   await page.setViewportSize({ width: 320, height: 844 });
   expect(
@@ -56,14 +54,12 @@ test('localized prepared themes retain portable choices across languages and fit
     name: 'Reader settings',
     exact: true,
   });
-  await expect(english.getByRole('combobox')).toHaveCount(3);
-  await expect(
-    english.getByRole('combobox', { name: 'Preset', exact: true }),
-  ).toHaveValue('ocean');
+  await expect(english.getByRole('combobox')).toHaveCount(2);
+  await expect(english.locator('input[type=radio][value=ocean]')).toBeChecked();
   await expect(
     english.getByRole('combobox', { name: 'Appearance mode', exact: true }),
   ).toHaveValue('dark');
-  await expect(english.locator('input')).toHaveCount(0);
+  await expect(english.locator('input:not([type=radio])')).toHaveCount(0);
   expect(errors).toEqual([]);
 });
 

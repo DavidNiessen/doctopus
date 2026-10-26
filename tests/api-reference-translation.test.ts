@@ -153,21 +153,18 @@ it('localizes parameter identities without boilerplate hints or treating source 
         schema: { type: 'string' },
       },
       value: 'draft',
-      presence: false,
-      allowEmpty: true,
       qualified: true,
       onChange: noop,
-      onPresence: noop,
     }),
   );
   expect(html).toContain('aria-label="query: Parameter &lt;img src=x&gt;"');
-  expect(html).toContain('aria-label="&lt;img src=x&gt; (query): Mitsenden"');
+  expect(html).not.toContain('type="checkbox"');
   expect(html).not.toContain('Als Entwurf behalten.');
   expect(html).toContain('value="draft"');
   expect(html).not.toContain('<img');
 });
 
-it('retains empty-value presence and localized required guidance', () => {
+it('marks missing required fields clearly without empty-value toggles', () => {
   const html = render(
     createElement(ParameterInput, {
       parameter: {
@@ -178,19 +175,16 @@ it('retains empty-value presence and localized required guidance', () => {
         schema: { type: 'string' },
       },
       value: '',
-      presence: true,
-      allowEmpty: true,
       qualified: false,
       onChange: noop,
-      onPresence: noop,
     }),
   );
   expect(html).toContain('Parameter id');
   expect(html).toContain('request-required-badge">erforderlich');
-  expect(html).toContain('id (path): Leer erlauben');
+  expect(html).toContain('aria-invalid="true"');
   expect(html).not.toContain('Leerer Wert wird gesendet.');
   expect(html).toContain('placeholder="Wert eingeben"');
-  expect(html).toContain('checked=""');
+  expect(html).not.toContain('type="checkbox"');
 });
 
 it('localizes generated example and clipboard controls while preserving authored labels and values', () => {

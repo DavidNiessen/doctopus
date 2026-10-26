@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-import { themePresets } from '@davidniessen/doctopus-contracts';
+import { themePresets, themePalettes } from '@davidniessen/doctopus-contracts';
 test('appearance settings offer prepared presets and the former custom-editor URL cannot expose editing controls', async ({
   page,
 }) => {
@@ -15,18 +15,29 @@ test('appearance settings offer prepared presets and the former custom-editor UR
     name: 'Reader settings',
     exact: true,
   });
-  const preset = dialog.getByRole('combobox', { name: 'Preset', exact: true });
-  await expect(preset.locator('option')).toHaveCount(5);
-  await expect(dialog.getByRole('combobox')).toHaveCount(3);
-  await expect(dialog.locator('input')).toHaveCount(0);
+  const preset = dialog.getByRole('group', { name: 'Theme', exact: true });
+  await expect(preset.getByRole('radio')).toHaveCount(5);
+  await expect(dialog.getByRole('combobox')).toHaveCount(2);
+  await expect(dialog.locator('input:not([type=radio])')).toHaveCount(0);
   await expect(
     dialog.getByRole('button', { name: /Save|Copy|Delete/ }),
   ).toHaveCount(0);
   for (const value of ['mint', 'ocean', 'violet', 'neutral'] as const) {
-    await preset.selectOption(value);
+    await preset.locator(`input[value="${value}"]`).check();
     await expect(page.locator('.docs-shell')).toHaveCSS(
       '--accent',
       themePresets[value],
+    );
+    const hex = themePalettes[value].light.background;
+    const rgb =
+      'rgb(' +
+      [1, 3, 5]
+        .map((index) => parseInt(hex.slice(index, index + 2), 16))
+        .join(', ') +
+      ')';
+    await expect(page.locator('.docs-shell')).toHaveCSS(
+      'background-color',
+      rgb,
     );
   }
   await page.keyboard.press('Escape');
@@ -36,7 +47,7 @@ test('appearance settings offer prepared presets and the former custom-editor UR
     themePresets.neutral,
   );
   await page.getByRole('button', { name: 'Open reader settings' }).click();
-  await preset.selectOption('published');
+  await preset.locator('input[value=published]').check();
   await expect(page.locator('.docs-shell')).toHaveCSS(
     '--accent',
     themePresets.violet,
@@ -101,11 +112,51 @@ test('legacy custom appearance is removed while mode, layout and recognized pres
     name: 'Reader settings',
     exact: true,
   });
-  await expect(dialog.locator('input')).toHaveCount(0);
+  await expect(dialog.locator('input:not([type=radio])')).toHaveCount(0);
   await expect(
     dialog.getByRole('combobox', {
       name: 'Response editor theme',
       exact: true,
     }),
   ).toHaveCount(0);
+});
+
+test('new readers follow the system theme and react to OS changes, including without JavaScript', async ({
+  page,
+  browser,
+}) => {
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await page.goto('http://127.0.0.1:4174/gallery/api/gallery/v1/health/');
+  await expect(page.locator('.docs-shell')).toHaveCSS(
+    'background-color',
+    'rgb(18, 16, 23)',
+  );
+  await page
+    .getByRole('button', { name: 'Open reader settings', exact: true })
+    .click();
+  await expect(
+    page.getByRole('combobox', { name: 'Appearance mode', exact: true }),
+  ).toHaveValue('system');
+  await expect(
+    page.getByRole('radio', { name: 'Site default', exact: true }),
+  ).toBeChecked();
+  await page.emulateMedia({ colorScheme: 'light' });
+  await expect(page.locator('.docs-shell')).toHaveCSS(
+    'background-color',
+    'rgb(255, 255, 255)',
+  );
+  const context = await browser.newContext({
+    javaScriptEnabled: false,
+    colorScheme: 'dark',
+  });
+  try {
+    const noJs = await context.newPage();
+    await noJs.goto('http://127.0.0.1:4174/gallery/api/gallery/v1/health/');
+    await expect(noJs.locator('.docs-shell')).toHaveCSS(
+      'background-color',
+      'rgb(18, 16, 23)',
+    );
+  } finally {
+    await context.close();
+  }
 });

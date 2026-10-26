@@ -66,7 +66,11 @@ function FieldValue({
   nested,
   nestedReason,
   path,
+  present = true,
+  onClear,
 }: {
+  present?: boolean;
+  onClear?: (() => void) | undefined;
   name: string;
   nested?: ReactNode;
   nestedReason?: string | undefined;
@@ -77,7 +81,7 @@ function FieldValue({
   onError: (name: string, error: string) => void;
 }) {
   const branchActions = useContext(BranchContext);
-  const text = serializeJsonValue(value, true),
+  const text = present ? serializeJsonValue(value, true) : '',
     id = useId();
   const [draft, setDraft] = useState(text),
     [error, setError] = useState('');
@@ -90,6 +94,9 @@ function FieldValue({
   }, [text, name]);
   useEffect(() => () => report.current(name, ''), [name]);
   const [nestedMode, setNestedMode] = useState<'fields' | 'json'>('fields');
+  useEffect(() => {
+    if (!present) setNestedMode('fields');
+  }, [present]);
   const declared =
     Array.isArray(schema.type) &&
     schema.type.filter((type) => type !== 'null').length > 1
@@ -111,7 +118,7 @@ function FieldValue({
         <p>
           Fixed value: <code>{sensitive ? '••••••' : fixed}</code>
         </p>
-        {current !== fixed && (
+        {(current !== fixed || !present) && (
           <>
             <p className="subtle">
               Use this constant explicitly to replace the current value.
@@ -137,6 +144,12 @@ function FieldValue({
   }
   const commit = (input: string) => {
     setDraft(input);
+    if (!input.trim() && onClear) {
+      onClear();
+      setError('');
+      onError(name, '');
+      return;
+    }
     try {
       const parsed = parseJsonValue(input);
       const types = Array.isArray(schema.type)
@@ -290,9 +303,17 @@ function FieldValue({
                 aria-label={`Body ${name}`}
                 type={sensitive ? 'password' : 'text'}
                 autoComplete="off"
-                value={value.kind === 'string' ? value.value : current}
+                value={
+                  !present
+                    ? ''
+                    : value.kind === 'string'
+                      ? value.value
+                      : current
+                }
                 onChange={(event) =>
-                  onChange({ kind: 'string', value: event.target.value })
+                  !event.target.value.trim() && onClear
+                    ? onClear()
+                    : onChange({ kind: 'string', value: event.target.value })
                 }
               />
             </label>
@@ -302,14 +323,17 @@ function FieldValue({
               Value
               <select
                 aria-label={`Body ${name}`}
-                value={current}
+                value={present ? current : ''}
                 onChange={(event) =>
-                  onChange({
-                    kind: 'boolean',
-                    value: event.target.value === 'true',
-                  })
+                  !event.target.value && onClear
+                    ? onClear()
+                    : onChange({
+                        kind: 'boolean',
+                        value: event.target.value === 'true',
+                      })
                 }
               >
+                <option value="">Select value</option>
                 <option value="false">false</option>
                 <option value="true">true</option>
               </select>
@@ -550,7 +574,6 @@ function ObjectFields({
   onError: (key: string, error: string) => void;
 }) {
   const branchActions = useContext(BranchContext);
-  const [error, setError] = useState('');
   const activeErrors = useRef(new Set<string>()),
     report = useRef(onError);
   report.current = onError;
@@ -568,7 +591,6 @@ function ObjectFields({
 
   return (
     <div className="body-object-fields">
-      {error && <p role="alert">{error}</p>}
       {model.fields.map(({ name, schema: field, nested, array, variants }) => {
         const fieldPath = [...path, name],
           label = bodyFieldLabel(fieldPath),
@@ -579,29 +601,7 @@ function ObjectFields({
         return (
           <div className="body-field" key={key}>
             <div className="body-field-heading">
-              <label className="body-checkbox">
-                <input
-                  type="checkbox"
-                  aria-label={`Include body ${label}`}
-                  checked={!!value}
-                  disabled={field.readOnly === true}
-                  onChange={(event) => {
-                    try {
-                      update(event.target.checked ? seed(field) : undefined);
-                      if (!event.target.checked)
-                        branchActions?.reset(fieldPath);
-                      setError('');
-                      reportError(key, '');
-                    } catch {
-                      setError(
-                        'This field cannot be initialized here. Edit it in JSON.',
-                      );
-                      reportError(key, 'Use JSON to initialize this field.');
-                    }
-                  }}
-                />
-                <code>{name}</code>
-              </label>
+              <code>{name}</code>
               <small>
                 {String(typeOf(field) ?? 'JSON')}
                 {model.required.includes(name) ? ' · required' : ''}
@@ -614,13 +614,19 @@ function ObjectFields({
             {variants && (
               <BranchSelector variants={variants} path={fieldPath} />
             )}
-            {value && field.readOnly !== true && (
+            {field.readOnly !== true && (
               <FieldValue
                 key={`${key}:${variants?.selected ?? ''}`}
                 path={fieldPath}
                 name={label}
                 schema={field}
-                value={value}
+                value={value ?? seed(field, true)}
+                present={!!value}
+                onClear={() => {
+                  update(undefined);
+                  branchActions?.reset(fieldPath);
+                  reportError(key, '');
+                }}
                 onChange={update}
                 onError={(_name, error) => reportError(key, error)}
                 nestedReason={

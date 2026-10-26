@@ -16,8 +16,8 @@ const config = parseConfig({
       de: {
         'settings.region': 'Persönliche Einstellungen',
         'appearance.title': 'Leseeinstellungen',
-        'appearance.preset': 'Voreinstellung <img src=x>',
-        'appearance.restore': 'Veröffentlichtes Design',
+        'settings.theme': 'Farbschema <img src=x>',
+        'settings.themeDefault': 'Veröffentlichtes Design',
       },
       'de-DE': { 'settings.unavailable': 'Speicher <nicht verfügbar>' },
     },
@@ -39,7 +39,7 @@ it('server-renders localized preset controls with escaped labels and independent
   );
   expect(html).toContain('aria-label="Persönliche Einstellungen"');
   expect(html).toContain('Speicher &lt;nicht verfügbar&gt;');
-  expect(html).toContain('Voreinstellung &lt;img src=x&gt;');
+  expect(html).toContain('Farbschema &lt;img src=x&gt;');
   expect(html).not.toContain('<img');
   expect(html).toContain('Documentation layout');
   expect(html).toContain('Veröffentlichtes Design');
@@ -68,10 +68,10 @@ it('server-renders a translated settings dialog with only prepared theme choices
     ),
   );
   expect(html).toContain('Leseeinstellungen');
-  expect(html).toContain('value="ocean" selected=""');
+  expect(html).toMatch(/checked="" value="ocean"/);
   expect(html).toContain('value="system"');
   expect(html).not.toContain('Response editor theme');
-  expect(html.match(/<select/g)).toHaveLength(3);
+  expect(html.match(/<select/g)).toHaveLength(2);
   expect(html).not.toMatch(
     /Copy theme|Save current|type="color"|value="custom"/,
   );

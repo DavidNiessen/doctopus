@@ -15,7 +15,7 @@ Doctopus turns API specifications into beautiful, self-hosted documentation. Orb
 
 - **Explore the reference.** Inspect parameters, request bodies, nested schemas and documented responses.
 - **Try the playground.** Change request inputs, copy a URL or snippet, generate a response and expand it fullscreen. The response editor supports syntax highlighting, folding and copying.
-- **Choose your workspace.** Open reader settings for prepared themes, system/light/dark appearance, and a classic collapsed endpoint list. Response colors follow your theme automatically.
+- **Choose your workspace.** Open reader settings for complete themes, system/light/dark appearance, and a classic collapsed endpoint list. Response colors follow your theme automatically.
 - **Find your way.** Search the site, filter All / Documentation / API Reference, and resize the modern navigation and inspector panels.
 
 ## Built for your stack

@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import type { Theme } from '@davidniessen/doctopus-contracts';
 import type { ReaderPreferences } from '../reader-preferences.js';
 import { useUi } from '../ui-translation.js';
 import { ReaderSettingsControls } from './ReaderSettingsControls.js';
@@ -8,11 +9,13 @@ export default function ReaderSettings({
   onChange,
   onClose,
   stored,
+  publishedTheme,
 }: {
   value: ReaderPreferences;
   onChange: (value: ReaderPreferences) => void;
   onClose: () => void;
   stored: boolean;
+  publishedTheme?: Theme | undefined;
 }) {
   const t = useUi();
   const dialog = useRef<HTMLDialogElement>(null);
@@ -56,6 +59,7 @@ export default function ReaderSettings({
         </button>
       </div>
       <ReaderSettingsControls
+        publishedTheme={publishedTheme}
         value={value}
         onChange={onChange}
         stored={stored}

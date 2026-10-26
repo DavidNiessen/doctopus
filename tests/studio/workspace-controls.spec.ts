@@ -31,13 +31,13 @@ test('appearance overrides the system, survives reloads and synchronizes across 
   await appearance.selectOption('dark');
   await expect(page.locator('.workspace-main')).toHaveCSS(
     'background-color',
-    'rgb(9, 13, 13)',
+    'rgb(18, 16, 23)',
   );
   await page.reload();
   await expect(appearance).toHaveValue('dark');
   await expect(page.locator('.workspace-main')).toHaveCSS(
     'background-color',
-    'rgb(9, 13, 13)',
+    'rgb(18, 16, 23)',
   );
   const other = await context.newPage();
   await other.route('**/api/**', (route) =>
@@ -59,7 +59,23 @@ test('appearance overrides the system, survives reloads and synchronizes across 
   await page.emulateMedia({ colorScheme: 'dark' });
   await expect(page.locator('.workspace-main')).toHaveCSS(
     'background-color',
-    'rgb(9, 13, 13)',
+    'rgb(18, 16, 23)',
+  );
+  const theme = page.getByRole('combobox', { name: 'Theme', exact: true });
+  await theme.selectOption('ocean');
+  await expect(page.locator('.workspace-main')).toHaveCSS(
+    'background-color',
+    'rgb(11, 20, 33)',
+  );
+  await expect(
+    other.getByRole('combobox', { name: 'Theme', exact: true }),
+  ).toHaveValue('ocean');
+  await page.reload();
+  await expect(theme).toHaveValue('ocean');
+  await page.emulateMedia({ colorScheme: 'light' });
+  await expect(page.locator('.workspace-main')).toHaveCSS(
+    'background-color',
+    'rgb(244, 248, 253)',
   );
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   await other.close();
@@ -136,7 +152,7 @@ test('blocked storage preserves usable appearance and sizing controls, including
   await appearance.selectOption('dark');
   await expect(page.locator('.workspace-main')).toHaveCSS(
     'background-color',
-    'rgb(9, 13, 13)',
+    'rgb(18, 16, 23)',
   );
   await page.setViewportSize({ width: 640, height: 900 });
   await page.evaluate(() => window.scrollTo(0, 120));

@@ -13,6 +13,11 @@ test('form values, literal encoded drafts and example selection send the active 
   );
   await page.getByRole('button', { name: 'Try now', exact: true }).click();
   const playground = page.getByLabel('API playground');
+  await expect(playground).toBeVisible();
+  if (await playground.getByLabel('bearer credential', { exact: true }).count())
+    await playground
+      .getByLabel('bearer credential', { exact: true })
+      .fill('demo-token');
   await playground.locator('.playground-request-example > summary').click();
   await expect(
     playground.getByRole('button', { name: 'Form values', exact: true }),
@@ -92,9 +97,9 @@ test('form values, literal encoded drafts and example selection send the active 
   await playground
     .getByRole('button', { name: 'Form values', exact: true })
     .click();
-  await expect(
-    playground.getByLabel('Include body name', { exact: true }),
-  ).not.toBeChecked();
+  await expect(playground.getByLabel('Body name', { exact: true })).toHaveValue(
+    '',
+  );
   await openRequestSettings(playground);
   await playground
     .getByRole('combobox', { name: 'Request example', exact: true })

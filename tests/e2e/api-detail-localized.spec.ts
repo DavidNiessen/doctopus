@@ -51,18 +51,8 @@ test('localized endpoint details and parameter presence keep wire values and cop
   const limit = dialog.getByLabel('Parameter limit', { exact: true });
   await expect(limit).toHaveAttribute('placeholder', 'Wert eingeben');
   await limit.fill('4');
-  const presence = dialog.getByRole('checkbox', {
-    name: 'In die Anfrage aufnehmen: query limit',
-    exact: true,
-  });
-  await expect(presence).toBeChecked();
-  await presence.uncheck();
-  await expect(
-    dialog.getByText(
-      'Nicht enthalten; der eingegebene Text bleibt als Entwurf erhalten.',
-    ),
-  ).toHaveCount(0);
-  await expect(limit).toHaveValue('4');
+  await expect(dialog.locator('.parameter-presence')).toHaveCount(0);
+  await limit.fill('');
   await dialog
     .getByRole('button', { name: 'Anfrage-URL kopieren', exact: true })
     .click();
@@ -71,7 +61,7 @@ test('localized endpoint details and parameter presence keep wire values and cop
       page.evaluate(() => (window as unknown as { copied: string }).copied),
     )
     .toBe('http://127.0.0.1:4010/v1/projects');
-  await presence.check();
+  await limit.fill('4');
   await dialog
     .getByRole('button', { name: 'Anfrage-URL kopieren', exact: true })
     .click();

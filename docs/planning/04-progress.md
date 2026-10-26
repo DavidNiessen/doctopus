@@ -1,6 +1,14 @@
 # Implementation progress
 
-Updated: 2026-10-25. **Approximately 99% complete; published prerelease.** This is an engineering estimate of implemented scope and remaining launch work, not measured test coverage. Independent reviews explicitly deferred by the owner remain unfinished; this is not a claim of stable production approval. The binding scope and release checklist remain in the [delivery plan](03-delivery-and-launch.md).
+Updated: 2026-10-26. **Approximately 99% complete; published prerelease.** This is an engineering estimate of implemented scope and remaining launch work, not measured test coverage. Independent reviews explicitly deferred by the owner remain unfinished; this is not a claim of stable production approval. The binding scope and release checklist remain in the [delivery plan](03-delivery-and-launch.md).
+
+## Complete themes and spec-driven request forms
+
+The Reader now offers complete Violet, Ocean, Forest and Graphite palettes with matching canvases, surfaces, text, accents, controls and code-editor colors. Site default preserves published branding; System remains the initial appearance and follows OS changes, including the pre-rendered page before JavaScript. Studio provides the same four palettes with its own persisted appearance preference.
+
+Request forms now expose only specification-defined fields. Required blank values block Send with named errors; optional blank values are omitted automatically. No inclusion, field-removal or custom-field controls remain. Unsupported request-body, header and query sections are hidden. Nested fields, schema branches, exact numeric tokens, sensitive-value redaction and schema-defined array items remain supported. The lower-level SDK retains its explicit serialization APIs.
+
+Local source validation passes formatting, lint, types, 193 tooling tests and 1,091 source tests. Studio's four presentation/browser journeys and the 18 static-demo browser journeys pass. This increment updates source and the automatically deployed demo; it does not change immutable published prerelease archives or complete the deferred launch reviews. Pull-request and deployment checks provide the final hosted acceptance evidence.
 
 ## Current direct framework setup
 

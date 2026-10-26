@@ -152,7 +152,7 @@ Open [http://localhost:3000/docs/](http://localhost:3000/docs/). The plugin acco
 | `doctopus.favicon`          | `favicon`                    | Public favicon URL                                                                           |
 | `doctopus.enabled`          | Register or omit the adapter | Enable/disable the Spring integration                                                        |
 
-Visitor preferences override the initial layout and appearance after a visitor makes a choice. Theme selection remains available in Reader settings; editor colors follow it. Runtime settings are evaluated when the integration starts; they are not an application-property hot-reload mechanism.
+Visitor preferences override the initial layout and appearance after a visitor makes a choice. The visual Theme switcher selects a complete palette; editor colors follow it. Default system appearance selects the theme's matching light or dark variant automatically. Configuration IDs remain `violet`, `ocean`, `mint` (Forest) and `neutral` (Graphite). Runtime settings are evaluated when the integration starts; they are not an application-property hot-reload mechanism.
 
 The public configuration is sent to the browser. Keep private secrets out of URLs and branding settings. The spec request uses same-origin browser credentials; cross-origin documents need appropriate CORS and do not receive your application's cookies through this loader. The Java and Node servers do not fetch the configured specification themselves.
 

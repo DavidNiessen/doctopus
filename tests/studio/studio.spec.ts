@@ -21,7 +21,7 @@ test('Studio login follows system appearance and supports doubled compact text',
     await expect(page.locator('html')).toHaveCSS('color-scheme', 'light dark');
     await expect(page.locator('.login')).toHaveCSS(
       'background-color',
-      appearance === 'light' ? 'rgb(255, 255, 255)' : 'rgb(9, 13, 13)',
+      appearance === 'light' ? 'rgb(255, 255, 255)' : 'rgb(18, 16, 23)',
     );
     await page.evaluate(() => {
       document.documentElement.style.fontSize = '200%';

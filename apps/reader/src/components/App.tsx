@@ -28,6 +28,7 @@ import {
   normalizePagePath,
   readableAccent,
   resolvePalette,
+  themeCssVariables,
   pageMetadata,
   createUiTranslation,
   localeRoute,
@@ -208,6 +209,8 @@ export function App({
     config.theme,
     theme === 'dark' ? 'dark' : 'light',
   );
+  const schemeColor = (color: string) =>
+    `light-dark(${readableAccent(color, 'light', resolvePalette(config.theme, 'light'))}, ${readableAccent(color, 'dark', resolvePalette(config.theme, 'dark'))})`;
   const href = (value: string) => withBase(config.basePath, value);
   const docHref = (value: string) => href(localizePath(config, value, locale));
   const activeGuide =
@@ -308,8 +311,9 @@ export function App({
     document.documentElement.lang = ui.locale;
   }, [ui.locale]);
   useEffect(() => {
-    document.documentElement.dataset.theme = theme;
-  }, [theme]);
+    if (preferencesReady)
+      document.documentElement.dataset.theme = preferredMode;
+  }, [preferredMode, preferencesReady]);
   useEffect(() => {
     const metadata = pageMetadata(site, path);
     document.title = `${metadata.title} · ${config.name}`;
@@ -549,33 +553,15 @@ export function App({
       data-layout={preferences.layout}
       style={
         {
-          '--accent': config.theme.accent,
-          '--code-string': readableAccent('#b45d34', theme, palette),
-          '--code-key': readableAccent('#237da3', theme, palette),
-          '--code-number': readableAccent('#b0662d', theme, palette),
-          '--code-keyword': readableAccent('#8e65b9', theme, palette),
-          '--code-comment': palette.muted,
-          '--code-flag': readableAccent('#2787c0', theme, palette),
-          '--success-text': readableAccent('#169965', theme, palette),
-          '--error-text': readableAccent('#b03642', theme, palette),
-          '--action-bg': readableAccent(config.theme.accent, 'light'),
-          '--accent-text-light': readableAccent(
-            config.theme.accent,
-            'light',
-            resolvePalette(config.theme, 'light'),
-          ),
-          '--accent-text-dark': readableAccent(
-            config.theme.accent,
-            'dark',
-            resolvePalette(config.theme, 'dark'),
-          ),
-          '--bg': palette.background,
-          '--surface': palette.surface,
-          '--subtle': palette.subtle,
-          '--border': palette.border,
-          '--text': palette.text,
-          '--muted': palette.muted,
-          '--heading': palette.heading,
+          ...themeCssVariables(config.theme),
+          '--code-string': schemeColor('#b45d34'),
+          '--code-key': schemeColor('#237da3'),
+          '--code-number': schemeColor('#b0662d'),
+          '--code-keyword': schemeColor('#8e65b9'),
+          '--code-comment': 'var(--muted)',
+          '--code-flag': schemeColor('#2787c0'),
+          '--success-text': schemeColor('#169965'),
+          '--error-text': schemeColor('#b03642'),
           '--sidebar-width': `${config.theme.sidebarWidth ?? 288}px`,
           '--content-width': `${config.theme.contentWidth ?? 760}px`,
           '--radius': `${config.theme.radius}px`,
@@ -1361,6 +1347,7 @@ export function App({
         <Suspense fallback={<div role="status">Loading reader settings…</div>}>
           <ReaderSettings
             value={preferences}
+            publishedTheme={site.config.theme}
             onChange={setPreferences}
             stored={stored}
             onClose={() => setSettingsOpen(false)}

@@ -1,3 +1,4 @@
+import { enterBodyField, clearBodyField } from '../helpers/request-forms.js';
 import {
   openSchemaControls,
   openRequestSettings,
@@ -10,6 +11,11 @@ const route =
 async function open(page: Page) {
   await page.goto(route);
   const playground = page.getByLabel('API playground');
+  await expect(playground).toBeVisible();
+  if (await playground.getByLabel('bearer credential', { exact: true }).count())
+    await playground
+      .getByLabel('bearer credential', { exact: true })
+      .fill('demo-token');
   await openRequestSettings(playground);
   await playground
     .getByRole('combobox', { name: 'Content type', exact: true })
@@ -74,9 +80,7 @@ test('nested choices preserve other drafts, numeric tokens and hidden values, an
       exact: true,
     })
     .click();
-  await playground
-    .getByLabel('Include body payload.company', { exact: true })
-    .check();
+  await enterBodyField(playground, 'payload.company');
   await playground
     .getByLabel('Body payload.company', { exact: true })
     .fill('New company');
@@ -90,7 +94,7 @@ test('nested choices preserve other drafts, numeric tokens and hidden values, an
   await branch.selectOption('2');
   await expect(
     playground.getByLabel('Include body payload', { exact: true }),
-  ).toBeDisabled();
+  ).toHaveCount(0);
   await expect(branch).toHaveValue('2');
   await expect(
     playground.getByLabel('Body payload.name', { exact: true }),
@@ -161,9 +165,7 @@ test('array structural edits clear item choices and drafts without changing unre
   await first.selectOption('0');
   await second.selectOption('1');
   await playground.getByLabel('Body counter', { exact: true }).fill('-');
-  await playground
-    .getByLabel('Include body items[0].count', { exact: true })
-    .check();
+  await enterBodyField(playground, 'items[0].count');
   await playground.getByLabel('Body items[0].count', { exact: true }).fill('-');
   await playground
     .getByRole('button', { name: 'Remove body items[0]', exact: true })
@@ -192,18 +194,13 @@ test('array structural edits clear item choices and drafts without changing unre
   await expect(second).toHaveValue('');
   await expect(second).toBeFocused();
   await second.selectOption('0');
-  await playground
-    .getByRole('button', {
-      name: 'Initialize body items[1] as object',
-      exact: true,
-    })
-    .click();
-  await playground
-    .getByLabel('Include body items[1].kind', { exact: true })
-    .check();
-  await playground
-    .getByLabel('Include body items[1].name', { exact: true })
-    .check();
+  const initialize = playground.getByRole('button', {
+    name: 'Initialize body items[1] as object',
+    exact: true,
+  });
+  if (await initialize.count()) await initialize.click();
+  await enterBodyField(playground, 'items[1].kind');
+  await enterBodyField(playground, 'items[1].name');
   await playground
     .getByLabel('Body items[1].name', { exact: true })
     .fill('New item');
@@ -267,15 +264,13 @@ test('nested JSON and omission reset descendant choices while preserving the con
   await expect(
     playground.getByLabel('Body lists[0].company', { exact: true }),
   ).toHaveValue('JSON company');
-  await playground.getByLabel('Include body lists', { exact: true }).uncheck();
+  await clearBodyField(playground, 'lists');
   await expect(branch).toHaveValue('1');
-  await playground.getByLabel('Include body lists', { exact: true }).check();
+  await enterBodyField(playground, 'lists');
   await playground
     .getByRole('button', { name: 'Add item to body lists', exact: true })
     .click();
-  await playground
-    .getByLabel('Include body lists[0].company', { exact: true })
-    .check();
+  await enterBodyField(playground, 'lists[0].company');
   await playground
     .getByLabel('Body lists[0].company', { exact: true })
     .fill('Restored empty list');
