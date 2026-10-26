@@ -142,17 +142,17 @@ The development command watches inputs and rebuilds them. Refresh the browser af
 
 ## Use the Reader and connect a real API
 
-The **All**, **API Reference** and **Documentation** tabs filter the modern navigation. Reader settings select appearance, a prepared theme and modern or classic layout. Classic mode uses an endpoint list and opens API Reference at the site root. Modern mode defaults to All. Search covers guides and endpoint documentation.
+The **All**, **API Reference** and **Documentation** tabs filter the modern navigation. Reader settings select appearance, a complete theme and modern or classic layout. Classic mode uses an endpoint list and opens API Reference at the site root. Modern mode defaults to All. Search covers guides and endpoint documentation.
 
 In the playground:
 
 1. Review the resolved URL, which is read-only and can be copied in full.
 2. Fill required path parameters and authentication inputs.
-3. Edit documented query/header values, or add and remove custom parameters.
+3. Fill documented query/header values. Clearing an optional value omits it; custom fields cannot be added.
 4. Use **Form** or **JSON** for the body. **Schema controls** within Form expose detailed field and array editing where supported.
 5. Send the request. Inspect, fold, copy or expand the read-only response editor to fullscreen.
 
-The checkbox beside a supported required text parameter means **Allow empty value**. It permits an explicitly empty value; it does not exclude a filled-in required parameter. Optional query/header inclusion controls can omit their values while retaining drafts.
+Missing required fields block Send and show clear field-level errors. Optional fields are included only when filled. There are no inclusion checkboxes or field-removal controls, and sections not defined by the selected operation stay hidden.
 
 ### Switch from mocks to live requests
 
@@ -459,23 +459,23 @@ Managed-platform upgrades additionally need a coordinated database/artifact back
 
 ## Troubleshooting
 
-| Symptom                                                | Check                                                                                                                                                 |
-| ------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Installation reports unsupported engines               | Use the checkout's `.node-version` and `packageManager` pin. Reinstall dependencies with the correct tools.                                           |
-| Renamed npm/Maven package returns 404                  | Check publication availability. Use the source-installation steps or the explicitly archived release instructions.                                    |
-| Assets, search or deep links return 404                | Match `basePath` to the externally served path, upload the entire publication, and configure directory index pages. Rebuild after changing the mount. |
-| Send mock never reaches the backend                    | This is mock mode's intended behavior. Set the actual OpenAPI `servers` URL and `explorer.mode: live`, then rebuild.                                  |
-| A live request fails although curl works               | Check browser CORS/preflight rules, HTTPS mixed content, the published server URL and required authentication. Inspect the browser network error.     |
-| The request URL cannot be edited                       | It is derived from the spec and parameter inputs. Change the published server in the specification, then rebuild.                                     |
-| A required path field seems unaffected by its checkbox | The checkbox permits an empty value; a nonempty required value is still sent.                                                                         |
-| The response editor cannot be edited                   | It is a response viewer. Edit the request body using Form or JSON instead.                                                                            |
-| Field controls are unavailable for a schema            | Use JSON and inspect the [supported body controls](explorer-bodies.md). The API still validates the submitted body.                                   |
-| A spec references an external URL                      | Import a bundled snapshot or use [pinned references](reference-snapshots.md). Ordinary builds do not fetch references from the network.               |
-| MDX or a plugin is refused                             | Review the content and use its separate trust flag only when intended. Markdown needs neither flag.                                                   |
-| Spring startup rejects a publication                   | Check manifest integrity, adapter compatibility, filesystem access and the compiled context/mount path. Use matching rebuilt artifacts.               |
-| The Node adapter cannot find the publication           | Set an absolute `DOCS_DIRECTORY`, verify the complete built directory and match its mount path.                                                       |
-| Studio queues a build that never starts                | Configure and start a Worker with the matching source approval, snapshot, image and policy.                                                           |
-| Server readiness returns 503                           | Check database connectivity, matching migrations, configured deadlines and Server logs. Use the recovery guide for damaged or incomplete deployments. |
-| A local port is already occupied                       | Stop only your preview process or choose another port; update the corresponding URL and any origin configuration.                                     |
+| Symptom                                             | Check                                                                                                                                                 |
+| --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Installation reports unsupported engines            | Use the checkout's `.node-version` and `packageManager` pin. Reinstall dependencies with the correct tools.                                           |
+| Renamed npm/Maven package returns 404               | Check publication availability. Use the source-installation steps or the explicitly archived release instructions.                                    |
+| Assets, search or deep links return 404             | Match `basePath` to the externally served path, upload the entire publication, and configure directory index pages. Rebuild after changing the mount. |
+| Send mock never reaches the backend                 | This is mock mode's intended behavior. Set the actual OpenAPI `servers` URL and `explorer.mode: live`, then rebuild.                                  |
+| A live request fails although curl works            | Check browser CORS/preflight rules, HTTPS mixed content, the published server URL and required authentication. Inspect the browser network error.     |
+| The request URL cannot be edited                    | It is derived from the spec and parameter inputs. Change the published server in the specification, then rebuild.                                     |
+| Send stays disabled after clearing a required field | Fill the fields listed in the request errors. Required values cannot be omitted or blank.                                                             |
+| The response editor cannot be edited                | It is a response viewer. Edit the request body using Form or JSON instead.                                                                            |
+| Field controls are unavailable for a schema         | Use JSON and inspect the [supported body controls](explorer-bodies.md). The API still validates the submitted body.                                   |
+| A spec references an external URL                   | Import a bundled snapshot or use [pinned references](reference-snapshots.md). Ordinary builds do not fetch references from the network.               |
+| MDX or a plugin is refused                          | Review the content and use its separate trust flag only when intended. Markdown needs neither flag.                                                   |
+| Spring startup rejects a publication                | Check manifest integrity, adapter compatibility, filesystem access and the compiled context/mount path. Use matching rebuilt artifacts.               |
+| The Node adapter cannot find the publication        | Set an absolute `DOCS_DIRECTORY`, verify the complete built directory and match its mount path.                                                       |
+| Studio queues a build that never starts             | Configure and start a Worker with the matching source approval, snapshot, image and policy.                                                           |
+| Server readiness returns 503                        | Check database connectivity, matching migrations, configured deadlines and Server logs. Use the recovery guide for damaged or incomplete deployments. |
+| A local port is already occupied                    | Stop only your preview process or choose another port; update the corresponding URL and any origin configuration.                                     |
 
 For more detail, see the [CLI reference](cli.md), [Reader interface guide](design/interface.md), [server operations](server.md), [build controls](studio-builds.md), [plugins](plugins.md), and [contributor checks](../CONTRIBUTING.md).

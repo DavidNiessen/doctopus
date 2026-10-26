@@ -4,6 +4,8 @@ For an existing Spring Boot or Node application, configure direct-mode branding 
 
 The remaining sections describe optional compiled/static publications. Their publisher configuration uses YAML or JSON, supports additional theme tokens and custom CSS, and is validated during build and doctor checks.
 
+Prepared theme IDs now select complete light/dark palettes, including backgrounds, panels, borders, text, accents and editor colors. The Reader and Studio display Violet, Ocean, Forest (`mint`) and Graphite (`neutral`). System appearance remains the default and follows OS changes; readers can override it independently. **Site default** preserves published palette overrides. See [Reader themes](reader-layout.md).
+
 ## Theme tokens
 
 ```yaml

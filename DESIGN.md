@@ -6,25 +6,67 @@ colors:
   ocean: '#2563eb'
   violet: '#7c3aed'
   neutral-accent: '#526071'
-  action: '#087a50'
-  action-hover: 'color-mix(in srgb, var(--action-bg) 88%, #000)'
+  action: 'light-dark(#7839e5, #a77bf3)'
+  action-text: 'light-dark(#ffffff, #111111)'
+  action-hover: 'light-dark(#6a32ca, #b28bf4)'
+  accent-text: 'light-dark(#7839e5, #a77bf3)'
+  accent-surface: 'color-mix(in srgb, var(--accent) 10%, var(--bg))'
   light-background: '#ffffff'
-  light-surface: '#f8faf9'
-  light-subtle: '#f0f4f2'
-  light-border: '#e5e9e7'
-  light-text: '#3f4945'
-  light-muted: '#626e68'
-  light-heading: '#17211c'
-  dark-background: '#090d0d'
-  dark-surface: '#171b19'
-  dark-subtle: '#0d1712'
-  dark-border: '#262a27'
-  dark-text: '#ced3d0'
-  dark-muted: '#9fa3a0'
-  dark-reader-heading: '#dfe3e0'
-  dark-studio-heading: '#f8faf9'
-  light-accent-surface: '#eaf8f0'
-  dark-accent-surface: '#0b261b'
+  light-surface: '#f7f5fc'
+  light-subtle: '#eee9f8'
+  light-border: '#dfd9eb'
+  light-text: '#403b4d'
+  light-muted: '#665c74'
+  light-heading: '#211a30'
+  dark-background: '#121017'
+  dark-surface: '#1c1824'
+  dark-subtle: '#272132'
+  dark-border: '#383043'
+  dark-text: '#dad4e5'
+  dark-muted: '#aea2bf'
+  dark-heading: '#f3edf9'
+  ocean-light-background: '#f4f8fd'
+  ocean-light-surface: '#eaf1fa'
+  ocean-light-subtle: '#dce7f5'
+  ocean-light-border: '#cbd9ec'
+  ocean-light-text: '#34485f'
+  ocean-light-muted: '#496078'
+  ocean-light-heading: '#142c48'
+  ocean-dark-background: '#0b1421'
+  ocean-dark-surface: '#111f31'
+  ocean-dark-subtle: '#182b40'
+  ocean-dark-border: '#2b415a'
+  ocean-dark-text: '#ccdbed'
+  ocean-dark-muted: '#94abc6'
+  ocean-dark-heading: '#edf5ff'
+  forest-light-background: '#f5f9f5'
+  forest-light-surface: '#eaf2eb'
+  forest-light-subtle: '#dde9df'
+  forest-light-border: '#cbdacf'
+  forest-light-text: '#344b3e'
+  forest-light-muted: '#4b6354'
+  forest-light-heading: '#183323'
+  forest-dark-background: '#0c1611'
+  forest-dark-surface: '#14221a'
+  forest-dark-subtle: '#1d3024'
+  forest-dark-border: '#304a39'
+  forest-dark-text: '#cfdfd3'
+  forest-dark-muted: '#9bb7a2'
+  forest-dark-heading: '#edf7ef'
+  graphite-light-background: '#f8f7f4'
+  graphite-light-surface: '#efede8'
+  graphite-light-subtle: '#e6e2db'
+  graphite-light-border: '#d5d0c7'
+  graphite-light-text: '#46433e'
+  graphite-light-muted: '#625d54'
+  graphite-light-heading: '#24221e'
+  graphite-dark-background: '#181817'
+  graphite-dark-surface: '#232321'
+  graphite-dark-subtle: '#2e2e2a'
+  graphite-dark-border: '#41413b'
+  graphite-dark-text: '#deddd5'
+  graphite-dark-muted: '#b1aea3'
+  graphite-dark-heading: '#f5f3eb'
   light-success-surface: '#eaf7ef'
   light-success-text: '#12654c'
   dark-success-surface: '#1e332b'
@@ -116,7 +158,7 @@ spacing:
 components:
   button-primary:
     backgroundColor: '{colors.action}'
-    textColor: '{colors.light-background}'
+    textColor: '{colors.action-text}'
     typography: '{typography.interface}'
     rounded: '{rounded.control}'
     padding: '8px 14px'
@@ -165,7 +207,7 @@ components:
 
 **Creative North Star: "Familiar, precise documentation software"** guides the reader and operational workspace.
 
-Doctopus uses a centered, flat documentation canvas and a practical operating workspace. Typography, quiet dividers and restrained surface changes organize the interface. The violet octopus assets retain the product identity while the default reference uses mint accents; published branding and the prepared alternate palettes remain supported.
+Doctopus uses a centered, flat documentation canvas and a practical operating workspace. Typography, quiet dividers and restrained surface changes organize the interface. The violet octopus assets retain the product identity, with Violet as the default complete palette; published branding and the prepared alternate palettes remain supported.
 
 Documentation prioritizes reading and understanding. The playground and Studio prioritize completing real tasks, with labeled forms, meaningful tables and explicit states. This is the Doctopus project system: its documented patterns describe the implemented reader and Studio rather than a universal interface template.
 
@@ -178,11 +220,11 @@ Documentation prioritizes reading and understanding. The playground and Studio p
 
 ## Colors
 
-The palette uses quiet green-tinted neutrals, restrained mint emphasis and separate semantic state colors. Frontmatter records the shipped defaults; published configuration can override reader palette roles.
+Each prepared theme supplies a complete, paired light/dark palette for the canvas, panels, subtle surfaces, borders and text, alongside its accent. Frontmatter records Violet in the unprefixed light/dark roles and Ocean, Forest and Graphite in their named roles. Published reader configuration can override individual palette roles.
 
 ### Primary
 
-Mint is the default reference accent. Ocean, violet and neutral are prepared reader presets. Studio uses the action role for filled primary actions and an appearance-specific accent text role; the reader derives these roles from its configured accent. The request send/try action uses ocean with its darker hover treatment.
+Violet is the default in Reader and Studio. Ocean uses cool blue surfaces, Forest uses green surfaces, and Graphite uses warm neutral surfaces. These are complete themes rather than accent-only choices. Visible names map to the existing configuration IDs `violet`, `ocean`, `mint` and `neutral`; keep those IDs compatible. Reader Site default restores the published theme, including custom colors. Primary action and accent text roles, including request Send/Try actions, resolve from the selected accent and palette.
 
 ### Secondary
 
@@ -190,7 +232,7 @@ The existing violet octopus remains the product identity asset. It does not forc
 
 ### Neutral
 
-Background is the canvas; surface and subtle group examples and supporting controls; border divides regions. Text, muted and heading remain distinct roles. Reader and Studio share the default neutrals, with the recorded dark heading difference retained.
+Background is the canvas; surface and subtle group examples and supporting controls; border divides regions. Text, muted and heading remain distinct roles. Reader and Studio use the same resolved palette roles. Theme changes update these roles together, including code and response editor surfaces, text, selection and syntax.
 
 ### Semantic states
 
@@ -198,7 +240,9 @@ Studio pairs success, error, warning and information text with matching tinted s
 
 **The Resolved Palette Rule.** Use the resolved palette for body text, inputs, tables and examples. Derive accent and syntax text against the actual background and surface rather than using raw brand colors as text.
 
-`packages/contracts/src/theme.ts` owns reader defaults and preset accents. `readableAccent` checks the configured background, surface and an 8% accent tint, choosing a text color that reaches a contrast ratio of at least 5 when possible. Syntax seed hues are transformed by this function, not final fixed theme colors. Studio's semantic role pairs live in its base stylesheet.
+`packages/contracts/src/theme.ts` owns `themePalettes`, preset accents, `resolvePalette` and `themeCssVariables`. Palette resolution starts with the selected pair, defaults to Violet, and applies published per-mode overrides. `readableAccent` checks background, surface, subtle and an 8% accent tint, choosing a text color that reaches a contrast ratio of at least 5 when possible. Syntax seed hues are transformed by this function, not final fixed theme colors. Primary actions use white text in light mode; dark mode chooses white or near-black text against the resolved action color, and hover moves the action toward its contrast destination. Studio's semantic role pairs remain in its base stylesheet.
+
+**The Independent Appearance Rule.** Keep theme, appearance and documentation layout as separate preferences. System is the default appearance and follows OS changes live; Reader follows the OS before JavaScript and when JavaScript is unavailable through `color-scheme` and `light-dark()`. Explicit Light or Dark overrides appearance without changing the selected theme.
 
 ## Typography
 
@@ -219,7 +263,7 @@ Reader responsive behavior comes from the final workspace stylesheet:
 - Between 761px and 1280px, API examples and guide contents move to a single main column; inspector resize handles disappear and examples stop sticking.
 - Between 761px and 1023px, the navigation track is 220px and main padding is 32px 24px 48px.
 - At 760px and below, the shell becomes one column, the header is 108px, navigation is a drawer no wider than `min(320px, calc(100vw - 24px))`, and main padding is 28px 24px 48px. Resize handles disappear. Playground request and response regions stack; response output is bounded by `min(720px, 80dvh)` with a 320px minimum.
-- Settings use a two-column control grid until 520px, then one column. The native settings dialog is at most 560px wide, with viewport margins and local vertical scrolling.
+- Settings use a two-column appearance/layout control grid until 520px, then one column. Theme miniatures use four columns above 520px and two below; Site default spans the grid. The native settings dialog is at most 620px wide, with viewport margins and local vertical scrolling.
 
 Studio uses a flat header with a measured CSS height, a default 240px rail adjustable from 200–360px, a 12px resize track, and a main region no wider than 1200px. Desktop main padding is `44px clamp(28px, 4vw, 64px) 40px 32px`. At 1000px and below the heading stacks and main padding becomes 32px 24px. At 620px and below, navigation becomes a horizontally scrollable row, the rail resize controls disappear, forms and metrics stack, and main padding becomes 28px 20px. Build controls stack at 600px.
 
@@ -247,7 +291,7 @@ Borders are generally one pixel. The reading article and workspace rails have no
 
 ### Buttons
 
-Primary actions pair the action background with white text; hover darkens the same role. Secondary buttons use the background, text and border roles and hover to surface. Studio primary/secondary padding and minimum height are recorded in frontmatter; use minimum height rather than a fixed height when text wraps. Buttons expose disabled state and retain a visible focus outline. Active buttons apply the shipped brightness treatment.
+Primary actions pair the resolved action background with its resolved action text; hover uses the matching appearance-specific action-hover role. Secondary buttons use the background, text and border roles and hover to surface. Studio primary/secondary padding and minimum height are recorded in frontmatter; use minimum height rather than a fixed height when text wraps. Buttons expose disabled state and retain a visible focus outline. Active buttons apply the shipped brightness treatment.
 
 The endpoint address bar follows the published corner radius, with a 1px border and 6px padding. Its Try now action stretches to the available control height and derives its corners from the outer radius minus that inset and border, clamped at zero. This keeps the corners concentric on compact and wide screens.
 
@@ -255,7 +299,7 @@ The endpoint address bar follows the published corner radius, with a 1px border 
 
 Inputs, selects and textareas use resolved background/text, a field-border role and the shared control radius. Credential prefixes and inputs form one bordered control with a shared focus ring; the input does not draw a second inner ring. Focus changes the border and adds an accent outline/ring. The search field uses 8px vertical and 12px horizontal padding so the caret and placeholder sit inside the focus boundary. Search result icon columns accommodate full method names without shrinking. Request forms group labels, descriptions, type metadata, required state and controls in real sections; advanced controls use native disclosure. Studio forms use consistent label spacing and stacked mobile columns. Preserve error, permission and disabled states rather than relying on color alone.
 
-Custom request fields align their key and value controls at the top of the row. Key inputs share value-input padding; type metadata underneath the key does not vertically shift the value or its actions. Compact layouts retain stacked controls and touch sizing.
+Specification-defined request forms show declared parameters and writable body fields. Do not add inclusion checkboxes, remove actions or custom-field creation controls to those fields. Required blank values show inline errors associated with their inputs and a request error summary; disable Send until the missing values are supplied. Omit optional blank values from requests, while preserving valid false, zero and explicit nullable values. Hide parameter, authentication and body sections that the operation does not define. Retain array item controls and nullable-value controls where the schema allows them. Compact layouts retain stacked controls and touch sizing.
 
 ### Navigation
 
@@ -277,7 +321,9 @@ Studio panels group meaningful forms and data with a border and padding. Tables 
 
 ### Dialogs / Settings
 
-Use native dialogs for focused settings, playground and fullscreen tasks. Settings presents its title directly, followed by appearance controls and storage status. System/light/dark modes, published or prepared presets and modern/classic layout choices remain available. Preserve Escape/dismissal, focus restoration, localized labels and viewport scrolling.
+Use native dialogs for focused settings, playground and fullscreen tasks. Reader settings presents its title directly, storage status, then a native radio group for Site default, Violet, Ocean, Forest and Graphite. The four prepared themes show miniature page previews of their complete palette; Site default is a full-width choice. Native radio semantics retain arrow-key selection, visible checked state and keyboard focus. Separate native selects control System/Light/Dark appearance and Modern/Classic documentation layout. Apply changes live and retain in-memory choices when preference storage is unavailable.
+
+Studio uses separate native Theme and Appearance selects in its header. Theme offers the same four prepared palettes; Appearance offers System, Light and Dark. Preserve accessible labels, Escape/dismissal, focus restoration, localized Reader labels and viewport scrolling.
 
 ## Do's and Don'ts
 

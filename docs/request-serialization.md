@@ -1,14 +1,16 @@
 # Request serialization
 
-The API playground and generated snippets use the same prepared URL, headers and body. Path, query and header values follow the operation's parameter definitions. Enter arrays and flat objects as JSON; enter scalar schema values as text. Required parameters start with an authored example or an illustrative generated value. By default, nonempty inputs are included and blank inputs are omitted. Explicit presence controls distinguish an omitted draft from an intentionally empty value.
+The API playground and generated snippets use the same prepared URL, headers and body. Path, query and header values follow the operation's parameter definitions. Enter arrays and flat objects as JSON; enter scalar schema values as text. Required parameters start with an authored example or an illustrative generated value. By default, nonempty inputs are included and blank inputs are omitted. The browser UI derives presence from the input; advanced SDK callers can explicitly select empty-value serialization.
 
-## Include, omit and send empty values
+## Required and optional inputs
 
-Optional parameters have an **Include in request** checkbox. Typing into an untouched parameter includes it automatically. Unchecking keeps its text as a draft while excluding it from the URL, headers, snippets and outgoing request; even an incomplete JSON draft can be retained this way. Once explicitly omitted, editing the draft does not include it again until checked. Checking an empty scalar input requests an empty value, such as `?trace=` or an empty custom header. Structured and JSON-content parameters still require valid input in their format; use `""` for an empty JSON string.
+The playground displays only parameter fields declared by the operation. Required path, query and header values must be filled before **Send** is enabled; missing inputs show an inline error and a summary. Optional values are included when nonblank and removed when cleared. Nonempty text retains its original whitespace, encoding and declared serialization rules. Zero and false remain valid values.
 
-Required parameters cannot be omitted. Supported text parameters have an **Allow empty value** control; leaving it unchecked retains the required-value error when an input is cleared. A required authored empty example starts with that explicit choice enabled when its format supports empty text. Empty path values remain subject to URL checks: for example, a label-style `.` segment is rejected. These controls select bytes to send; they do not establish that an empty value meets every schema constraint or the API's validation rules.
+There are no inclusion checkboxes, remove/restore buttons or custom-parameter insertion controls. Empty parameter sections and request-body editors that the operation does not define are hidden. Same-named parameters remain independent by location. Authentication and generated Accept/Content-Type headers retain their dedicated controls. Drafts remain in memory for the open playground, separate from appearance preferences.
 
-Same-named parameters retain independent values and inclusion choices by location. Their input labels include the location when necessary. Choices and drafts remain in memory for the active playground, separate from persisted appearance settings.
+## Programmatic serialization controls
+
+The lower-level SDK retains its explicit serialization controls for custom integrations. They are not exposed by the spec-driven playground.
 
 SDK callers can provide an optional `parameterPresence` map to `prepareRequest`, using the same `in:name` keys as `parameters`:
 
@@ -26,15 +28,9 @@ An absent flag preserves automatic inclusion of nonempty input. `true` includes 
 
 cURL snippets use `--header 'trace;'` for an empty custom header; `trace:` would remove that header in cURL. Generated clients in all five languages are executed against a loopback server with empty headers, alongside the existing body, multipart and error/redirect cases.
 
-## Editable parameter forms
+## Programmatic additional parameters
 
-The playground groups query parameters and headers into rounded forms. Documented fields show their name, type, required badge and description beside the input. **Add query parameter** and **Add header parameter** reveal a custom-field form and focus its name. Uncheck a field to omit it while keeping its draft, or use its remove button to discard it. Empty groups remain collapsed until opened. Parameter-presence changes do not add explanatory text below the controls.
-
-Optional documented query/header rows can be removed without changing the specification. **Restore documented parameters** brings them back with their previous values. Required documented fields stay visible and cannot be removed. Path fields and documented arrays, objects, styles and content-based values retain their existing validation and serialization.
-
-Custom query values are literal text. Repeated names preserve their order, and an enabled empty value sends `name=`. Custom header names are case-insensitive; duplicate active custom header rows produce an error. Browser-controlled headers retain the restrictions below. Authentication-owned fields must use the authentication controls, and a request body's Content-Type must use the body format control. A custom Accept header can override the default response format.
-
-Additional rows stay in memory for the open modal. Navigating to a different published destination or closing the modal clears them; they are not stored with reader preferences. Credential-like custom names, including Authorization, API keys and tokens, have masked value inputs and placeholders in displayed/copied URLs and generated snippets. Sending uses the entered values.
+The browser playground does not accept ad hoc query/header rows. Applications using the serializer directly can still use its typed additional-parameter API, with their own validation and access policy.
 
 SDK callers can supply the same literal rows to `prepareRequest`:
 

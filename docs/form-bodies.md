@@ -10,6 +10,8 @@ Choose **Encoded body** to provide the exact wire text. On its first use after F
 
 Literal encoded-body snippets use `YOUR_REQUEST_BODY` because arbitrary encodings cannot be safely reconstructed for schema redaction. Inspect or deliberately copy the actual text in the encoded-body editor when needed. Drafts remain while editing in the open playground; closing it, navigation and reload discard them. See [JSON field editing](explorer-bodies.md) for syntax limits, incomplete edits and sensitive values.
 
+The reader omits blank optional values and blocks sending when required values are missing. It only accepts fields declared by the request schema; use the labeled fields or JSON to correct the highlighted request errors. These UI rules also apply to literal encoded text. The SDK remains a lower-level serializer with its documented encoding behavior.
+
 ## SDK
 
 Pass `bodyFormat: 'json'` to `prepareRequest` with a declared form content type, the logical object in `body`, and the API's `schemas` and `openapiVersion`. The returned body is the encoded wire text used by every snippet generator. The default `bodyFormat: 'serialized'` keeps an already encoded body literal.

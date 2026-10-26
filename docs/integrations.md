@@ -80,7 +80,7 @@ doctopus:
   appearance: system
 ```
 
-Open `/docs/` after starting the application. The JARs contain the Reader assets and their integrity inventory, fonts, notices and browser component inventory. No Node process or documentation project is required in a consuming Java application. The browser fetches the specification on a fresh page load. Titles, logos, prepared themes and initial layout/appearance are bound from normal Spring properties; restart the application to apply changed settings.
+Open `/docs/` after starting the application. The JARs contain the Reader assets and their integrity inventory, fonts, notices and browser component inventory. No Node process or documentation project is required in a consuming Java application. The browser fetches the specification on a fresh page load. Titles, logos, complete themes and initial layout/appearance are bound from normal Spring properties; restart the application to apply changed settings.
 
 The [step-by-step quickstart](direct-integrations.md#spring-boot) covers the Maven dependency, specification exposure, optional branding and security. The starter includes generated IDE configuration metadata. Disable it with `doctopus.enabled=false`.
 
