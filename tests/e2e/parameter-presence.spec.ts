@@ -2,154 +2,72 @@ import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 const route =
   'http://127.0.0.1:4174/gallery/api/gallery/v1/parameterpresence/?playground=open';
-
-test('optional inclusion preserves omitted drafts and the URL preview matches empty query/header wire values', async ({
+test('required values block Send and optional query/header fields are included only when filled', async ({
   page,
 }) => {
   await page.goto(route);
-  const playground = page.getByLabel('API playground');
-  await playground
+  const form = page.getByLabel('API playground');
+  await form
     .getByLabel('bearer credential', { exact: true })
     .fill('demo-token');
-  await expect(
-    playground.getByRole('checkbox', {
-      name: 'Allow empty value: query requiredBlank',
-      exact: true,
-    }),
-  ).toBeChecked();
-  const query = playground.getByRole('textbox', {
-    name: 'trace query parameter',
-    exact: true,
-  });
-  const header = playground.getByRole('textbox', {
-    name: 'trace header parameter',
-    exact: true,
-  });
-  await expect(query).toBeVisible();
-  await expect(header).toBeVisible();
-  await query.fill('private query draft');
-  await playground
-    .getByRole('checkbox', {
-      name: 'Include in request: query trace',
-      exact: true,
-    })
-    .uncheck();
+  const send = form.getByRole('button', { name: 'Send request', exact: true }),
+    required = form.getByLabel('requiredBlank parameter', { exact: true }),
+    id = form.getByLabel('id parameter', { exact: true });
+  await expect(form.locator('.parameter-presence')).toHaveCount(0);
+  await expect(send).toBeDisabled();
+  await expect(required).toHaveAttribute('aria-invalid', 'true');
+  await expect(form.locator('.request-validation')).toContainText(
+    'requiredBlank is required.',
+  );
+  await required.fill('ready');
+  await id.fill('example');
+  const query = form.getByLabel('trace query parameter', { exact: true }),
+    header = form.getByLabel('trace header parameter', { exact: true });
+  await query.fill('query value');
   await header.fill('header value');
-  await playground
-    .getByRole('textbox', { name: 'filters parameter', exact: true })
-    .fill('{private invalid draft');
-  await playground
-    .getByRole('checkbox', {
-      name: 'Include in request: query filters',
-      exact: true,
-    })
-    .uncheck();
-  await expect(query).toHaveValue('private query draft');
-  await playground.locator('.playground-request-example > summary').click();
-  await expect(
-    playground.locator('.playground-request-example pre'),
-  ).not.toContainText('private');
-  const first = page.waitForResponse(
-    (response) =>
-      response.url().includes('/v1/presence/') &&
-      response.request().method() === 'GET',
+  let response = page.waitForResponse(
+    (r) =>
+      r.url().includes('/v1/presence/example?') &&
+      r.request().method() === 'GET',
   );
-  await playground.getByRole('button', { name: 'Send request' }).click();
-  expect(await (await first).json()).toEqual({
-    url: '/v1/presence/example?requiredBlank=',
-    trace: 'header value',
-  });
+  await send.click();
+  let received = await response;
+  expect(new URL(received.request().url()).searchParams.get('trace')).toBe(
+    'query value',
+  );
+  expect(received.request().headers().trace).toBe('header value');
   await query.fill('');
-  await playground
-    .getByRole('checkbox', {
-      name: 'Include in request: query trace',
-      exact: true,
-    })
-    .check();
   await header.fill('');
-  await playground
-    .getByRole('checkbox', {
-      name: 'Include in request: header trace',
-      exact: true,
-    })
-    .check();
-  const target =
-    'http://127.0.0.1:4010/v1/presence/example?requiredBlank=&trace=';
-  await expect(
-    playground.getByLabel('Request URL', { exact: true }),
-  ).toHaveText(target);
-  await expect(
-    playground.locator('.playground-request-example pre'),
-  ).toContainText("--header 'trace;'");
-  await expect(
-    playground.locator('.playground-request-example pre'),
-  ).toContainText(target);
-  const next = page.waitForResponse((response) => response.url() === target);
-  await playground.getByRole('button', { name: 'Send request' }).click();
-  expect(await (await next).json()).toEqual({
-    url: '/v1/presence/example?requiredBlank=&trace=',
-    trace: '',
-  });
-  await playground
-    .getByRole('checkbox', {
-      name: 'Include in request: header trace',
-      exact: true,
-    })
-    .uncheck();
-  await playground
-    .getByRole('checkbox', {
-      name: 'Allow empty value: query requiredBlank',
-      exact: true,
-    })
-    .uncheck();
-  await expect(
-    playground.getByRole('button', { name: 'Send request' }),
-  ).toBeDisabled();
-  await expect(playground.locator('.playground-request-example')).toContainText(
-    'requiredBlank is required',
+  response = page.waitForResponse(
+    (r) =>
+      r.url().includes('/v1/presence/example?') &&
+      r.request().method() === 'GET',
   );
-  await expect(
-    playground.getByLabel('Request URL', { exact: true }),
-  ).toContainText('Complete');
+  await send.click();
+  received = await response;
+  expect(new URL(received.request().url()).searchParams.has('trace')).toBe(
+    false,
+  );
+  expect(received.request().headers().trace).toBeUndefined();
+  await id.fill('');
+  await expect(send).toBeDisabled();
+  await expect(id).toHaveAttribute('aria-invalid', 'true');
+  await expect(form.locator('.request-validation')).toContainText(
+    'id is required.',
+  );
 });
-
-test('empty paths require explicit intent and drafts stay private across themes and compact layouts', async ({
+test('missing-field guidance stays accessible and fits compact request forms', async ({
   page,
 }) => {
   await page.goto(route);
-  const playground = page.getByLabel('API playground');
-  await playground
-    .getByLabel('bearer credential', { exact: true })
-    .fill('demo-token');
-  await playground
-    .getByRole('textbox', { name: 'id parameter', exact: true })
-    .fill('');
-  await expect(
-    playground.getByLabel('Request URL', { exact: true }),
-  ).toContainText('Complete');
-  await playground
-    .getByRole('checkbox', { name: 'Allow empty value: path id', exact: true })
-    .check();
-  const target = 'http://127.0.0.1:4010/v1/presence/?requiredBlank=';
-  await expect(
-    playground.getByLabel('Request URL', { exact: true }),
-  ).toHaveText(target);
-  const sent = page.waitForResponse((response) => response.url() === target);
-  await playground.getByRole('button', { name: 'Send request' }).click();
-  expect(await (await sent).json()).toEqual({
-    url: '/v1/presence/?requiredBlank=',
-    trace: null,
-  });
-  expect(
-    (await new AxeBuilder({ page }).include('.playground-dialog').analyze())
-      .violations,
-  ).toEqual([]);
-  await page.keyboard.press('Escape');
-  await page.getByRole('button', { name: 'Switch to dark theme' }).click();
+  const form = page.getByLabel('API playground');
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.getByRole('button', { name: 'Try now', exact: true }).click();
+  await form.getByLabel('id parameter', { exact: true }).fill('');
+  await expect(
+    form.getByRole('button', { name: 'Send request', exact: true }),
+  ).toBeDisabled();
   expect(
-    await playground.evaluate(
+    await form.evaluate(
       (element) => element.scrollWidth <= element.clientWidth,
     ),
   ).toBe(true);
@@ -157,7 +75,4 @@ test('empty paths require explicit intent and drafts stay private across themes 
     (await new AxeBuilder({ page }).include('.playground-dialog').analyze())
       .violations,
   ).toEqual([]);
-  expect(await page.evaluate(() => JSON.stringify(localStorage))).not.toContain(
-    'private',
-  );
 });

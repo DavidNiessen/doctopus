@@ -226,11 +226,21 @@ export const defaultUiMessages = Object.freeze({
   'footer.feedback': 'Report an issue',
   'footer.newTab': ' (opens in a new tab)',
   'footer.builtWith': 'Built with doctopus',
+  'parameter.requiredValue': '{name} is required.',
+  'request.requiredFields': 'Check the request fields before sending.',
   'settings.region': 'Personal preferences',
   'settings.saved':
     'Saved in this browser for this documentation site. Your settings do not change the published project.',
   'settings.unavailable':
     'Browser storage is unavailable. Settings work for this visit.',
+  'settings.theme': 'Theme',
+  'settings.themeDefault': 'Site default',
+  'settings.themeHelp':
+    'Complete palettes for the page, panels and code editor. Each includes a light and dark version.',
+  'settings.theme.violet': 'Violet',
+  'settings.theme.ocean': 'Ocean',
+  'settings.theme.mint': 'Forest',
+  'settings.theme.neutral': 'Graphite',
   'settings.mode': 'Appearance mode',
   'settings.system': 'Use system setting',
   'settings.light': 'Light',

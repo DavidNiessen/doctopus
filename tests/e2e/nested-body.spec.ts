@@ -1,3 +1,4 @@
+import { enterBodyField, clearBodyField } from '../helpers/request-forms.js';
 import { openSchemaControls } from '../helpers/request-forms.js';
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
@@ -12,6 +13,11 @@ test('allOf object controls retain precise and unknown values, mask secrets and 
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto(route + '?playground=open');
   const playground = page.getByLabel('API playground');
+  await expect(playground).toBeVisible();
+  if (await playground.getByLabel('bearer credential', { exact: true }).count())
+    await playground
+      .getByLabel('bearer credential', { exact: true })
+      .fill('demo-token');
   await playground
     .getByRole('group', { name: 'Request body editor', exact: true })
     .getByRole('button', { name: 'JSON', exact: true })
@@ -72,9 +78,7 @@ test('allOf object controls retain precise and unknown values, mask secrets and 
   await playground
     .getByLabel('Body profile.manager.name', { exact: true })
     .fill('Grace Hopper');
-  await playground
-    .getByLabel('Include body profile.privateNote', { exact: true })
-    .uncheck();
+  await clearBodyField(playground, 'profile.privateNote');
   await playground.locator('.playground-request-example > summary').click();
   const code = playground.locator('.playground-request-example pre');
   await expect(code).toContainText('9007199254740997');
@@ -154,6 +158,11 @@ test('nested JSON/fields switches, omission and null toggles clear discarded err
 }) => {
   await page.goto(route + '?playground=open');
   const playground = page.getByLabel('API playground');
+  await expect(playground).toBeVisible();
+  if (await playground.getByLabel('bearer credential', { exact: true }).count())
+    await playground
+      .getByLabel('bearer credential', { exact: true })
+      .fill('demo-token');
   await playground
     .getByRole('group', { name: 'Request body editor', exact: true })
     .getByRole('button', { name: 'JSON', exact: true })
@@ -186,22 +195,17 @@ test('nested JSON/fields switches, omission and null toggles clear discarded err
     playground.getByRole('button', { name: 'Send request' }),
   ).toBeEnabled();
   await playground.getByLabel('Body profile.id', { exact: true }).fill('-');
-  await playground
-    .getByLabel('Include body profile', { exact: true })
-    .uncheck();
+  await clearBodyField(playground, 'profile');
   await expect(
     playground.getByRole('button', { name: 'Send request' }),
   ).toBeEnabled();
-  await playground.getByLabel('Include body profile', { exact: true }).check();
-  await playground
-    .getByLabel('Include body profile.name', { exact: true })
-    .check();
+  await enterBodyField(playground, 'profile');
+  await enterBodyField(playground, 'profile.id');
+  await enterBodyField(playground, 'profile.name');
   await playground
     .getByLabel('Body profile.name', { exact: true })
     .fill('Recreated');
-  await playground
-    .getByLabel('Include body profile.address', { exact: true })
-    .check();
+  await enterBodyField(playground, 'profile.address');
   await playground
     .getByLabel('Use null for body profile.address', { exact: true })
     .check();
@@ -211,9 +215,7 @@ test('nested JSON/fields switches, omission and null toggles clear discarded err
   await playground
     .getByLabel('Use null for body profile.address', { exact: true })
     .uncheck();
-  await playground
-    .getByLabel('Include body profile.address.city', { exact: true })
-    .check();
+  await enterBodyField(playground, 'profile.address.city');
   await playground
     .getByLabel('Body profile.address.city', { exact: true })
     .fill('Berlin');
@@ -223,6 +225,7 @@ test('nested JSON/fields switches, omission and null toggles clear discarded err
     .inputValue();
   expect(JSON.parse(text).profile).toEqual({
     name: 'Recreated',
+    id: 0,
     address: { city: 'Berlin' },
   });
   expect(text).toContain('9007199254740993');

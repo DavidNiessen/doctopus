@@ -266,6 +266,7 @@ paths:
               type: object
               properties:
                 id: { type: integer }
+                extra: { type: object }
                 responseOnly: { type: string, readOnly: true }
               required: [id]
               discriminator:
@@ -555,6 +556,10 @@ components:
       schema: { type: string, writeOnly: true }
   schemas:
     NestedChoice:
+      type: object
+      properties:
+        id: { type: integer }
+        extra: { type: number }
       oneOf:
         - $ref: '#/components/schemas/PersonBody'
         - $ref: '#/components/schemas/OrganizationBody'
@@ -609,6 +614,10 @@ components:
             password: { type: string, format: password, writeOnly: true }
             responseOnly: { type: string, readOnly: true }
             optional: { type: string, default: optional-default }
+            custom: { type: object }
+            constructor: { type: string }
+            __proto__: { type: object }
+            profile.name: { type: string }
             fixed: { type: string, const: fixed }
             profile:
               $ref: '#/components/schemas/NestedProfile'
@@ -634,12 +643,15 @@ components:
         - type: object
           properties:
             privateNote: { type: string, writeOnly: true }
+            custom: { type: object }
+            unknown: { type: number }
             responseOnly: { type: string, readOnly: true }
             address:
               type: [object, 'null']
               properties:
                 city: { type: string }
                 zip: { type: string }
+                unknown: { type: object }
             manager:
               $ref: '#/components/schemas/NestedProfile'
             settings:

@@ -206,9 +206,7 @@ test('demo search, presets and mobile playground remain accessible', async ({
   ).toBeVisible();
   await page.keyboard.press('Escape');
   await page.getByRole('button', { name: 'Open reader settings' }).click();
-  await page
-    .getByRole('combobox', { name: 'Preset', exact: true })
-    .selectOption('ocean');
+  await page.locator('input[type="radio"][value="ocean"]').check();
   await page
     .getByRole('combobox', { name: 'Appearance mode', exact: true })
     .selectOption('dark');
@@ -219,7 +217,7 @@ test('demo search, presets and mobile playground remain accessible', async ({
     .click();
   await expect(page.locator('.monaco-editor')).toHaveCSS(
     'background-color',
-    'rgb(9, 13, 13)',
+    'rgb(11, 20, 33)',
   );
   await page.setViewportSize({ width: 390, height: 844 });
   expect(

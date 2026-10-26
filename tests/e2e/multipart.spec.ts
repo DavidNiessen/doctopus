@@ -22,6 +22,11 @@ test('multipart uploads send real binary files and structured parts while previe
   await page.goto(route);
   await page.getByRole('button', { name: 'Try now', exact: true }).click();
   const playground = page.getByLabel('API playground');
+  await expect(playground).toBeVisible();
+  if (await playground.getByLabel('bearer credential', { exact: true }).count())
+    await playground
+      .getByLabel('bearer credential', { exact: true })
+      .fill('demo-token');
   await playground.locator('.playground-request-example > summary').click();
   const partHeader = playground.getByLabel(
     'Part documents header X-Upload-Token',
@@ -199,6 +204,11 @@ test('invalid and oversized multipart inputs cannot send and valid upload contro
   await page.goto(route);
   await page.getByRole('button', { name: 'Try now', exact: true }).click();
   const playground = page.getByLabel('API playground');
+  await expect(playground).toBeVisible();
+  if (await playground.getByLabel('bearer credential', { exact: true }).count())
+    await playground
+      .getByLabel('bearer credential', { exact: true })
+      .fill('demo-token');
   await playground.locator('.playground-request-example > summary').click();
   await playground.getByRole('button', { name: 'JSON', exact: true }).click();
   await playground

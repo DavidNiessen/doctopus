@@ -1,35 +1,5 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
-export async function addParameter(
-  playground: Locator,
-  location: 'query' | 'header',
-) {
-  const section = playground
-    .locator('.request-parameter-section')
-    .filter({ hasText: location === 'query' ? 'Query parameters' : 'Headers' });
-  if (
-    !(await section.evaluate((element) => (element as HTMLDetailsElement).open))
-  )
-    await section.locator('summary').click();
-  await section
-    .getByRole('button', { name: `Add ${location} parameter`, exact: true })
-    .click();
-}
-
-export async function expandBodyFields(playground: Locator) {
-  const button = playground.getByRole('button', {
-    name: /^Expand \d+ optional fields?$/,
-  });
-  if (await button.count()) await button.click();
-}
-
-export async function addBodyField(playground: Locator) {
-  await playground
-    .getByRole('button', { name: 'Add body field', exact: true })
-    .click();
-  return playground.locator('.body-form .request-custom-field:visible').last();
-}
-
 export async function openRequestSettings(playground: Locator) {
   const section = playground.locator('.request-settings');
   if (
@@ -86,4 +56,46 @@ export async function changePublishedServer(
   await expect(page.locator('main')).toHaveAttribute('aria-busy', 'false');
   await page.getByRole('button', { name: 'Try now', exact: true }).click();
   await expect(playground).toBeVisible();
+}
+
+export async function clearBodyField(playground: Locator, name: string) {
+  const control = playground.getByLabel(`Body ${name}`, { exact: true });
+  if (!(await control.isVisible())) {
+    const json = playground.getByRole('button', {
+      name: `Edit body ${name} as JSON`,
+      exact: true,
+    });
+    if (await json.count()) await json.click();
+  }
+  if (await control.evaluate((element) => element.tagName === 'SELECT'))
+    await control.selectOption('');
+  else await control.fill('');
+}
+
+export async function enterBodyField(playground: Locator, name: string) {
+  const fixed = playground.getByRole('button', {
+    name: `Use fixed value for body ${name}`,
+    exact: true,
+  });
+  if (await fixed.count()) {
+    await fixed.click();
+    return;
+  }
+  const control = playground.getByLabel(`Body ${name}`, { exact: true });
+  if (await control.evaluate((element) => element.tagName === 'SELECT')) {
+    await control.selectOption('false');
+    return;
+  }
+  const group = control.locator(
+    'xpath=ancestor::*[contains(concat(" ",normalize-space(@class)," ")," body-field ")][1]',
+  );
+  const type = await group.locator('.body-field-heading small').textContent();
+  const value = type?.match(/object|JSON/)
+    ? '{}'
+    : type?.includes('array')
+      ? '[]'
+      : type?.match(/integer|number/)
+        ? '0'
+        : 'example';
+  await control.fill(value);
 }

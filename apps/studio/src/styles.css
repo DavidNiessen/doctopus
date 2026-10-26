@@ -1,11 +1,11 @@
 :root {
-  --bg: light-dark(#ffffff, #090d0d);
-  --surface: light-dark(#f8faf9, #171b19);
-  --subtle: light-dark(#f0f4f2, #0d1712);
-  --border: light-dark(#e5e9e7, #262a27);
-  --text: light-dark(#3f4945, #ced3d0);
-  --muted: light-dark(#626e68, #9fa3a0);
-  --heading: light-dark(#17211c, #f8faf9);
+  --bg: light-dark(#ffffff, #121017);
+  --surface: light-dark(#f7f5fc, #1c1824);
+  --subtle: light-dark(#eee9f8, #272132);
+  --border: light-dark(#dfd9eb, #383043);
+  --text: light-dark(#403b4d, #dad4e5);
+  --muted: light-dark(#6e657c, #aea2bf);
+  --heading: light-dark(#211a30, #f3edf9);
   --accent-text: light-dark(#087a50, #07c983);
   --action-bg: #087a50;
   --accent-surface: light-dark(#eaf8f0, #0b261b);
@@ -324,10 +324,10 @@ h2 {
 }
 .primary {
   background: var(--action-bg);
-  color: white;
+  color: var(--action-text, #fff);
 }
 .primary:hover {
-  background: color-mix(in srgb, var(--action-bg) 88%, #000);
+  background: var(--action-hover);
 }
 .secondary {
   background: var(--bg);
@@ -508,7 +508,7 @@ code {
 }
 .login-mark {
   font-size: 2.5rem;
-  color: white;
+  color: var(--action-text, #fff);
   background: var(--action-bg);
   border-radius: 13px;
   width: 58px;

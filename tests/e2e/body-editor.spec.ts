@@ -1,3 +1,4 @@
+import { enterBodyField } from '../helpers/request-forms.js';
 import { openSchemaControls } from '../helpers/request-forms.js';
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
@@ -12,9 +13,14 @@ test('body fields retain exact numbers, protect snippet secrets and send the edi
   );
   await page.getByRole('button', { name: 'Try now', exact: true }).click();
   const playground = page.getByLabel('API playground');
+  await expect(playground).toBeVisible();
+  if (await playground.getByLabel('bearer credential', { exact: true }).count())
+    await playground
+      .getByLabel('bearer credential', { exact: true })
+      .fill('demo-token');
   await playground.locator('.playground-request-example > summary').click();
   const raw =
-    '{"name":"before","enabled":false,"count":0,"id":9007199254740993,"mode":"auto","note":"hello","options":["cat"],"metadata":{"precise":1.234567890123456789},"password":"fixture-body-password","responseOnly":"retained-read-only-value","custom":{"huge":1e400},"fixed":"fixed"}';
+    '{"name":"before","enabled":false,"count":0,"id":9007199254740993,"mode":"auto","note":"hello","options":["cat"],"metadata":{"precise":1.234567890123456789,"huge":1e400},"password":"fixture-body-password","responseOnly":"retained-read-only-value","fixed":"fixed"}';
   await playground
     .getByRole('group', { name: 'Request body editor', exact: true })
     .getByRole('button', { name: 'JSON', exact: true })
@@ -60,10 +66,10 @@ test('body fields retain exact numbers, protect snippet secrets and send the edi
   await playground
     .getByLabel('Use null for body note', { exact: true })
     .check();
-  await playground.getByLabel('Include body optional', { exact: true }).check();
+  await enterBodyField(playground, 'optional');
   await expect(
     playground.getByLabel('Body optional', { exact: true }),
-  ).toHaveValue('optional-default');
+  ).toHaveValue('example');
   await playground.getByLabel('Body optional', { exact: true }).fill('');
   await playground
     .getByRole('button', { name: 'Edit body options as JSON', exact: true })
@@ -100,7 +106,6 @@ test('body fields retain exact numbers, protect snippet secrets and send the edi
     count: 0,
     mode: 'manual',
     note: null,
-    optional: '',
     options: ['cat', 'dog'],
     responseOnly: 'retained-read-only-value',
   });
@@ -159,6 +164,14 @@ test('invalid drafts can return to JSON without changing the last valid body', a
   );
   await page.getByRole('button', { name: 'Try now', exact: true }).click();
   const playground = page.getByLabel('API playground');
+  await expect(playground).toBeVisible();
+  if (await playground.getByLabel('bearer credential', { exact: true }).count())
+    await playground
+      .getByLabel('bearer credential', { exact: true })
+      .fill('demo-token');
+  await playground
+    .getByLabel('bearer credential', { exact: true })
+    .fill('demo-token');
   await playground.locator('.playground-request-example > summary').click();
   await openSchemaControls(playground);
   await playground.getByLabel('Body count', { exact: true }).fill('-');
@@ -180,12 +193,17 @@ test('invalid drafts can return to JSON without changing the last valid body', a
     .click();
   await playground
     .getByLabel('Request body', { exact: true })
-    .fill('{"name":"a","name":"b"}');
+    .fill('{"name":"a","name":"b","enabled":false,"count":0,"id":1}');
   await expect(
     playground.getByRole('button', { name: 'Form', exact: true }),
   ).toBeDisabled();
   await expect(
     playground.getByText('Duplicate JSON properties require the raw editor.'),
   ).toBeVisible();
-  await expect(playground.locator('pre')).toContainText('YOUR_REQUEST_BODY');
+  await expect(
+    playground.getByRole('button', { name: 'Send request' }),
+  ).toBeDisabled();
+  await expect(playground.locator('.request-validation')).toContainText(
+    'Duplicate JSON properties are not allowed',
+  );
 });

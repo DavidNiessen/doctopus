@@ -79,7 +79,7 @@
   color: var(--muted);
 }
 .header-actions > a:last-of-type {
-  color: white;
+  color: var(--action-text, #fff);
   background: var(--action-bg);
   padding: 8px 12px;
   border-radius: 12px;
@@ -309,12 +309,12 @@
 }
 .try-now,
 .request-url-bar .url-send {
-  background: #2563eb;
-  color: #fff;
+  background: var(--action-bg);
+  color: var(--action-text, #fff);
 }
 .try-now:hover,
 .request-url-bar .url-send:hover {
-  background: #1d4ed8;
+  background: var(--action-hover);
 }
 .method-badge.get {
   color: #087444;

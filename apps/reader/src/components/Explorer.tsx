@@ -20,8 +20,6 @@ import {
   isFormMediaType,
   toFetchRequest,
   isMultipartMediaType,
-  canSerializeEmptyParameter,
-  redactAdditionalParameters,
 } from '@davidniessen/doctopus-explorer';
 import type {
   PreparedRequest,
@@ -36,11 +34,8 @@ import { CopyButton } from './CopyButton.js';
 import { PanelResizeHandle } from './PanelResizeHandle.js';
 import { RequestUrlBar } from './RequestUrlBar.js';
 import { ParameterInput } from './ParameterInput.js';
+import { requestFields } from '../request-fields.js';
 import { ParameterForm } from './ParameterForm.js';
-import {
-  createParameterDrafts,
-  editParameterDraft,
-} from '../parameter-drafts.js';
 import { MockResponseControls } from './MockResponseControls.js';
 
 import { AuthField } from './AuthField.js';
@@ -132,15 +127,6 @@ export function Explorer({
   const [origin, setOrigin] = useState('');
   useEffect(() => setOrigin(location.origin), []);
   const [server] = useState(operation.servers[0] ?? 'https://api.example.com');
-  const [parameterDrafts, setParameterDrafts] = useState(createParameterDrafts);
-  const additionalParameters = parameterDrafts.rows;
-  const previewAdditionalParameters = useMemo(
-    () => redactAdditionalParameters(additionalParameters),
-    [additionalParameters],
-  );
-  const [removedParameters, setRemovedParameters] = useState<
-    ReadonlySet<string>
-  >(() => new Set());
   const [parameters, setParameters] = useState<Record<string, string>>(() =>
     Object.fromEntries(
       operation.parameters
@@ -163,35 +149,15 @@ export function Explorer({
         }),
     ),
   );
-  const emptyParameters = useMemo(
+  const parameterPresence = useMemo(
     () =>
-      new Set(
-        operation.parameters
-          .filter(
-            (parameter) =>
-              parameter.required &&
-              canSerializeEmptyParameter(parameter, {
-                schemas: api.schemas,
-                openapiVersion: api.openapiVersion,
-              }),
-          )
-          .map((parameter) => `${parameter.in}:${parameter.name}`),
+      Object.fromEntries(
+        operation.parameters.map((parameter) => {
+          const key = `${parameter.in}:${parameter.name}`;
+          return [key, !!parameters[key]?.trim()];
+        }),
       ),
-    [operation, api.schemas, api.openapiVersion],
-  );
-  const [parameterPresence, setParameterPresence] = useState<
-    Record<string, boolean>
-  >(() =>
-    Object.fromEntries(
-      operation.parameters
-        .filter(
-          (parameter) =>
-            parameter.required &&
-            parameters[`${parameter.in}:${parameter.name}`] === '' &&
-            emptyParameters.has(`${parameter.in}:${parameter.name}`),
-        )
-        .map((parameter) => [`${parameter.in}:${parameter.name}`, true]),
-    ),
+    [operation, parameters],
   );
   const qualifiedParameterNames = useMemo(() => {
     const names = new Set<string>(),
@@ -287,9 +253,43 @@ export function Explorer({
       operation.security.flatMap((alternative) => Object.keys(alternative)),
     ),
   ];
+  const fieldState = useMemo(
+    () =>
+      requestFields(
+        operation,
+        parameters,
+        body,
+        contentType,
+        bodyFormat,
+        api.schemas,
+        api.openapiVersion?.startsWith('3.0') ?? false,
+        files,
+      ),
+    [
+      operation,
+      parameters,
+      body,
+      contentType,
+      bodyFormat,
+      api.schemas,
+      api.openapiVersion,
+      files,
+    ],
+  );
+  const missingAuthentication =
+    !mockOnly &&
+    operation.security.length > 0 &&
+    !operation.security.some((alternative) =>
+      Object.keys(alternative).every((name) => !!credentials[name]?.trim()),
+    );
+  const requestErrors = [
+    ...fieldState.errors,
+    ...(missingAuthentication ? ['Authentication is required.'] : []),
+  ];
   const preview = useMemo(() => {
     try {
       if (bodyFormError) throw new Error(bodyFormError);
+      if (fieldState.errors.length) throw new Error(fieldState.errors[0]);
       const placeholderCredentials = Object.fromEntries(
         authNames.map((name) => [name, 'YOUR_CREDENTIAL']),
       );
@@ -299,8 +299,7 @@ export function Explorer({
         openapiVersion: api.openapiVersion,
         parameters,
         parameterPresence,
-        additionalParameters: previewAdditionalParameters,
-        body,
+        body: fieldState.body,
         bodyFormat,
         files,
         partHeaders,
@@ -313,7 +312,7 @@ export function Explorer({
         if (bodyFormat === 'json' && requestMedia) {
           try {
             const redacted = redactJsonBody(
-              body,
+              fieldState.body,
               {
                 schema: requestMedia.schema,
                 schemas: api.schemas,
@@ -343,8 +342,7 @@ export function Explorer({
     server,
     parameters,
     parameterPresence,
-    previewAdditionalParameters,
-    body,
+    fieldState,
     contentType,
     accept,
     bodyFormError,
@@ -363,7 +361,6 @@ export function Explorer({
         server,
         parameters,
         parameterPresence,
-        additionalParameters: previewAdditionalParameters,
         schemas: api.schemas,
         openapiVersion: api.openapiVersion,
         credentials: Object.fromEntries(
@@ -380,7 +377,6 @@ export function Explorer({
     server,
     parameters,
     parameterPresence,
-    previewAdditionalParameters,
     credentials,
     authNames.join(','),
   ]);
@@ -405,6 +401,10 @@ export function Explorer({
   }
   async function execute() {
     setError('');
+    if (requestErrors.length || bodyFormError) {
+      setError(requestErrors[0] ?? bodyFormError);
+      return;
+    }
     if (mockOnly) {
       try {
         showMockResponse(
@@ -438,8 +438,7 @@ export function Explorer({
         openapiVersion: api.openapiVersion,
         parameters,
         parameterPresence,
-        additionalParameters,
-        body,
+        body: fieldState.body,
         bodyFormat,
         files,
         partHeaders,
@@ -635,6 +634,7 @@ export function Explorer({
           disabled={
             (relay.enabled && !relay.policy) ||
             !!bodyFormError ||
+            requestErrors.length > 0 ||
             (isMultipartMediaType(contentType) && !!preview.error)
           }
           onSend={() => {
@@ -677,6 +677,16 @@ export function Explorer({
                   relay.select(enabled);
                 }}
               />
+            )}
+            {requestErrors.length > 0 && (
+              <div className="request-validation" role="status">
+                <p>{t('request.requiredFields')}</p>
+                <ul>
+                  {requestErrors.map((message) => (
+                    <li key={message}>{message}</li>
+                  ))}
+                </ul>
+              </div>
             )}
             {authNames.length > 0 && (
               <details className="auth-fields request-form-section" open>
@@ -778,22 +788,12 @@ export function Explorer({
                         compact
                         parameter={parameter}
                         value={parameters[key] ?? ''}
-                        presence={parameterPresence[key]}
-                        allowEmpty={emptyParameters.has(key)}
                         qualified={qualifiedParameterNames.has(parameter.name)}
                         onChange={(value) =>
                           setParameters((previous) => ({
                             ...previous,
                             [key]: value,
                           }))
-                        }
-                        onPresence={(value) =>
-                          setParameterPresence((previous) => {
-                            const next = { ...previous };
-                            if (value === undefined) delete next[key];
-                            else next[key] = value;
-                            return next;
-                          })
                         }
                       />
                     );
@@ -814,58 +814,10 @@ export function Explorer({
                       )
                     ),
                 )}
-                removed={removedParameters}
                 values={parameters}
-                presence={parameterPresence}
-                empty={emptyParameters}
                 qualified={qualifiedParameterNames}
-                rows={additionalParameters.filter((row) => row.in === location)}
                 onValue={(key, value) =>
                   setParameters((previous) => ({ ...previous, [key]: value }))
-                }
-                onPresence={(key, value) =>
-                  setParameterPresence((previous) => {
-                    const next = { ...previous };
-                    if (value === undefined) delete next[key];
-                    else next[key] = value;
-                    return next;
-                  })
-                }
-                onRemoveDeclared={(key) => {
-                  setRemovedParameters(
-                    (previous) => new Set([...previous, key]),
-                  );
-                  setParameterPresence((previous) => ({
-                    ...previous,
-                    [key]: false,
-                  }));
-                }}
-                onRestore={() => {
-                  setRemovedParameters(
-                    (previous) =>
-                      new Set(
-                        [...previous].filter(
-                          (key) => !key.startsWith(location + ':'),
-                        ),
-                      ),
-                  );
-                  setParameterPresence((previous) => {
-                    const next = { ...previous };
-                    for (const key of removedParameters)
-                      if (key.startsWith(location + ':')) delete next[key];
-                    return next;
-                  });
-                }}
-                onEdit={(id, patch) =>
-                  setParameterDrafts((previous) =>
-                    editParameterDraft(previous, id, patch),
-                  )
-                }
-                onRemove={(id) =>
-                  setParameterDrafts((previous) => ({
-                    ...previous,
-                    rows: previous.rows.filter((row) => row.id !== id),
-                  }))
                 }
               />
             ))}

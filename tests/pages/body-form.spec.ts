@@ -1,111 +1,50 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-import {
-  addBodyField,
-  expandBodyFields,
-  addParameter,
-} from '../helpers/request-forms.js';
-
-test('request forms show schema metadata and optional fields, preserve exact JSON and keep mock options below examples', async ({
+test('body forms contain only declared fields and clearing required or optional values has explicit request behavior', async ({
   page,
 }) => {
   await page.goto('api/orbit/v1/create-project/?playground=open');
-  const playground = page.getByLabel('API playground', { exact: true });
+  const form = page.getByLabel('API playground', { exact: true });
+  const name = form.getByLabel('Body name', { exact: true }),
+    description = form.getByLabel('Body description', { exact: true }),
+    send = form.getByRole('button', { name: 'Send mock request', exact: true });
   await expect(
-    playground
-      .getByRole('group', { name: 'Request body editor', exact: true })
-      .getByRole('button'),
-  ).toHaveCount(2);
-  await expect(
-    playground.getByLabel('API server', { exact: true }),
+    form.getByRole('button', { name: /Add body field|Remove body field/ }),
   ).toHaveCount(0);
-  await expect(
-    playground.getByRole('button', { name: 'Form', exact: true }),
-  ).toHaveAttribute('aria-pressed', 'true');
-  await expect(
-    playground.getByLabel('Body name', { exact: true }),
-  ).toBeVisible();
-  await expect(
-    playground.getByLabel('Body description', { exact: true }),
-  ).not.toBeVisible();
-  await playground
-    .getByLabel('Body name', { exact: true })
-    .fill('Form project');
-  await expandBodyFields(playground);
-  await playground
-    .getByRole('button', { name: 'Remove body field 2', exact: true })
-    .click();
-  const field = await addBodyField(playground);
-  await field.locator('.body-form-key').fill('precise');
-  await field.locator('.request-type-select').selectOption('number');
-  await field
-    .locator('.request-field-control > input')
-    .fill('900719925474099312345');
-  await playground
-    .getByLabel('Include body field 2', { exact: true })
-    .uncheck();
-  await expect(
-    playground.getByLabel('Body metadata', { exact: true }),
-  ).toHaveValue('{"region":"eu-west"}');
-  await playground.getByLabel('Include body field 2', { exact: true }).check();
-  await playground.getByRole('button', { name: 'JSON', exact: true }).click();
-  const body = playground.getByLabel('Request body', { exact: true });
-  await expect(body).toHaveValue(/900719925474099312345/);
-  expect(JSON.parse(await body.inputValue())).toMatchObject({
-    name: 'Form project',
-    metadata: { region: 'eu-west' },
-  });
-  await expect(body).not.toHaveValue(/description/);
-  await playground.locator('.playground-request-example > summary').click();
-  await expect(
-    playground.locator('.playground-request-example pre'),
-  ).toContainText('900719925474099312345');
+  await expect(form.locator('.parameter-presence')).toHaveCount(0);
+  await name.fill('');
+  await expect(send).toBeDisabled();
+  await expect(name).toHaveAttribute('aria-invalid', 'true');
+  await expect(form.locator('.request-validation')).toContainText(
+    'Body.name is required.',
+  );
+  await name.fill('Form project');
+  await description.fill('');
+  await form.getByRole('button', { name: 'JSON', exact: true }).click();
+  const body = form.getByLabel('Request body', { exact: true });
+  expect(JSON.parse(await body.inputValue())).not.toHaveProperty('description');
+  await body.fill('{"name":"Form project","notInSpec":true}');
+  await expect(send).toBeDisabled();
+  await expect(form.locator('.request-validation')).toContainText(
+    'notInSpec is not defined',
+  );
+  await body.fill('{"name":"Form project"}');
+  await expect(send).toBeEnabled();
+  await send.click();
+  await expect(form.locator('.response-meta')).toContainText('201');
+  await form.locator('.playground-request-example > summary').click();
   expect(
-    await playground
+    await form
       .locator('.playground-request-example')
       .evaluate((element) => element.nextElementSibling?.textContent),
   ).toContain('Mock response options');
-  await playground
-    .getByRole('button', { name: 'Send mock request', exact: true })
-    .click();
-  await expect(playground.locator('.response-meta')).toContainText('201');
 });
-
-test('form drafts validate without table UI or redundant hints and section sizing stays consistent', async ({
+test('spec-only request forms fit compact and desktop layouts with accessible validation', async ({
   page,
 }) => {
   await page.goto('api/orbit/v1/create-project/?playground=open');
-  const playground = page.getByLabel('API playground', { exact: true });
-  const field = await addBodyField(playground);
-  await field.locator('.body-form-key').fill('name');
-  await expect(playground.getByRole('alert')).toContainText(
-    'Duplicate body field',
-  );
-  await expect(
-    playground.getByRole('button', { name: 'Send mock request', exact: true }),
-  ).toBeDisabled();
-  await field.locator('.body-form-key').fill('enabled');
-  await field.locator('.request-type-select').selectOption('boolean');
-  await field.locator('.request-field-control > input').fill('unfinished');
-  await expect(playground.getByRole('alert')).toContainText('valid boolean');
-  await field.locator('.request-field-control > input').fill('true');
-  await expect(playground.getByRole('alert')).toHaveCount(0);
-  await addParameter(playground, 'query');
-  await playground
-    .getByLabel('query parameter name 1', { exact: true })
-    .fill('empty');
-  await expect(playground).not.toContainText('Sends an empty value.');
-  await playground
-    .getByLabel('query parameter value 1', { exact: true })
-    .fill('draft');
-  await playground
-    .getByLabel('Include additional query parameter 1', { exact: true })
-    .uncheck();
-  await expect(playground).not.toContainText('Omitted;');
-  await expect(playground.locator('.request-parameter-columns')).toHaveCount(0);
-  await expect(
-    playground.getByRole('button', { name: 'Table', exact: true }),
-  ).toHaveCount(0);
+  const form = page.getByLabel('API playground', { exact: true });
+  await form.getByLabel('Body name', { exact: true }).fill('');
   for (const width of [360, 855, 1280]) {
     await page.setViewportSize({ width, height: 800 });
     for (const colorScheme of ['light', 'dark'] as const) {
@@ -115,7 +54,7 @@ test('form drafts validate without table UI or redundant hints and section sizin
         colorScheme,
       );
       expect(
-        await playground.evaluate(
+        await form.evaluate(
           (element) => element.scrollWidth <= element.clientWidth,
         ),
       ).toBe(true);
@@ -125,12 +64,4 @@ test('form drafts validate without table UI or redundant hints and section sizin
       ).toEqual([]);
     }
   }
-  const headers = playground.locator(
-    '.request-parameter-section > summary, .playground-request-example > summary, .mock-response-controls > summary',
-  );
-  const geometry = await headers.evaluateAll((items) =>
-    items.map((item) => item.getBoundingClientRect()),
-  );
-  expect(new Set(geometry.map((rect) => rect.height)).size).toBe(1);
-  expect(new Set(geometry.map((rect) => rect.width)).size).toBe(1);
 });

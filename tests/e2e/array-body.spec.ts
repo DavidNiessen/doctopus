@@ -1,3 +1,4 @@
+import { enterBodyField } from '../helpers/request-forms.js';
 import {
   openSchemaControls,
   openRequestSettings,
@@ -16,6 +17,11 @@ test('array items support edits, additions and removal with precise requests and
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto(route);
   const playground = page.getByLabel('API playground');
+  await expect(playground).toBeVisible();
+  if (await playground.getByLabel('bearer credential', { exact: true }).count())
+    await playground
+      .getByLabel('bearer credential', { exact: true })
+      .fill('demo-token');
   await playground
     .getByRole('group', { name: 'Request body editor', exact: true })
     .getByRole('button', { name: 'JSON', exact: true })
@@ -55,12 +61,11 @@ test('array items support edits, additions and removal with precise requests and
   await playground
     .getByRole('button', { name: 'Add item to body members', exact: true })
     .click();
-  await playground
-    .getByLabel('Include body members[2].name', { exact: true })
-    .check();
+  await enterBodyField(playground, 'members[2].name');
   await playground
     .getByLabel('Body members[2].name', { exact: true })
     .fill('New member');
+  await playground.getByLabel('Body members[2].id', { exact: true }).fill('0');
   await playground
     .getByRole('button', { name: 'Add item to body matrix[1]', exact: true })
     .click();
@@ -218,6 +223,11 @@ test('root array bodies use referenced item fields and preserve exact batch requ
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto(route);
   const playground = page.getByLabel('API playground');
+  await expect(playground).toBeVisible();
+  if (await playground.getByLabel('bearer credential', { exact: true }).count())
+    await playground
+      .getByLabel('bearer credential', { exact: true })
+      .fill('demo-token');
   const media = 'application/vnd.doctopus.list+json';
   await openRequestSettings(playground);
   await playground
@@ -252,10 +262,11 @@ test('root array bodies use referenced item fields and preserve exact batch requ
   await playground
     .getByRole('button', { name: 'Add item to body $', exact: true })
     .click();
-  await playground.getByLabel('Include body [1].name', { exact: true }).check();
+  await enterBodyField(playground, '[1].name');
   await playground
     .getByLabel('Body [1].name', { exact: true })
     .fill('New batch member');
+  await playground.getByLabel('Body [1].id', { exact: true }).fill('0');
   await playground
     .getByLabel('bearer credential', { exact: true })
     .fill('demo-token');
@@ -309,7 +320,7 @@ test('root array bodies use referenced item fields and preserve exact batch requ
   await playground
     .getByRole('button', { name: 'Add item to body $', exact: true })
     .click();
-  await playground.getByLabel('Include body [0].name', { exact: true }).check();
+  await enterBodyField(playground, '[0].name');
   await playground
     .getByLabel('Body [0].name', { exact: true })
     .fill('Created from empty');

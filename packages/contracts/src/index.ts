@@ -319,6 +319,8 @@ export {
   readableAccent,
   resolvePalette,
   themePresets,
+  themePalettes,
+  themeCssVariables,
 } from './theme.js';
 
 export { pageMetadata } from './metadata.js';

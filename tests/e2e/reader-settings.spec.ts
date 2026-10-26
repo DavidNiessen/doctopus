@@ -32,10 +32,8 @@ test('prepared themes and classic layout persist without changing project defaul
   await dialog
     .getByRole('combobox', { name: 'Documentation layout', exact: true })
     .selectOption('classic');
-  await dialog
-    .getByRole('combobox', { name: 'Preset', exact: true })
-    .selectOption('ocean');
-  await expect(dialog.locator('input')).toHaveCount(0);
+  await dialog.locator('input[type="radio"][value="ocean"]').check();
+  await expect(dialog.locator('input:not([type=radio])')).toHaveCount(0);
   await expect(dialog.locator('option[value=custom]')).toHaveCount(0);
   await expect(page.locator('.docs-shell')).toHaveCSS('--accent', '#2563eb');
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
@@ -65,9 +63,7 @@ test('prepared themes and classic layout persist without changing project defaul
   );
   await expect(page.locator('.docs-shell')).toHaveCSS('--accent', '#2563eb');
   const again = await settings(page);
-  await again
-    .getByRole('combobox', { name: 'Preset', exact: true })
-    .selectOption('published');
+  await again.locator('input[type="radio"][value="published"]').check();
   await expect(page.locator('.docs-shell')).toHaveCSS(
     '--accent',
     originalAccent,
@@ -132,9 +128,7 @@ test('response editor follows reader appearance and presets across tabs without 
   const shellBackground = () =>
     page
       .locator('.docs-shell')
-      .evaluate((element) =>
-        getComputedStyle(element).getPropertyValue('--bg').trim(),
-      );
+      .evaluate((element) => getComputedStyle(element).backgroundColor);
   const keyColor = () =>
     editor
       .locator('.view-lines span')
@@ -154,9 +148,7 @@ test('response editor follows reader appearance and presets across tabs without 
     .getByRole('button', { name: 'Expand all', exact: true })
     .click();
   const lightKey = await keyColor();
-  await dialog
-    .getByRole('combobox', { name: 'Preset', exact: true })
-    .selectOption('ocean');
+  await dialog.locator('input[type="radio"][value="ocean"]').check();
   await expect(page.locator('.docs-shell')).toHaveCSS('--accent', '#2563eb');
   await expect.poll(keyColor).not.toBe(lightKey);
   await playground
@@ -167,8 +159,8 @@ test('response editor follows reader appearance and presets across tabs without 
     .selectOption('dark');
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
   await expect(editor).toHaveClass(/vs-dark/);
-  expect(await shellBackground()).toBe('#090d0d');
-  await expect(editor).toHaveCSS('background-color', 'rgb(9, 13, 13)');
+  expect(await shellBackground()).toBe('rgb(11, 20, 33)');
+  await expect(editor).toHaveCSS('background-color', 'rgb(11, 20, 33)');
   await expect(
     editor.locator('.codicon-folding-collapsed').first(),
   ).toBeVisible();
@@ -200,13 +192,13 @@ test('response editor follows reader appearance and presets across tabs without 
   await expect(fullscreen.locator('.monaco-editor')).toHaveClass(/\bvs\b/);
   await expect(fullscreen.locator('.monaco-editor')).toHaveCSS(
     'background-color',
-    'rgb(255, 255, 255)',
+    'rgb(244, 248, 253)',
   );
   await page.emulateMedia({ colorScheme: 'dark' });
   await expect(fullscreen.locator('.monaco-editor')).toHaveClass(/vs-dark/);
   await expect(fullscreen.locator('.monaco-editor')).toHaveCSS(
     'background-color',
-    'rgb(9, 13, 13)',
+    'rgb(11, 20, 33)',
   );
   await page.keyboard.press('Escape');
   await expect(playground).toBeVisible();

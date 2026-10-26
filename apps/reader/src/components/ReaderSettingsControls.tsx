@@ -1,13 +1,17 @@
+import type { Theme } from '@davidniessen/doctopus-contracts';
+import { ThemePicker } from './ThemePicker.js';
 import { useUi } from '../ui-translation.js';
 import type { ReaderPreferences } from '../reader-preferences.js';
 export function ReaderSettingsControls({
   value,
   onChange,
   stored,
+  publishedTheme,
 }: {
   value: ReaderPreferences;
   onChange: (value: ReaderPreferences) => void;
   stored: boolean;
+  publishedTheme?: Theme | undefined;
 }) {
   const t = useUi();
   const change = (update: Partial<ReaderPreferences>) =>
@@ -20,6 +24,11 @@ export function ReaderSettingsControls({
       <p className="settings-privacy">
         {stored ? t('settings.saved') : t('settings.unavailable')}
       </p>
+      <ThemePicker
+        value={value.theme}
+        publishedTheme={publishedTheme}
+        onChange={(theme) => change({ theme })}
+      />
       <div className="reader-settings-grid">
         <label>
           {t('settings.mode')}
@@ -32,23 +41,6 @@ export function ReaderSettingsControls({
             <option value="system">{t('settings.system')}</option>
             <option value="light">{t('settings.light')}</option>
             <option value="dark">{t('settings.dark')}</option>
-          </select>
-        </label>
-        <label>
-          {t('appearance.preset')}
-          <select
-            value={value.theme}
-            onChange={(event) =>
-              change({
-                theme: event.target.value as ReaderPreferences['theme'],
-              })
-            }
-          >
-            <option value="published">{t('appearance.restore')}</option>
-            <option value="mint">Mint</option>
-            <option value="ocean">Ocean</option>
-            <option value="violet">Violet</option>
-            <option value="neutral">Neutral</option>
           </select>
         </label>
         <label>

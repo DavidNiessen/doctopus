@@ -65,6 +65,11 @@ test('relay is an explicit choice and preserves URL, confirmation, response fold
   });
   await page.goto(pageUrl);
   const playground = page.getByLabel('API playground');
+  await expect(playground).toBeVisible();
+  if (await playground.getByLabel('bearer credential', { exact: true }).count())
+    await playground
+      .getByLabel('bearer credential', { exact: true })
+      .fill('demo-token');
   await playground
     .getByLabel('bearer credential', { exact: true })
     .fill('relay-secret');
@@ -121,12 +126,12 @@ test('relay is an explicit choice and preserves URL, confirmation, response fold
       await page.getByRole('button', { name: 'Switch to dark theme' }).click();
       await page.getByRole('button', { name: 'Try now', exact: true }).click();
       await playground.getByLabel('Request transport').selectOption('relay');
-      await expect(
-        playground.getByRole('button', { name: 'Send request' }),
-      ).toBeEnabled();
       await playground
         .getByLabel('bearer credential', { exact: true })
         .fill('relay-secret');
+      await expect(
+        playground.getByRole('button', { name: 'Send request' }),
+      ).toBeEnabled();
     }
     expect(
       (await new AxeBuilder({ page }).include('.playground-dialog').analyze())
@@ -160,6 +165,11 @@ test('relay denial blocks Send, supports an explicit access recheck and returns 
   });
   await page.goto(pageUrl);
   const playground = page.getByLabel('API playground');
+  await expect(playground).toBeVisible();
+  if (await playground.getByLabel('bearer credential', { exact: true }).count())
+    await playground
+      .getByLabel('bearer credential', { exact: true })
+      .fill('demo-token');
   await playground.getByLabel('Request transport').selectOption('relay');
   await expect(playground.getByRole('alert')).toHaveText(
     /Sign in to the documentation server/,
@@ -196,6 +206,11 @@ test('closing the modal cancels a pending relay exchange without an automatic re
   });
   await page.goto(pageUrl);
   const playground = page.getByLabel('API playground');
+  await expect(playground).toBeVisible();
+  if (await playground.getByLabel('bearer credential', { exact: true }).count())
+    await playground
+      .getByLabel('bearer credential', { exact: true })
+      .fill('demo-token');
   await playground
     .getByLabel('bearer credential', { exact: true })
     .fill('relay-secret');
