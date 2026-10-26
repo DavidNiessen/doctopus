@@ -149,6 +149,9 @@ test('array reindexing discards incomplete drafts and mode changes restore valid
   const playground = page.getByLabel('API playground'),
     send = playground.getByRole('button', { name: 'Send request' });
   await playground
+    .getByLabel('bearer credential', { exact: true })
+    .fill('demo-token');
+  await playground
     .getByRole('group', { name: 'Request body editor', exact: true })
     .getByRole('button', { name: 'JSON', exact: true })
     .click();
