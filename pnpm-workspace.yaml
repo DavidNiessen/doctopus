@@ -11,3 +11,4 @@ overrides:
   katex: 0.18.2
   dompurify: 3.4.17
   body-parser: 2.4.0
+  re2js: 2.8.7

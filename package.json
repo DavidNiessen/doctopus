@@ -2,7 +2,7 @@
   "name": "doctopus",
   "version": "0.2.0-candidate.7",
   "private": true,
-  "description": "Doctopus — beautiful, self-hosted API documentation with an interactive playground and framework integrations.",
+  "description": "Doctopus \u2014 beautiful, self-hosted API documentation with an interactive playground and framework integrations.",
   "type": "module",
   "engines": {
     "node": ">=24.22.1 <25",
@@ -104,6 +104,7 @@
   "overrides": {
     "katex": "0.18.2",
     "dompurify": "3.4.17",
-    "body-parser": "2.4.0"
+    "body-parser": "2.4.0",
+    "re2js": "2.8.7"
   }
 }
