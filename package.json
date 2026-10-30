@@ -2,7 +2,7 @@
   "name": "doctopus",
   "version": "0.2.0-candidate.7",
   "private": true,
-  "description": "Doctopus \u2014 beautiful, self-hosted API documentation with an interactive playground and framework integrations.",
+  "description": "Doctopus — beautiful, self-hosted API documentation with an interactive playground and framework integrations.",
   "type": "module",
   "engines": {
     "node": ">=24.22.1 <25",
