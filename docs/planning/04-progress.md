@@ -1,8 +1,14 @@
 # Implementation progress
 
-Updated: 2026-10-26. **Approximately 99% complete; published prerelease.** This is an engineering estimate of implemented scope and remaining launch work, not measured test coverage. Independent reviews explicitly deferred by the owner remain unfinished; this is not a claim of stable production approval. The binding scope and release checklist remain in the [delivery plan](03-delivery-and-launch.md).
+Updated: 2026-10-30. **Approximately 99% complete; published prerelease.** This is an engineering estimate of implemented scope and remaining launch work, not measured test coverage. Independent reviews explicitly deferred by the owner remain unfinished; this is not a claim of stable production approval. The binding scope and release checklist remain in the [delivery plan](03-delivery-and-launch.md).
 
-## Complete themes and spec-driven request forms
+## Theme startup and classic navigation
+
+Violet is now the public demo's published default. Reader, direct Spring/Node references and Studio restore saved palettes and appearance through a small same-origin blocking script before the page paints, while preserving no-JavaScript reading and the existing content-security policy. Ember and High contrast replace Forest and Graphite; legacy IDs remain accepted and saved choices resolve to their replacements. Prepared High contrast reading text reaches at least 7:1 against every reading surface. Classic headers now use the full reference width, and hidden navigation items reserve no space.
+
+Local validation passes formatting, lint, types, all 1,094 source tests, 11 focused Reader/framework journeys, all 21 mock-demo journeys and five Studio presentation journeys. Delayed-application tests verify saved appearance before React starts, and alignment checks cover wide and narrow viewports. The scoped visual review and design documentation handoffs are complete. Pull-request and deployment runs provide the final hosted acceptance evidence; independent launch reviews remain deferred.
+
+## Previous complete themes and spec-driven request forms
 
 The Reader now offers complete Violet, Ocean, Forest and Graphite palettes with matching canvases, surfaces, text, accents, controls and code-editor colors. Site default preserves published branding; System remains the initial appearance and follows OS changes, including the pre-rendered page before JavaScript. Studio provides the same four palettes with its own persisted appearance preference.
 

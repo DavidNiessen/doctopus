@@ -22,7 +22,7 @@ public class DoctopusProperties {
   private String title;
   /** Optional documentation site description for direct mode. */
   private String description;
-  /** Prepared theme for direct mode: violet, mint, ocean or neutral. */
+  /** Prepared theme for direct mode: violet, ocean, ember or contrast (legacy mint/neutral remain accepted). */
   private String theme;
   /** Initial direct-mode layout: modern or classic. Visitor preferences take precedence. */
   private String layout;
@@ -70,9 +70,9 @@ public class DoctopusProperties {
   public String getDescription() { return description; }
   /** @param value Optional documentation site description for direct mode. */
   public void setDescription(String value) { description = value; }
-  /** @return Prepared theme for direct mode: violet, mint, ocean or neutral. */
+  /** @return Prepared theme for direct mode: violet, ocean, ember or contrast (legacy mint/neutral remain accepted). */
   public String getTheme() { return theme; }
-  /** @param value Prepared theme for direct mode: violet, mint, ocean or neutral. */
+  /** @param value Prepared theme for direct mode: violet, ocean, ember or contrast (legacy mint/neutral remain accepted). */
   public void setTheme(String value) { theme = value; }
   /** @return Initial direct-mode layout: modern or classic. Visitor preferences take precedence. */
   public String getLayout() { return layout; }

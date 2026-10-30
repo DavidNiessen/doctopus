@@ -39,6 +39,7 @@ export function readableAccent(
   mode: 'light' | 'dark',
   colors?: Pick<Palette, 'surface' | 'background'> &
     Partial<Pick<Palette, 'subtle'>>,
+  minimum = 5,
 ): string {
   const key = JSON.stringify([
     accent,
@@ -46,10 +47,11 @@ export function readableAccent(
     colors?.surface,
     colors?.background,
     colors?.subtle,
+    minimum,
   ]);
   const cached = readableAccentCache.get(key);
   if (cached) return cached;
-  const result = computeReadableAccent(accent, mode, colors);
+  const result = computeReadableAccent(accent, mode, colors, minimum);
   if (key.length <= 256) {
     if (readableAccentCache.size >= 256)
       readableAccentCache.delete(readableAccentCache.keys().next().value!);
@@ -62,6 +64,7 @@ function computeReadableAccent(
   mode: 'light' | 'dark',
   colors?: Pick<Palette, 'surface' | 'background'> &
     Partial<Pick<Palette, 'subtle'>>,
+  minimum = 5,
 ): string {
   const palette = mode === 'light' ? light : dark;
   const surface = colors?.surface ?? palette.surface;
@@ -80,20 +83,31 @@ function computeReadableAccent(
   )[0]!;
   for (let step = 0; step <= 100; step++) {
     const candidate = blend(accent, destination, step / 100);
-    if (surfaces.every((value) => contrastRatio(candidate, value) >= 5))
+    if (surfaces.every((value) => contrastRatio(candidate, value) >= minimum))
       return candidate;
   }
   return destination;
 }
 
+export const themeNames = ['violet', 'ocean', 'ember', 'contrast'] as const;
+export type ThemeName = (typeof themeNames)[number];
+/** Legacy configuration and saved-preference IDs resolve to their replacements. */
+export function normalizeThemeName(value: unknown): ThemeName | undefined {
+  if (value === 'mint') return 'ember';
+  if (value === 'neutral') return 'contrast';
+  return themeNames.includes(value as ThemeName)
+    ? (value as ThemeName)
+    : undefined;
+}
 export const themePresets = {
-  mint: '#07c983',
-  ocean: '#2563eb',
   violet: '#7c3aed',
-  neutral: '#526071',
+  ocean: '#2563eb',
+  ember: '#c24c23',
+  contrast: '#003366',
+  mint: '#c24c23',
+  neutral: '#003366',
 } as const;
-/** Complete light/dark themes. Existing preset IDs remain valid configuration tokens. */
-export const themePalettes = {
+const palettes = {
   violet: {
     light: {
       background: '#ffffff',
@@ -134,50 +148,52 @@ export const themePalettes = {
       heading: '#edf5ff',
     },
   },
-  mint: {
+  ember: {
     light: {
-      background: '#f5f9f5',
-      surface: '#eaf2eb',
-      subtle: '#dde9df',
-      border: '#cbdacf',
-      text: '#344b3e',
-      muted: '#4b6354',
-      heading: '#183323',
+      background: '#fff9f2',
+      surface: '#f8eee2',
+      subtle: '#f0dfca',
+      border: '#d8bfa2',
+      text: '#4a3527',
+      muted: '#705039',
+      heading: '#2b180d',
     },
     dark: {
-      background: '#0c1611',
-      surface: '#14221a',
-      subtle: '#1d3024',
-      border: '#304a39',
-      text: '#cfdfd3',
-      muted: '#9bb7a2',
-      heading: '#edf7ef',
+      background: '#1b1110',
+      surface: '#281a16',
+      subtle: '#35221b',
+      border: '#634637',
+      text: '#eedacc',
+      muted: '#c9a58c',
+      heading: '#fff2e6',
     },
   },
-  neutral: {
+  contrast: {
     light: {
-      background: '#f8f7f4',
-      surface: '#efede8',
-      subtle: '#e6e2db',
-      border: '#d5d0c7',
-      text: '#46433e',
-      muted: '#625d54',
-      heading: '#24221e',
+      background: '#ffffff',
+      surface: '#f7f7f7',
+      subtle: '#ededed',
+      border: '#666666',
+      text: '#111111',
+      muted: '#333333',
+      heading: '#000000',
     },
     dark: {
-      background: '#181817',
-      surface: '#232321',
-      subtle: '#2e2e2a',
-      border: '#41413b',
-      text: '#deddd5',
-      muted: '#b1aea3',
-      heading: '#f5f3eb',
+      background: '#000000',
+      surface: '#080808',
+      subtle: '#141414',
+      border: '#999999',
+      text: '#ffffff',
+      muted: '#dedede',
+      heading: '#ffffff',
     },
   },
-} as const satisfies Record<
-  keyof typeof themePresets,
-  { light: Palette; dark: Palette }
->;
+} as const satisfies Record<ThemeName, { light: Palette; dark: Palette }>;
+export const themePalettes = {
+  ...palettes,
+  mint: palettes.ember,
+  neutral: palettes.contrast,
+};
 const light: Palette = themePalettes.violet.light;
 const dark: Palette = themePalettes.violet.dark;
 export function resolvePalette(
@@ -212,6 +228,9 @@ export function themeCssVariables(theme: {
   const light = resolvePalette(theme, 'light'),
     dark = resolvePalette(theme, 'dark');
   const accent = theme.accent ?? themePresets[theme.preset ?? 'violet'];
+  const minimum = normalizeThemeName(theme.preset) === 'contrast' ? 7 : 5;
+  const readable = (mode: 'light' | 'dark', palette: Palette) =>
+    readableAccent(accent, mode, palette, minimum);
   const roles = {
     bg: 'background',
     surface: 'surface',
@@ -221,7 +240,7 @@ export function themeCssVariables(theme: {
     muted: 'muted',
     heading: 'heading',
   } as const;
-  const darkAction = readableAccent(accent, 'dark', dark);
+  const darkAction = readable('dark', dark);
   const darkActionText =
     contrastRatio('#111111', darkAction) >= contrastRatio('#ffffff', darkAction)
       ? '#111111'
@@ -234,12 +253,12 @@ export function themeCssVariables(theme: {
       ]),
     ),
     '--accent': accent,
-    '--accent-text-light': readableAccent(accent, 'light', light),
-    '--accent-text-dark': readableAccent(accent, 'dark', dark),
-    '--accent-text': `light-dark(${readableAccent(accent, 'light', light)}, ${readableAccent(accent, 'dark', dark)})`,
+    '--accent-text-light': readable('light', light),
+    '--accent-text-dark': readable('dark', dark),
+    '--accent-text': `light-dark(${readable('light', light)}, ${readable('dark', dark)})`,
     '--accent-surface': 'color-mix(in srgb, var(--accent) 10%, var(--bg))',
-    '--action-bg': `light-dark(${readableAccent(accent, 'light', light)}, ${darkAction})`,
+    '--action-bg': `light-dark(${readable('light', light)}, ${darkAction})`,
     '--action-text': `light-dark(#ffffff, ${darkActionText})`,
-    '--action-hover': `light-dark(${blend(readableAccent(accent, 'light', light), '#000000', 0.12)}, ${blend(darkAction, darkActionText === '#ffffff' ? '#000000' : '#ffffff', 0.12)})`,
+    '--action-hover': `light-dark(${blend(readable('light', light), '#000000', 0.12)}, ${blend(darkAction, darkActionText === '#ffffff' ? '#000000' : '#ffffff', 0.12)})`,
   };
 }

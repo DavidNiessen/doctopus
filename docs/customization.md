@@ -4,7 +4,7 @@ For an existing Spring Boot or Node application, configure direct-mode branding 
 
 The remaining sections describe optional compiled/static publications. Their publisher configuration uses YAML or JSON, supports additional theme tokens and custom CSS, and is validated during build and doctor checks.
 
-Prepared theme IDs now select complete light/dark palettes, including backgrounds, panels, borders, text, accents and editor colors. The Reader and Studio display Violet, Ocean, Forest (`mint`) and Graphite (`neutral`). System appearance remains the default and follows OS changes; readers can override it independently. **Site default** preserves published palette overrides. See [Reader themes](reader-layout.md).
+Prepared theme IDs now select complete light/dark palettes, including backgrounds, panels, borders, text, accents and editor colors. The Reader and Studio display Violet, Ocean, Ember (`ember`) and High contrast (`contrast`). System appearance remains the default and follows OS changes; readers can override it independently. **Site default** preserves published palette overrides. See [Reader themes](reader-layout.md).
 
 ## Theme tokens
 
@@ -31,7 +31,7 @@ theme:
       muted: '#a1adba'
 ```
 
-Presets are `mint`, `ocean`, `violet`, and `neutral`. An explicit accent overrides the preset. Palette overrides apply after the default light/dark palette. Available palette tokens are `background`, `surface`, `subtle`, `border`, `text`, `muted`, and `heading`. Colors use six-digit hex notation. Text, muted and heading colors must reach WCAG 4.5:1 against all three reading surfaces; insufficient contrast fails configuration validation. Accent text and focus indicators derive readable colors while retaining the brand hue. Decorative accents retain the configured color.
+Prepared themes are `violet` (default), `ocean`, `ember` and `contrast`. Legacy `mint` and `neutral` IDs remain accepted and select Ember and High contrast. An explicit accent overrides the preset. Palette overrides apply after the default light/dark palette. Available palette tokens are `background`, `surface`, `subtle`, `border`, `text`, `muted`, and `heading`. Colors use six-digit hex notation. Text, muted and heading colors must reach WCAG 4.5:1 against all three reading surfaces; insufficient contrast fails configuration validation. Accent text and focus indicators derive readable colors while retaining the brand hue. Decorative accents retain the configured color.
 
 Density supports `comfortable` and `compact`; font supports `system`, `sans` and `serif`. System fonts need no third-party request. Radius is 0–24 px, sidebar width 220–320 px, and guide content width 600–960 px. Responsive layouts override desktop sizing where necessary. `codeTheme` chooses dark or light treatment for the shared documentation code blocks.
 
@@ -84,7 +84,7 @@ Robots directives are hints, not access control. Protect every private artifact 
 
 ## Reader appearance presets
 
-Visitors can open **Reader settings** to choose the published theme or a prepared Mint, Ocean, Violet or Neutral preset, alongside system/light/dark appearance and modern/classic layout. Preferences stay in their browser and synchronize across tabs for the same documentation base path. Response editor colors follow the selected theme automatically.
+Visitors can open **Reader settings** to choose the published theme or a complete Violet, Ocean, Ember or High contrast palette, alongside system/light/dark appearance and modern/classic layout. Preferences stay in their browser and synchronize across tabs for the same documentation base path. Response editor colors follow the selected theme automatically.
 
 Custom appearance controls, named themes and the temporary `?theme-editor=1` preview are removed. For a compiled publication, change published branding through the validated `theme` section in the project's YAML or JSON configuration and rebuild. Existing custom visitor settings are discarded while recognized mode, layout and preset choices migrate.
 

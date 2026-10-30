@@ -1,13 +1,13 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-26T19:52:47Z",
+  "generatedAt": "2026-10-30T16:41:59.135Z",
   "title": "Design System: Doctopus",
   "extensions": {
     "colorMeta": {
-      "mint": {
+      "ember": {
         "role": "primary",
-        "displayName": "Forest accent",
-        "purpose": "Forest complete theme; compatibility ID mint."
+        "displayName": "Ember accent",
+        "purpose": "Ember complete theme; canonical ID ember; legacy mint aliases this palette."
       },
       "ocean": {
         "role": "primary",
@@ -17,12 +17,12 @@
       "violet": {
         "role": "primary",
         "displayName": "Violet accent",
-        "purpose": "Default complete theme; violet octopus assets retain the product identity."
+        "purpose": "Core default and public demo published default; violet octopus assets retain the product identity."
       },
-      "neutral-accent": {
+      "contrast": {
         "role": "primary",
-        "displayName": "Graphite accent",
-        "purpose": "Graphite complete theme; compatibility ID neutral."
+        "displayName": "High contrast accent",
+        "purpose": "High contrast complete theme; canonical ID contrast; legacy neutral aliases this palette."
       },
       "light-background": {
         "role": "neutral",
@@ -164,145 +164,145 @@
         "displayName": "Ocean dark heading",
         "purpose": "Heading role in the complete Ocean dark palette."
       },
-      "forest-light-background": {
+      "ember-light-background": {
         "role": "neutral",
-        "displayName": "Forest light background",
-        "purpose": "Background role in the complete Forest light palette."
+        "displayName": "Ember light background",
+        "purpose": "Background role in the complete Ember light palette."
       },
-      "forest-light-surface": {
+      "ember-light-surface": {
         "role": "neutral",
-        "displayName": "Forest light surface",
-        "purpose": "Surface role in the complete Forest light palette."
+        "displayName": "Ember light surface",
+        "purpose": "Surface role in the complete Ember light palette."
       },
-      "forest-light-subtle": {
+      "ember-light-subtle": {
         "role": "neutral",
-        "displayName": "Forest light subtle",
-        "purpose": "Subtle role in the complete Forest light palette."
+        "displayName": "Ember light subtle",
+        "purpose": "Subtle role in the complete Ember light palette."
       },
-      "forest-light-border": {
+      "ember-light-border": {
         "role": "neutral",
-        "displayName": "Forest light border",
-        "purpose": "Border role in the complete Forest light palette."
+        "displayName": "Ember light border",
+        "purpose": "Border role in the complete Ember light palette."
       },
-      "forest-light-text": {
+      "ember-light-text": {
         "role": "neutral",
-        "displayName": "Forest light text",
-        "purpose": "Text role in the complete Forest light palette."
+        "displayName": "Ember light text",
+        "purpose": "Text role in the complete Ember light palette."
       },
-      "forest-light-muted": {
+      "ember-light-muted": {
         "role": "neutral",
-        "displayName": "Forest light muted",
-        "purpose": "Muted role in the complete Forest light palette."
+        "displayName": "Ember light muted",
+        "purpose": "Muted role in the complete Ember light palette."
       },
-      "forest-light-heading": {
+      "ember-light-heading": {
         "role": "neutral",
-        "displayName": "Forest light heading",
-        "purpose": "Heading role in the complete Forest light palette."
+        "displayName": "Ember light heading",
+        "purpose": "Heading role in the complete Ember light palette."
       },
-      "forest-dark-background": {
+      "ember-dark-background": {
         "role": "neutral",
-        "displayName": "Forest dark background",
-        "purpose": "Background role in the complete Forest dark palette."
+        "displayName": "Ember dark background",
+        "purpose": "Background role in the complete Ember dark palette."
       },
-      "forest-dark-surface": {
+      "ember-dark-surface": {
         "role": "neutral",
-        "displayName": "Forest dark surface",
-        "purpose": "Surface role in the complete Forest dark palette."
+        "displayName": "Ember dark surface",
+        "purpose": "Surface role in the complete Ember dark palette."
       },
-      "forest-dark-subtle": {
+      "ember-dark-subtle": {
         "role": "neutral",
-        "displayName": "Forest dark subtle",
-        "purpose": "Subtle role in the complete Forest dark palette."
+        "displayName": "Ember dark subtle",
+        "purpose": "Subtle role in the complete Ember dark palette."
       },
-      "forest-dark-border": {
+      "ember-dark-border": {
         "role": "neutral",
-        "displayName": "Forest dark border",
-        "purpose": "Border role in the complete Forest dark palette."
+        "displayName": "Ember dark border",
+        "purpose": "Border role in the complete Ember dark palette."
       },
-      "forest-dark-text": {
+      "ember-dark-text": {
         "role": "neutral",
-        "displayName": "Forest dark text",
-        "purpose": "Text role in the complete Forest dark palette."
+        "displayName": "Ember dark text",
+        "purpose": "Text role in the complete Ember dark palette."
       },
-      "forest-dark-muted": {
+      "ember-dark-muted": {
         "role": "neutral",
-        "displayName": "Forest dark muted",
-        "purpose": "Muted role in the complete Forest dark palette."
+        "displayName": "Ember dark muted",
+        "purpose": "Muted role in the complete Ember dark palette."
       },
-      "forest-dark-heading": {
+      "ember-dark-heading": {
         "role": "neutral",
-        "displayName": "Forest dark heading",
-        "purpose": "Heading role in the complete Forest dark palette."
+        "displayName": "Ember dark heading",
+        "purpose": "Heading role in the complete Ember dark palette."
       },
-      "graphite-light-background": {
+      "contrast-light-background": {
         "role": "neutral",
-        "displayName": "Graphite light background",
-        "purpose": "Background role in the complete Graphite light palette."
+        "displayName": "High contrast light background",
+        "purpose": "Background role in the complete High contrast light palette."
       },
-      "graphite-light-surface": {
+      "contrast-light-surface": {
         "role": "neutral",
-        "displayName": "Graphite light surface",
-        "purpose": "Surface role in the complete Graphite light palette."
+        "displayName": "High contrast light surface",
+        "purpose": "Surface role in the complete High contrast light palette."
       },
-      "graphite-light-subtle": {
+      "contrast-light-subtle": {
         "role": "neutral",
-        "displayName": "Graphite light subtle",
-        "purpose": "Subtle role in the complete Graphite light palette."
+        "displayName": "High contrast light subtle",
+        "purpose": "Subtle role in the complete High contrast light palette."
       },
-      "graphite-light-border": {
+      "contrast-light-border": {
         "role": "neutral",
-        "displayName": "Graphite light border",
-        "purpose": "Border role in the complete Graphite light palette."
+        "displayName": "High contrast light border",
+        "purpose": "Border role in the complete High contrast light palette."
       },
-      "graphite-light-text": {
+      "contrast-light-text": {
         "role": "neutral",
-        "displayName": "Graphite light text",
-        "purpose": "Text role in the complete Graphite light palette."
+        "displayName": "High contrast light text",
+        "purpose": "Text role in the complete High contrast light palette."
       },
-      "graphite-light-muted": {
+      "contrast-light-muted": {
         "role": "neutral",
-        "displayName": "Graphite light muted",
-        "purpose": "Muted role in the complete Graphite light palette."
+        "displayName": "High contrast light muted",
+        "purpose": "Muted role in the complete High contrast light palette."
       },
-      "graphite-light-heading": {
+      "contrast-light-heading": {
         "role": "neutral",
-        "displayName": "Graphite light heading",
-        "purpose": "Heading role in the complete Graphite light palette."
+        "displayName": "High contrast light heading",
+        "purpose": "Heading role in the complete High contrast light palette."
       },
-      "graphite-dark-background": {
+      "contrast-dark-background": {
         "role": "neutral",
-        "displayName": "Graphite dark background",
-        "purpose": "Background role in the complete Graphite dark palette."
+        "displayName": "High contrast dark background",
+        "purpose": "Background role in the complete High contrast dark palette."
       },
-      "graphite-dark-surface": {
+      "contrast-dark-surface": {
         "role": "neutral",
-        "displayName": "Graphite dark surface",
-        "purpose": "Surface role in the complete Graphite dark palette."
+        "displayName": "High contrast dark surface",
+        "purpose": "Surface role in the complete High contrast dark palette."
       },
-      "graphite-dark-subtle": {
+      "contrast-dark-subtle": {
         "role": "neutral",
-        "displayName": "Graphite dark subtle",
-        "purpose": "Subtle role in the complete Graphite dark palette."
+        "displayName": "High contrast dark subtle",
+        "purpose": "Subtle role in the complete High contrast dark palette."
       },
-      "graphite-dark-border": {
+      "contrast-dark-border": {
         "role": "neutral",
-        "displayName": "Graphite dark border",
-        "purpose": "Border role in the complete Graphite dark palette."
+        "displayName": "High contrast dark border",
+        "purpose": "Border role in the complete High contrast dark palette."
       },
-      "graphite-dark-text": {
+      "contrast-dark-text": {
         "role": "neutral",
-        "displayName": "Graphite dark text",
-        "purpose": "Text role in the complete Graphite dark palette."
+        "displayName": "High contrast dark text",
+        "purpose": "Text role in the complete High contrast dark palette."
       },
-      "graphite-dark-muted": {
+      "contrast-dark-muted": {
         "role": "neutral",
-        "displayName": "Graphite dark muted",
-        "purpose": "Muted role in the complete Graphite dark palette."
+        "displayName": "High contrast dark muted",
+        "purpose": "Muted role in the complete High contrast dark palette."
       },
-      "graphite-dark-heading": {
+      "contrast-dark-heading": {
         "role": "neutral",
-        "displayName": "Graphite dark heading",
-        "purpose": "Heading role in the complete Graphite dark palette."
+        "displayName": "High contrast dark heading",
+        "purpose": "Heading role in the complete High contrast dark palette."
       }
     },
     "typographyMeta": {
@@ -441,7 +441,7 @@
       "kind": "card",
       "refersTo": "code-example",
       "description": "Quiet bordered example with local, focusable code overflow.",
-      "html": "<section class=\"ds-code-card\" aria-label=\"Response example\"><div class=\"ds-code-toolbar\">Response \u00b7 application/json</div><pre class=\"ds-code-pre\" tabindex=\"0\" aria-label=\"Response example code\"><code>{\n  \"status\": \"succeeded\"\n}</code></pre></section>",
+      "html": "<section class=\"ds-code-card\" aria-label=\"Response example\"><div class=\"ds-code-toolbar\">Response · application/json</div><pre class=\"ds-code-pre\" tabindex=\"0\" aria-label=\"Response example code\"><code>{\n  \"status\": \"succeeded\"\n}</code></pre></section>",
       "css": ".ds-code-card{overflow:hidden;min-width:0;border:1px solid var(--ui-border,var(--border,#dfd9eb));border-radius:16px;background:var(--surface,#f7f5fc);color:var(--text,#403b4d)}.ds-code-toolbar{min-height:36px;padding:7px 12px;color:var(--heading,#211a30);font:600 .75rem var(--ui-font, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', ui-sans-serif, system-ui, sans-serif)}.ds-code-pre{margin:0;padding:16px 18px;max-height:320px;overflow:auto;border-radius:14px;background:var(--bg,#fff);font:400 .75rem/1.8 var(--ui-mono, 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace);tab-size:2}.ds-code-pre code{font:inherit}.ds-code-pre:focus-visible{outline:2px solid var(--accent-text,#7839e5);outline-offset:4px}"
     },
     {
@@ -461,21 +461,21 @@
     {
       "name": "Studio theme and appearance",
       "kind": "custom",
-      "description": "Separate native selects for the four complete themes and System/Light/Dark; defaults are Violet and System. Changes apply live to the whole workspace.",
-      "html": "<div class=\"ds-appearance\"><label>Theme<select><option value=\"violet\">Violet</option><option value=\"ocean\">Ocean</option><option value=\"mint\">Forest</option><option value=\"neutral\">Graphite</option></select></label><label>Appearance<select><option>System</option><option>Light</option><option>Dark</option></select></label></div>",
+      "description": "Separate native selects for Violet, Ocean, Ember and High contrast and System/Light/Dark; defaults are Violet and System. Saved legacy IDs normalize to their replacements. The shared external head bootstrap applies saved preferences before body paint; changes apply live to the whole workspace.",
+      "html": "<div class=\"ds-appearance\"><label>Theme<select><option value=\"violet\">Violet</option><option value=\"ocean\">Ocean</option><option value=\"ember\">Ember</option><option value=\"contrast\">High contrast</option></select></label><label>Appearance<select><option>System</option><option>Light</option><option>Dark</option></select></label></div>",
       "css": ".ds-appearance{display:flex;flex-wrap:wrap;gap:12px;color:var(--text,#403b4d);font:.875rem var(--ui-font,Inter,system-ui,sans-serif)}.ds-appearance label{display:grid;gap:8px}.ds-appearance select{min-height:36px;padding:6px 10px;border:1px solid var(--border,#dfd9eb);border-radius:8px;background:var(--bg,#fff);color:inherit;font:inherit}.ds-appearance select:hover{border-color:var(--muted,#665c74)}.ds-appearance select:focus-visible{outline:2px solid var(--accent-text,#7839e5);outline-offset:3px}@media(max-width:760px){.ds-appearance select{min-height:44px;font-size:1rem}}"
     },
     {
       "name": "Reader theme selector",
       "kind": "custom",
-      "description": "Native radio group with Site default and miniature previews for four complete paired palettes. Theme, System/Light/Dark appearance and Modern/Classic layout remain independent. System follows the OS live, including Reader before JavaScript; editors follow the complete resolved theme.",
-      "html": "<fieldset class=\"ds-themes\"><legend>Theme</legend><p>Complete palettes for the page, panels and code editor. Each includes a light and dark version.</p><div class=\"ds-theme-grid\"><label class=\"ds-theme-default\"><input type=\"radio\" name=\"ds-theme\" checked />Site default</label><label class=\"ds-theme-violet\"><span class=\"ds-mini\" aria-hidden=\"true\"><span class=\"ds-mini-rail\"><i></i><i></i><i></i></span><span class=\"ds-mini-page\"><b></b><i></i><i></i><span></span></span></span><input type=\"radio\" name=\"ds-theme\" value=\"violet\" />Violet</label><label class=\"ds-theme-ocean\"><span class=\"ds-mini\" aria-hidden=\"true\"><span class=\"ds-mini-rail\"><i></i><i></i><i></i></span><span class=\"ds-mini-page\"><b></b><i></i><i></i><span></span></span></span><input type=\"radio\" name=\"ds-theme\" value=\"ocean\" />Ocean</label><label class=\"ds-theme-mint\"><span class=\"ds-mini\" aria-hidden=\"true\"><span class=\"ds-mini-rail\"><i></i><i></i><i></i></span><span class=\"ds-mini-page\"><b></b><i></i><i></i><span></span></span></span><input type=\"radio\" name=\"ds-theme\" value=\"mint\" />Forest</label><label class=\"ds-theme-neutral\"><span class=\"ds-mini\" aria-hidden=\"true\"><span class=\"ds-mini-rail\"><i></i><i></i><i></i></span><span class=\"ds-mini-page\"><b></b><i></i><i></i><span></span></span></span><input type=\"radio\" name=\"ds-theme\" value=\"neutral\" />Graphite</label></div></fieldset>",
-      "css": ".ds-themes{border:0;padding:0;color:var(--text,#403b4d);font:.875rem/1.7 var(--ui-font,Inter,system-ui,sans-serif)}.ds-themes legend{font-weight:600;color:var(--heading,#211a30)}.ds-themes p{color:var(--muted,#665c74)}.ds-theme-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.ds-theme-grid label{border:1px solid var(--border,#dfd9eb);border-radius:10px;overflow:hidden;cursor:pointer}.ds-theme-grid label:hover{border-color:var(--muted,#665c74)}.ds-theme-grid label:has(:checked){outline:1px solid var(--accent-text,#7839e5);border-color:var(--accent-text,#7839e5)}.ds-theme-grid label:has(:focus-visible){outline:2px solid var(--accent-text,#7839e5);outline-offset:4px}.ds-theme-grid input{accent-color:var(--accent,#7c3aed);margin:12px 8px}.ds-theme-default{grid-column:1/-1;min-height:44px}.ds-mini{display:grid;grid-template-columns:25% 1fr;height:76px;padding:10px;gap:9px;border-bottom:1px solid var(--mini-border);background:var(--mini-bg)}.ds-mini-rail{display:flex;flex-direction:column;gap:6px;border-right:1px solid var(--mini-border);padding-right:7px}.ds-mini-rail i{height:4px;background:var(--mini-muted);opacity:.55;border-radius:2px}.ds-mini-rail i:first-child{background:var(--mini-accent);opacity:1}.ds-mini-page{display:flex;flex-direction:column;gap:5px}.ds-mini-page b{height:5px;width:65%;margin-bottom:2px;background:var(--mini-text);border-radius:2px}.ds-mini-page i{height:3px;background:var(--mini-muted);opacity:.65;border-radius:2px}.ds-mini-page i:nth-child(3){width:80%}.ds-mini-page>span{flex:1;border:1px solid var(--mini-border);background:var(--mini-surface);border-radius:3px;margin-top:3px}@media(max-width:520px){.ds-theme-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}.ds-theme-violet{--mini-bg:light-dark(#ffffff,#121017);--mini-border:light-dark(#dfd9eb,#383043);--mini-text:light-dark(#211a30,#f3edf9);--mini-surface:light-dark(#f7f5fc,#1c1824);}.ds-theme-ocean{--mini-bg:light-dark(#f4f8fd,#0b1421);--mini-border:light-dark(#cbd9ec,#2b415a);--mini-text:light-dark(#142c48,#edf5ff);--mini-surface:light-dark(#eaf1fa,#111f31);}.ds-theme-mint{--mini-bg:light-dark(#f5f9f5,#0c1611);--mini-border:light-dark(#cbdacf,#304a39);--mini-text:light-dark(#183323,#edf7ef);--mini-surface:light-dark(#eaf2eb,#14221a);}.ds-theme-neutral{--mini-bg:light-dark(#f8f7f4,#181817);--mini-border:light-dark(#d5d0c7,#41413b);--mini-text:light-dark(#24221e,#f5f3eb);--mini-surface:light-dark(#efede8,#232321);}.ds-theme-violet{--mini-accent:#7c3aed;--mini-muted:light-dark(#665c74,#aea2bf);}.ds-theme-ocean{--mini-accent:#2563eb;--mini-muted:light-dark(#496078,#94abc6);}.ds-theme-mint{--mini-accent:#07c983;--mini-muted:light-dark(#4b6354,#9bb7a2);}.ds-theme-neutral{--mini-accent:#526071;--mini-muted:light-dark(#625d54,#b1aea3);}"
+      "description": "Native radio group with Site default and miniature previews for Violet, Ocean, Ember and High contrast paired palettes. Theme, System/Light/Dark appearance and Modern/Classic layout remain independent. The external head bootstrap restores saved preferences before body paint; pending shell styling lasts until React commits them. Code and response editors follow the complete resolved theme.",
+      "html": "<fieldset class=\"ds-themes\"><legend>Theme</legend><p>Complete palettes for the page, panels and code editor. Each includes a light and dark version.</p><div class=\"ds-theme-grid\"><label class=\"ds-theme-default\"><input type=\"radio\" name=\"ds-theme\" checked />Site default</label><label class=\"ds-theme-violet\"><span class=\"ds-mini\" aria-hidden=\"true\"><span class=\"ds-mini-rail\"><i></i><i></i><i></i></span><span class=\"ds-mini-page\"><b></b><i></i><i></i><span></span></span></span><input type=\"radio\" name=\"ds-theme\" value=\"violet\" />Violet</label><label class=\"ds-theme-ocean\"><span class=\"ds-mini\" aria-hidden=\"true\"><span class=\"ds-mini-rail\"><i></i><i></i><i></i></span><span class=\"ds-mini-page\"><b></b><i></i><i></i><span></span></span></span><input type=\"radio\" name=\"ds-theme\" value=\"ocean\" />Ocean</label><label class=\"ds-theme-ember\"><span class=\"ds-mini\" aria-hidden=\"true\"><span class=\"ds-mini-rail\"><i></i><i></i><i></i></span><span class=\"ds-mini-page\"><b></b><i></i><i></i><span></span></span></span><input type=\"radio\" name=\"ds-theme\" value=\"ember\" />Ember</label><label class=\"ds-theme-contrast\"><span class=\"ds-mini\" aria-hidden=\"true\"><span class=\"ds-mini-rail\"><i></i><i></i><i></i></span><span class=\"ds-mini-page\"><b></b><i></i><i></i><span></span></span></span><input type=\"radio\" name=\"ds-theme\" value=\"contrast\" />High contrast</label></div></fieldset>",
+      "css": ".ds-themes{border:0;padding:0;color:var(--text,#403b4d);font:.875rem/1.7 var(--ui-font,Inter,system-ui,sans-serif)}.ds-themes legend{font-weight:600;color:var(--heading,#211a30)}.ds-themes p{color:var(--muted,#665c74)}.ds-theme-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.ds-theme-grid label{border:1px solid var(--border,#dfd9eb);border-radius:10px;overflow:hidden;cursor:pointer}.ds-theme-grid label:hover{border-color:var(--muted,#665c74)}.ds-theme-grid label:has(:checked){outline:1px solid var(--accent-text,#7839e5);border-color:var(--accent-text,#7839e5)}.ds-theme-grid label:has(:focus-visible){outline:2px solid var(--accent-text,#7839e5);outline-offset:4px}.ds-theme-grid input{accent-color:var(--accent,#7c3aed);margin:12px 8px}.ds-theme-default{grid-column:1/-1;min-height:44px}.ds-mini{display:grid;grid-template-columns:25% 1fr;height:76px;padding:10px;gap:9px;border-bottom:1px solid var(--mini-border);background:var(--mini-bg)}.ds-mini-rail{display:flex;flex-direction:column;gap:6px;border-right:1px solid var(--mini-border);padding-right:7px}.ds-mini-rail i{height:4px;background:var(--mini-muted);opacity:.55;border-radius:2px}.ds-mini-rail i:first-child{background:var(--mini-accent);opacity:1}.ds-mini-page{display:flex;flex-direction:column;gap:5px}.ds-mini-page b{height:5px;width:65%;margin-bottom:2px;background:var(--mini-text);border-radius:2px}.ds-mini-page i{height:3px;background:var(--mini-muted);opacity:.65;border-radius:2px}.ds-mini-page i:nth-child(3){width:80%}.ds-mini-page>span{flex:1;border:1px solid var(--mini-border);background:var(--mini-surface);border-radius:3px;margin-top:3px}@media(max-width:520px){.ds-theme-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}.ds-theme-violet{--mini-bg:light-dark(#ffffff,#121017);--mini-border:light-dark(#dfd9eb,#383043);--mini-text:light-dark(#211a30,#f3edf9);--mini-surface:light-dark(#f7f5fc,#1c1824);}.ds-theme-ocean{--mini-bg:light-dark(#f4f8fd,#0b1421);--mini-border:light-dark(#cbd9ec,#2b415a);--mini-text:light-dark(#142c48,#edf5ff);--mini-surface:light-dark(#eaf1fa,#111f31);}.ds-theme-ember{--mini-bg:light-dark(#fff9f2,#1b1110);--mini-border:light-dark(#d8bfa2,#634637);--mini-text:light-dark(#2b180d,#fff2e6);--mini-surface:light-dark(#f8eee2,#281a16);}.ds-theme-contrast{--mini-bg:light-dark(#ffffff,#000000);--mini-border:light-dark(#666666,#999999);--mini-text:light-dark(#000000,#ffffff);--mini-surface:light-dark(#f7f7f7,#080808);}.ds-theme-violet{--mini-accent:#7c3aed;--mini-muted:light-dark(#665c74,#aea2bf);}.ds-theme-ocean{--mini-accent:#2563eb;--mini-muted:light-dark(#496078,#94abc6);}.ds-theme-ember{--mini-accent:#c24c23;--mini-muted:light-dark(#705039,#c9a58c);}.ds-theme-contrast{--mini-accent:#003366;--mini-muted:light-dark(#333333,#dedede);}"
     }
   ],
   "narrative": {
     "northStar": "Familiar, precise documentation software",
-    "overview": "Doctopus uses a centered, flat documentation canvas and a practical operating workspace. Typography, quiet dividers and restrained surface changes organize the interface. The violet octopus assets retain the product identity, with Violet as the default complete palette; published branding and the prepared alternate palettes remain supported.\n\nDocumentation prioritizes reading and understanding. The playground and Studio prioritize completing real tasks, with labeled forms, meaningful tables and explicit states. This is the Doctopus project system: its documented patterns describe the implemented reader and Studio rather than a universal interface template.",
+    "overview": "Doctopus uses a centered, flat documentation canvas and a practical operating workspace. Typography, quiet dividers and restrained surface changes organize the interface. The violet octopus assets retain the product identity, with Violet as the default complete palette in Reader, Studio and the public demo configuration; published branding and the prepared alternate palettes remain supported.\n\nDocumentation prioritizes reading and understanding. The playground and Studio prioritize completing real tasks, with labeled forms, meaningful tables and explicit states. This is the Doctopus project system: its documented patterns describe the implemented reader and Studio rather than a universal interface template.",
     "keyCharacteristics": [
       "Centered documentation shell with an unboxed article.",
       "Shared local typefaces, palette roles and native controls.",

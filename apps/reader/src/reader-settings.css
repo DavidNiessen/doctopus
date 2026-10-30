@@ -105,6 +105,7 @@
 }
 
 .layout-classic.docs-shell {
+  --workspace-max: 1600px;
   --canvas: var(--bg);
   --workspace-top: calc(7rem + 1px);
   --island-radius: 4px;

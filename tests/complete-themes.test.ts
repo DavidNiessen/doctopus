@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import {
   resolvePalette,
+  themeNames,
+  readableAccent,
   themePalettes,
   themePresets,
   contrastRatio,
@@ -11,7 +13,7 @@ describe('complete themes', () => {
     for (const mode of ['light', 'dark'] as const) {
       expect(
         new Set(
-          Object.values(themePalettes).map((theme) => theme[mode].background),
+          themeNames.map((name) => JSON.stringify(themePalettes[name][mode])),
         ).size,
       ).toBe(4);
       for (const preset of Object.keys(
@@ -24,6 +26,21 @@ describe('complete themes', () => {
               contrastRatio(fg, bg),
               `${preset} ${mode}: ${fg} on ${bg}`,
             ).toBeGreaterThanOrEqual(4.5);
+      }
+    }
+  });
+  it('provides AAA text and clearly visible boundaries in both high-contrast appearances', () => {
+    for (const mode of ['light', 'dark'] as const) {
+      const palette = themePalettes.contrast[mode];
+      for (const bg of [palette.background, palette.surface, palette.subtle]) {
+        for (const fg of [
+          palette.text,
+          palette.muted,
+          palette.heading,
+          readableAccent(themePresets.contrast, mode, palette, 7),
+        ])
+          expect(contrastRatio(fg, bg)).toBeGreaterThanOrEqual(7);
+        expect(contrastRatio(palette.border, bg)).toBeGreaterThanOrEqual(3);
       }
     }
   });

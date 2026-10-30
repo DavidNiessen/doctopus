@@ -261,3 +261,46 @@ test('mobile publication and audit tables retain readable columns with keyboard 
     }
   }
 });
+
+test('saved Studio appearance is installed before its delayed application module', async ({
+  page,
+}) => {
+  await page.emulateMedia({ colorScheme: 'light' });
+  await page.addInitScript(() => {
+    localStorage.setItem('doctopus-studio-theme', 'ember');
+    localStorage.setItem('doctopus-studio-appearance', 'dark');
+  });
+  let release!: () => void;
+  const delayed = new Promise<void>((resolve) => (release = resolve));
+  await page.route('**/admin/assets/index-*.js', async (route) => {
+    await delayed;
+    await route.continue();
+  });
+  await page.goto('/admin/', { waitUntil: 'commit' });
+  try {
+    await expect(page.locator('html')).toHaveCSS(
+      'background-color',
+      'rgb(27, 17, 16)',
+    );
+    await expect(page.locator('html')).toHaveAttribute(
+      'data-appearance',
+      'dark',
+    );
+    await expect(page.locator('#root')).toBeEmpty();
+  } finally {
+    release();
+  }
+  await expect(
+    page.getByRole('heading', { name: 'Overview', exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole('combobox', { name: 'Theme', exact: true }),
+  ).toHaveValue('ember');
+  await page
+    .getByRole('combobox', { name: 'Appearance', exact: true })
+    .selectOption('light');
+  await expect(page.locator('.workspace-main')).toHaveCSS(
+    'background-color',
+    'rgb(255, 249, 242)',
+  );
+});

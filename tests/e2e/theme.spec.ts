@@ -22,7 +22,7 @@ test('appearance settings offer prepared presets and the former custom-editor UR
   await expect(
     dialog.getByRole('button', { name: /Save|Copy|Delete/ }),
   ).toHaveCount(0);
-  for (const value of ['mint', 'ocean', 'violet', 'neutral'] as const) {
+  for (const value of ['ember', 'ocean', 'violet', 'contrast'] as const) {
     await preset.locator(`input[value="${value}"]`).check();
     await expect(page.locator('.docs-shell')).toHaveCSS(
       '--accent',
@@ -44,7 +44,7 @@ test('appearance settings offer prepared presets and the former custom-editor UR
   await page.reload();
   await expect(page.locator('.docs-shell')).toHaveCSS(
     '--accent',
-    themePresets.neutral,
+    themePresets.contrast,
   );
   await page.getByRole('button', { name: 'Open reader settings' }).click();
   await preset.locator('input[value=published]').check();

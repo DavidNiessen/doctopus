@@ -1,4 +1,7 @@
-import { themePresets } from '@davidniessen/doctopus-contracts';
+import {
+  themePresets,
+  normalizeThemeName,
+} from '@davidniessen/doctopus-contracts';
 import type { Theme } from '@davidniessen/doctopus-contracts';
 export type ReaderTheme = 'published' | keyof typeof themePresets;
 export interface ReaderPreferences {
@@ -44,11 +47,7 @@ export function parseReaderPreferences(
   result.layout = choice(data.layout, ['modern', 'classic'], 'modern');
   const theme =
     data.version === 1 && record(data.theme) ? data.theme.preset : data.theme;
-  result.theme = choice(
-    theme,
-    ['published', 'mint', 'ocean', 'violet', 'neutral'],
-    'published',
-  );
+  result.theme = normalizeThemeName(theme) ?? 'published';
   return result;
 }
 export function readerTheme(published: Theme, selection: ReaderTheme): Theme {

@@ -14,7 +14,7 @@ export const EditorThemeContext = createContext<{
   mode: 'light' | 'dark';
 }>({
   palette: resolvePalette({}, 'light'),
-  accent: themePresets.mint,
+  accent: themePresets.violet,
   mode: 'light',
 });
 export function useReaderPreferences(

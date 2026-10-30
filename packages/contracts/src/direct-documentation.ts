@@ -4,7 +4,7 @@ export interface DirectDocumentationOptions {
   /** Visible header title and browser-tab site name. Defaults to the API title. */
   title?: string;
   description?: string;
-  theme?: 'violet' | 'mint' | 'ocean' | 'neutral';
+  theme?: 'violet' | 'mint' | 'ocean' | 'neutral' | 'ember' | 'contrast';
   layout?: 'modern' | 'classic';
   appearance?: 'system' | 'light' | 'dark';
   logo?: string;
@@ -14,7 +14,7 @@ export interface DirectDocumentationOptions {
 export interface DirectDocumentationConfig extends DirectDocumentationOptions {
   basePath: string;
   url: string;
-  theme: 'violet' | 'mint' | 'ocean' | 'neutral';
+  theme: 'violet' | 'mint' | 'ocean' | 'neutral' | 'ember' | 'contrast';
   layout: 'modern' | 'classic';
   appearance: 'system' | 'light' | 'dark';
 }
@@ -36,7 +36,9 @@ export function directDocumentationConfig(
     appearance: options.appearance ?? 'system',
   };
   if (
-    !['violet', 'mint', 'ocean', 'neutral'].includes(result.theme) ||
+    !['violet', 'mint', 'ocean', 'neutral', 'ember', 'contrast'].includes(
+      result.theme,
+    ) ||
     !['modern', 'classic'].includes(result.layout) ||
     !['system', 'light', 'dark'].includes(result.appearance)
   )

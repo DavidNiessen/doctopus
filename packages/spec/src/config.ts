@@ -107,7 +107,7 @@ export const configSchema = z
     theme: z
       .object({
         preset: z
-          .enum(['mint', 'ocean', 'violet', 'neutral'])
+          .enum(['mint', 'ocean', 'violet', 'neutral', 'ember', 'contrast'])
           .default('violet'),
         accent: color.optional(),
         colors: z

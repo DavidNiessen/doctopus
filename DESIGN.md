@@ -2,15 +2,27 @@
 name: Doctopus
 description: A flat, precise interface for reading API documentation and operating documentation workspaces.
 colors:
-  mint: '#07c983'
+  ember: '#c24c23'
   ocean: '#2563eb'
   violet: '#7c3aed'
-  neutral-accent: '#526071'
+  contrast: '#003366'
   action: 'light-dark(#7839e5, #a77bf3)'
   action-text: 'light-dark(#ffffff, #111111)'
   action-hover: 'light-dark(#6a32ca, #b28bf4)'
   accent-text: 'light-dark(#7839e5, #a77bf3)'
   accent-surface: 'color-mix(in srgb, var(--accent) 10%, var(--bg))'
+  ocean-action: 'light-dark(#2258ce, #6d96f2)'
+  ocean-action-text: 'light-dark(#ffffff, #111111)'
+  ocean-action-hover: 'light-dark(#1e4db5, #7fa3f4)'
+  ocean-accent-text: 'light-dark(#2258ce, #6d96f2)'
+  ember-action: 'light-dark(#9b4124, #d48063)'
+  ember-action-text: 'light-dark(#ffffff, #111111)'
+  ember-action-hover: 'light-dark(#883920, #d98f76)'
+  ember-accent-text: 'light-dark(#9b4124, #d48063)'
+  contrast-action: 'light-dark(#003366, #8ca3ba)'
+  contrast-action-text: 'light-dark(#ffffff, #111111)'
+  contrast-action-hover: 'light-dark(#002d5a, #9aaec2)'
+  contrast-accent-text: 'light-dark(#003366, #8ca3ba)'
   light-background: '#ffffff'
   light-surface: '#f7f5fc'
   light-subtle: '#eee9f8'
@@ -39,34 +51,34 @@ colors:
   ocean-dark-text: '#ccdbed'
   ocean-dark-muted: '#94abc6'
   ocean-dark-heading: '#edf5ff'
-  forest-light-background: '#f5f9f5'
-  forest-light-surface: '#eaf2eb'
-  forest-light-subtle: '#dde9df'
-  forest-light-border: '#cbdacf'
-  forest-light-text: '#344b3e'
-  forest-light-muted: '#4b6354'
-  forest-light-heading: '#183323'
-  forest-dark-background: '#0c1611'
-  forest-dark-surface: '#14221a'
-  forest-dark-subtle: '#1d3024'
-  forest-dark-border: '#304a39'
-  forest-dark-text: '#cfdfd3'
-  forest-dark-muted: '#9bb7a2'
-  forest-dark-heading: '#edf7ef'
-  graphite-light-background: '#f8f7f4'
-  graphite-light-surface: '#efede8'
-  graphite-light-subtle: '#e6e2db'
-  graphite-light-border: '#d5d0c7'
-  graphite-light-text: '#46433e'
-  graphite-light-muted: '#625d54'
-  graphite-light-heading: '#24221e'
-  graphite-dark-background: '#181817'
-  graphite-dark-surface: '#232321'
-  graphite-dark-subtle: '#2e2e2a'
-  graphite-dark-border: '#41413b'
-  graphite-dark-text: '#deddd5'
-  graphite-dark-muted: '#b1aea3'
-  graphite-dark-heading: '#f5f3eb'
+  ember-light-background: '#fff9f2'
+  ember-light-surface: '#f8eee2'
+  ember-light-subtle: '#f0dfca'
+  ember-light-border: '#d8bfa2'
+  ember-light-text: '#4a3527'
+  ember-light-muted: '#705039'
+  ember-light-heading: '#2b180d'
+  ember-dark-background: '#1b1110'
+  ember-dark-surface: '#281a16'
+  ember-dark-subtle: '#35221b'
+  ember-dark-border: '#634637'
+  ember-dark-text: '#eedacc'
+  ember-dark-muted: '#c9a58c'
+  ember-dark-heading: '#fff2e6'
+  contrast-light-background: '#ffffff'
+  contrast-light-surface: '#f7f7f7'
+  contrast-light-subtle: '#ededed'
+  contrast-light-border: '#666666'
+  contrast-light-text: '#111111'
+  contrast-light-muted: '#333333'
+  contrast-light-heading: '#000000'
+  contrast-dark-background: '#000000'
+  contrast-dark-surface: '#080808'
+  contrast-dark-subtle: '#141414'
+  contrast-dark-border: '#999999'
+  contrast-dark-text: '#ffffff'
+  contrast-dark-muted: '#dedede'
+  contrast-dark-heading: '#ffffff'
   light-success-surface: '#eaf7ef'
   light-success-text: '#12654c'
   dark-success-surface: '#1e332b'
@@ -207,7 +219,7 @@ components:
 
 **Creative North Star: "Familiar, precise documentation software"** guides the reader and operational workspace.
 
-Doctopus uses a centered, flat documentation canvas and a practical operating workspace. Typography, quiet dividers and restrained surface changes organize the interface. The violet octopus assets retain the product identity, with Violet as the default complete palette; published branding and the prepared alternate palettes remain supported.
+Doctopus uses a centered, flat documentation canvas and a practical operating workspace. Typography, quiet dividers and restrained surface changes organize the interface. The violet octopus assets retain the product identity, with Violet as the default complete palette in Reader, Studio and the public demo configuration; published branding and the prepared alternate palettes remain supported.
 
 Documentation prioritizes reading and understanding. The playground and Studio prioritize completing real tasks, with labeled forms, meaningful tables and explicit states. This is the Doctopus project system: its documented patterns describe the implemented reader and Studio rather than a universal interface template.
 
@@ -220,11 +232,11 @@ Documentation prioritizes reading and understanding. The playground and Studio p
 
 ## Colors
 
-Each prepared theme supplies a complete, paired light/dark palette for the canvas, panels, subtle surfaces, borders and text, alongside its accent. Frontmatter records Violet in the unprefixed light/dark roles and Ocean, Forest and Graphite in their named roles. Published reader configuration can override individual palette roles.
+Each prepared theme supplies a complete, paired light/dark palette for the canvas, panels, subtle surfaces, borders and text, alongside its accent. Frontmatter records Violet in the unprefixed light/dark roles and Ocean, Ember and High contrast in their named roles. Published reader configuration can override individual palette roles.
 
 ### Primary
 
-Violet is the default in Reader and Studio. Ocean uses cool blue surfaces, Forest uses green surfaces, and Graphite uses warm neutral surfaces. These are complete themes rather than accent-only choices. Visible names map to the existing configuration IDs `violet`, `ocean`, `mint` and `neutral`; keep those IDs compatible. Reader Site default restores the published theme, including custom colors. Primary action and accent text roles, including request Send/Try actions, resolve from the selected accent and palette.
+Violet is the core default in Reader and Studio and the published default in the public demo configuration. Ocean uses cool blue surfaces. Ember pairs warm ivory and copper in light mode with deep warm surfaces in dark mode. High contrast uses white and black canvases, strong borders and distinct reading surfaces. These are complete themes rather than accent-only choices. Canonical `themeNames` are `violet`, `ocean`, `ember` and `contrast`. `themePresets` and `themePalettes` retain `mint` → `ember` and `neutral` → `contrast` aliases for existing configuration; saved preferences normalize these legacy IDs to their canonical replacements. Reader Site default restores the published theme, including custom colors. Primary action and accent text roles, including request Send/Try actions, resolve from the selected accent and palette.
 
 ### Secondary
 
@@ -240,9 +252,11 @@ Studio pairs success, error, warning and information text with matching tinted s
 
 **The Resolved Palette Rule.** Use the resolved palette for body text, inputs, tables and examples. Derive accent and syntax text against the actual background and surface rather than using raw brand colors as text.
 
-`packages/contracts/src/theme.ts` owns `themePalettes`, preset accents, `resolvePalette` and `themeCssVariables`. Palette resolution starts with the selected pair, defaults to Violet, and applies published per-mode overrides. `readableAccent` checks background, surface, subtle and an 8% accent tint, choosing a text color that reaches a contrast ratio of at least 5 when possible. Syntax seed hues are transformed by this function, not final fixed theme colors. Primary actions use white text in light mode; dark mode chooses white or near-black text against the resolved action color, and hover moves the action toward its contrast destination. Studio's semantic role pairs remain in its base stylesheet.
+`packages/contracts/src/theme.ts` owns `themePalettes`, preset accents, `resolvePalette` and `themeCssVariables`. Palette resolution starts with the selected pair, defaults to Violet, and applies published per-mode overrides. `readableAccent` checks background, surface, subtle and an 8% accent tint, choosing a text color that reaches a contrast ratio of at least 5 when possible, or 7 for the High contrast preset. Prepared High contrast text, muted and heading roles reach at least 7:1 against each of its background, surface and subtle reading surfaces in both appearances. These targets describe the prepared palette; published color overrides still need their own checks. Syntax seed hues are transformed by this function, not final fixed theme colors. Primary actions use white text in light mode; dark mode chooses white or near-black text against the resolved action color, and hover moves the action toward its contrast destination. Studio's semantic role pairs remain in its base stylesheet.
 
 **The Independent Appearance Rule.** Keep theme, appearance and documentation layout as separate preferences. System is the default appearance and follows OS changes live; Reader follows the OS before JavaScript and when JavaScript is unavailable through `color-scheme` and `light-dark()`. Explicit Light or Dark overrides appearance without changing the selected theme.
+
+Compiled Reader, direct Java/Node integration and Studio load the shared, self-hosted `assets/theme.js` as a classic blocking script in the document head. It applies saved palette and System/Light/Dark appearance before body paint, using data-only JSON metadata in Reader. Keep this bootstrap external: no inline executable scripts or relaxed script CSP. Reader temporarily applies the resolved palette to its server-rendered shell until React commits restored preferences, then removes the pending style. Storage denial leaves usable published or default styling. Main palette choices and code/response editor colors must remain synchronized.
 
 ## Typography
 
@@ -271,7 +285,7 @@ Studio tables retain a minimum 720px table inside a labeled, focusable local scr
 
 Classic endpoint rows align descriptions in a common grid column. Each endpoint header retains the same keyboard-accessible Try now button in both disclosure states, with explicit loading and retry states; the button is outside the native summary.
 
-Classic reference remains an alternate layout: a maximum 1600px shell, navigation `min(250px, 26vw)`, no resize controls, examples below the article, and hidden contents rail. Its mobile main padding is 24px 16px.
+Classic reference remains an alternate layout: a maximum 1600px shell shared by the header and reference content, navigation `min(250px, 26vw)`, no resize controls, examples below the article, and hidden contents rail. Its mobile main padding is 24px 16px.
 
 ## Elevation & Depth
 
@@ -303,7 +317,7 @@ Specification-defined request forms show declared parameters and writable body f
 
 ### Navigation
 
-Reader links use compact method badges and a restrained accent tint for the active endpoint. Top-level reader tabs are underlined. Modern mode orders All, API Reference, Documentation; classic mode orders API Reference, Documentation and omits All. Classic mode selects API Reference at the site root; explicit guide links select Documentation. Modern mode defaults to All. Studio navigation uses the same font and rounded selection rhythm. Mobile reader navigation is a drawer; mobile Studio navigation scrolls horizontally. Keep current-item semantics and visible keyboard focus.
+Reader links use compact method badges and a restrained accent tint for the active endpoint. Top-level reader tabs are underlined. Modern mode orders All, API Reference, Documentation; classic mode orders API Reference, Documentation and omits All. Hidden fallback links and tabs occupy no flex track or gap, including before hydration. Classic mode selects API Reference at the site root; explicit guide links select Documentation. Modern mode defaults to All. Studio navigation uses the same font and rounded selection rhythm. Mobile reader navigation is a drawer; mobile Studio navigation scrolls horizontally. Keep current-item semantics and visible keyboard focus.
 
 Resize handles are keyboard-focusable separators with labels and current/minimum/maximum values. Arrow keys adjust widths; Shift increases the step; Home/End choose bounds; double-click restores the initial width. Width persistence is optional when browser storage is unavailable.
 
@@ -321,7 +335,7 @@ Studio panels group meaningful forms and data with a border and padding. Tables 
 
 ### Dialogs / Settings
 
-Use native dialogs for focused settings, playground and fullscreen tasks. Reader settings presents its title directly, storage status, then a native radio group for Site default, Violet, Ocean, Forest and Graphite. The four prepared themes show miniature page previews of their complete palette; Site default is a full-width choice. Native radio semantics retain arrow-key selection, visible checked state and keyboard focus. Separate native selects control System/Light/Dark appearance and Modern/Classic documentation layout. Apply changes live and retain in-memory choices when preference storage is unavailable.
+Use native dialogs for focused settings, playground and fullscreen tasks. Reader settings presents its title directly, storage status, then a native radio group for Site default, Violet, Ocean, Ember and High contrast. The four prepared themes show miniature page previews of their complete palette; Site default is a full-width choice. Native radio semantics retain arrow-key selection, visible checked state and keyboard focus. Separate native selects control System/Light/Dark appearance and Modern/Classic documentation layout. Apply changes live and retain in-memory choices when preference storage is unavailable.
 
 Studio uses separate native Theme and Appearance selects in its header. Theme offers the same four prepared palettes; Appearance offers System, Light and Dark. Preserve accessible labels, Escape/dismissal, focus restoration, localized Reader labels and viewport scrolling.
 

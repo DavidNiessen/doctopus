@@ -128,7 +128,7 @@ export interface Palette {
   heading: string;
 }
 export interface Theme {
-  preset?: 'mint' | 'ocean' | 'violet' | 'neutral';
+  preset?: 'mint' | 'ocean' | 'violet' | 'neutral' | 'ember' | 'contrast';
   colors?: { light?: Partial<Palette>; dark?: Partial<Palette> };
   sidebarWidth?: number;
   contentWidth?: number;
@@ -318,6 +318,8 @@ export {
   contrastRatio,
   readableAccent,
   resolvePalette,
+  themeNames,
+  normalizeThemeName,
   themePresets,
   themePalettes,
   themeCssVariables,
@@ -408,3 +410,5 @@ export type {
   DirectDocumentationOptions,
   DirectDocumentationConfig,
 } from './direct-documentation.js';
+
+export type { ThemeName } from './theme.js';
