@@ -998,3 +998,16 @@
   outline-offset: -2px;
   border-radius: 4px;
 }
+
+/* Hidden fallback links must occupy no flex track or gap, including before hydration. */
+.header-tabs > [hidden],
+:root[data-reader-layout='classic'] .header-tabs > [data-section='all'] {
+  display: none;
+}
+.header-tabs {
+  justify-content: flex-start;
+}
+
+:root[data-reader-layout='classic'] .docs-shell {
+  --workspace-max: 1600px;
+}

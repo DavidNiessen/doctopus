@@ -19,7 +19,7 @@
     }
   },
   "scripts": {
-    "build:client": "vite build && node ../../scripts/write-browser-notices.mjs dist/client && node ../../scripts/package-reader-integration.mjs"
+    "build:client": "vite build && vite build --config ../shared/vite.appearance.config.ts && node ../../scripts/write-browser-notices.mjs dist/client && node ../../scripts/package-reader-integration.mjs"
   },
   "dependencies": {
     "@davidniessen/doctopus-contracts": "0.2.0-candidate.7",

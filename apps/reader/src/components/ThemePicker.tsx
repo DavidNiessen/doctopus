@@ -25,7 +25,7 @@ export function ThemePicker({
         accent: themePresets.violet,
       },
     },
-    ...(['violet', 'ocean', 'mint', 'neutral'] as const).map((id) => ({
+    ...(['violet', 'ocean', 'ember', 'contrast'] as const).map((id) => ({
       id,
       label: t(`settings.theme.${id}`),
       theme: { preset: id, accent: themePresets[id] },

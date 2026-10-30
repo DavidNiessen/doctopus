@@ -37,7 +37,7 @@ public final class DirectDocumentation {
     config.put("theme", options.getOrDefault("theme", "violet"));
     config.put("layout", options.getOrDefault("layout", "modern"));
     config.put("appearance", options.getOrDefault("appearance", "system"));
-    if (!Set.of("violet", "mint", "ocean", "neutral").contains(config.get("theme"))
+    if (!Set.of("violet", "mint", "ocean", "neutral", "ember", "contrast").contains(config.get("theme"))
         || !Set.of("modern", "classic").contains(config.get("layout"))
         || !Set.of("system", "light", "dark").contains(config.get("appearance")))
       throw new IllegalArgumentException("Unsupported documentation theme, layout or appearance");

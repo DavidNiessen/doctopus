@@ -9,5 +9,5 @@ specs:
 explorer:
   mode: mock
 theme:
-  preset: mint
+  preset: violet
   radius: 14

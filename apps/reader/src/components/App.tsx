@@ -1,5 +1,7 @@
+import { readerThemeVariables } from '../theme-variables.js';
 import {
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -26,9 +28,7 @@ import {
   withBase,
   safeNavigationHref,
   normalizePagePath,
-  readableAccent,
   resolvePalette,
-  themeCssVariables,
   pageMetadata,
   createUiTranslation,
   localeRoute,
@@ -209,8 +209,24 @@ export function App({
     config.theme,
     theme === 'dark' ? 'dark' : 'light',
   );
-  const schemeColor = (color: string) =>
-    `light-dark(${readableAccent(color, 'light', resolvePalette(config.theme, 'light'))}, ${readableAccent(color, 'dark', resolvePalette(config.theme, 'dark'))})`;
+  useLayoutEffect(() => {
+    if (!preferencesReady) return;
+    const root = document.documentElement;
+    for (const [key, value] of Object.entries(
+      readerThemeVariables(config.theme),
+    ))
+      root.style.setProperty(key, value);
+    root.style.colorScheme =
+      preferences.mode === 'system' ? 'light dark' : preferences.mode;
+    root.dataset.readerLayout = preferences.layout;
+    document.getElementById('doctopus-pending-appearance')?.remove();
+  }, [
+    preferencesReady,
+    preferences.theme,
+    preferences.mode,
+    preferences.layout,
+    site.config.theme,
+  ]);
   const href = (value: string) => withBase(config.basePath, value);
   const docHref = (value: string) => href(localizePath(config, value, locale));
   const activeGuide =
@@ -553,15 +569,7 @@ export function App({
       data-layout={preferences.layout}
       style={
         {
-          ...themeCssVariables(config.theme),
-          '--code-string': schemeColor('#b45d34'),
-          '--code-key': schemeColor('#237da3'),
-          '--code-number': schemeColor('#b0662d'),
-          '--code-keyword': schemeColor('#8e65b9'),
-          '--code-comment': 'var(--muted)',
-          '--code-flag': schemeColor('#2787c0'),
-          '--success-text': schemeColor('#169965'),
-          '--error-text': schemeColor('#b03642'),
+          ...readerThemeVariables(config.theme),
           '--sidebar-width': `${config.theme.sidebarWidth ?? 288}px`,
           '--content-width': `${config.theme.contentWidth ?? 760}px`,
           '--radius': `${config.theme.radius}px`,
@@ -703,7 +711,11 @@ export function App({
         </div>
         <nav className="header-tabs" aria-label={t('navigation.sections')}>
           {preferences.layout !== 'classic' && (
-            <span className="section-fallback active" hidden={preferencesReady}>
+            <span
+              className="section-fallback active"
+              data-section="all"
+              hidden={preferencesReady}
+            >
               {t('navigation.all')}
             </span>
           )}

@@ -25,6 +25,16 @@ describe('direct API references', () => {
     });
     expect(encodeHtmlJson({ title: '</script>' })).not.toContain('<');
   });
+  it('accepts the replacement palettes and loads appearance before the direct shell', async () => {
+    for (const theme of ['ember', 'contrast'] as const) {
+      const html = await renderDirectDocumentation({ theme }, '/docs');
+      expect(html).toContain('src="/docs/assets/theme.js"');
+      expect(html.indexOf('src="/docs/assets/theme.js"')).toBeLessThan(
+        html.indexOf('<body>'),
+      );
+      expect(directDocumentationConfig({ theme }, '/docs').theme).toBe(theme);
+    }
+  });
   it('rejects ambiguous URL protocols and unsafe mount paths and keeps missing assets out of shell routing', () => {
     for (const url of [
       'javascript:alert(1)',

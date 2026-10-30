@@ -30,7 +30,7 @@ describe('prepared reader preferences', () => {
   ])('ignores corrupt, unsupported or excessive storage %s', (source) => {
     expect(parseReaderPreferences(source)).toEqual(defaultReaderPreferences());
   });
-  it.each(['mint', 'ocean', 'violet', 'neutral'] as const)(
+  it.each(['ember', 'ocean', 'violet', 'contrast'] as const)(
     'restores only the prepared %s theme and independent layout choices',
     (theme) => {
       expect(
@@ -50,6 +50,17 @@ describe('prepared reader preferences', () => {
       });
     },
   );
+  it('migrates retired theme IDs without exposing them as additional choices', () => {
+    expect(
+      parseReaderPreferences(JSON.stringify({ version: 2, theme: 'mint' }))
+        .theme,
+    ).toBe('ember');
+    expect(
+      parseReaderPreferences(
+        JSON.stringify({ version: 1, theme: { preset: 'neutral' } }),
+      ).theme,
+    ).toBe('contrast');
+  });
   it('falls back per invalid token and never restores custom colors, names or arbitrary CSS', () => {
     const result = parseReaderPreferences(
       JSON.stringify({
@@ -102,7 +113,7 @@ describe('prepared reader preferences', () => {
   it('applies a prepared palette without mutating published configuration or carrying custom reading colors', () => {
     const before = JSON.stringify(published);
     expect(readerTheme(published, 'published')).toBe(published);
-    for (const preset of ['mint', 'ocean', 'violet', 'neutral'] as const) {
+    for (const preset of ['ember', 'ocean', 'violet', 'contrast'] as const) {
       const resolved = readerTheme(published, preset);
       expect(resolved).toMatchObject({
         preset,

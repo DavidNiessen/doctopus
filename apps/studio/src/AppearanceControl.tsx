@@ -1,14 +1,14 @@
 import {
   themeCssVariables,
-  themePresets,
+  normalizeThemeName,
 } from '@davidniessen/doctopus-contracts';
 import { useEffect, useLayoutEffect, useState } from 'react';
 
 type Appearance = 'system' | 'light' | 'dark';
 const themeKey = 'doctopus-studio-theme';
-type ThemeName = keyof typeof themePresets;
+type ThemeName = 'violet' | 'ocean' | 'ember' | 'contrast';
 const themeFrom = (value: string | null): ThemeName =>
-  value && Object.hasOwn(themePresets, value) ? (value as ThemeName) : 'violet';
+  normalizeThemeName(value) ?? 'violet';
 const storageKey = 'doctopus-studio-appearance';
 function appearanceFrom(value: string | null): Appearance {
   return value === 'light' || value === 'dark' ? value : 'system';
@@ -37,6 +37,8 @@ export function AppearanceControl() {
   }, [theme]);
   useLayoutEffect(() => {
     document.documentElement.dataset.appearance = appearance;
+    document.documentElement.style.colorScheme =
+      appearance === 'system' ? 'light dark' : appearance;
   }, [appearance]);
   useEffect(() => {
     const synchronize = (event: StorageEvent) => {
@@ -66,8 +68,8 @@ export function AppearanceControl() {
         >
           <option value="violet">Violet</option>
           <option value="ocean">Ocean</option>
-          <option value="mint">Forest</option>
-          <option value="neutral">Graphite</option>
+          <option value="ember">Ember</option>
+          <option value="contrast">High contrast</option>
         </select>
       </label>
       <label className="studio-appearance">

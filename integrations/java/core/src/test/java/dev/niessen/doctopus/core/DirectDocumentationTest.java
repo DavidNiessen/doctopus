@@ -18,6 +18,15 @@ class DirectDocumentationTest {
     assertNull(site.read("manifest.json"));
     assertNull(site.read("../private.json"));
   }
+  @Test void replacementThemesApplyBeforeTheShellPaints() throws Exception {
+    for (String theme : new String[]{"ember", "contrast"}) {
+      var site = new DirectDocumentation(Map.of("theme", theme), "/docs");
+      String html = new String(site.read("index.html"), StandardCharsets.UTF_8);
+      assertTrue(html.contains("src=\"/docs/assets/theme.js\""));
+      assertTrue(html.indexOf("assets/theme.js") < html.indexOf("<body>"));
+      assertNotNull(site.read("assets/theme.js"));
+    }
+  }
   @Test void validatesPublicUrlsAndPreparedAppearance() {
     for (String url : new String[]{"javascript:alert(1)", "data:text/html,hi", "https://user:secret@example.com/spec", "/openapi.json#secret"})
       assertThrows(IllegalArgumentException.class, () -> new DirectDocumentation(Map.of("url",url), "/docs"));

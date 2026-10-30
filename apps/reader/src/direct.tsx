@@ -160,16 +160,17 @@ function DirectReference({ config }: { config: DirectDocumentationConfig }) {
   }, [config, revision]);
   useEffect(() => {
     const media = matchMedia('(prefers-color-scheme: dark)');
+    if (config.favicon)
+      document
+        .querySelector('link[rel="icon"]')
+        ?.setAttribute('href', config.favicon);
+    if (document.documentElement.dataset.theme) return;
     document.documentElement.dataset.theme =
       config.appearance === 'system'
         ? media.matches
           ? 'dark'
           : 'light'
         : config.appearance;
-    if (config.favicon)
-      document
-        .querySelector('link[rel="icon"]')
-        ?.setAttribute('href', config.favicon);
   }, [config]);
   if (site)
     return (
