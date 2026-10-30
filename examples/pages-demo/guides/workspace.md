@@ -7,7 +7,7 @@ group: Get started
 
 ## Pick a theme
 
-Open reader settings and preview Violet, Ocean, Forest or Graphite. Each changes the whole canvas, panels, borders, text, actions and response editor. **Site default** restores the published palette. By default, appearance follows your system and automatically uses the matching light or dark palette; choose Light or Dark to override it.
+Open reader settings and preview Violet, Ocean, Ember or High contrast. Each changes the whole canvas, panels, borders, text, actions and response editor. **Site default** restores the published palette. By default, appearance follows your system and automatically uses the matching light or dark palette; choose Light or Dark to override it.
 
 Your preferences stay in this browser for this documentation site. They synchronize across open tabs without changing the published project.
 
